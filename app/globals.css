@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face { font-family: 'GeistSans'; src: url('./fonts/GeistVF.woff') format('woff'); } 
+@font-face { font-family: 'GeistMono'; src: url('./fonts/GeistMonoVF.woff') format('woff'); } 
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #1771c6;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #f5f5f5b0;
+  border-radius: 10px
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #003b88;
+}
+
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: GeistSans, GeistMono, sans-serif
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #036cff 2.34%, #3700ff 100.78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+} 
