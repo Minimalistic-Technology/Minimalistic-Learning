@@ -67,8 +67,8 @@ const Hero = () => {
   <Image
     src="/images/herostudent.png" // Corrected image path
     alt="Learning Illustration"
-    width={2000} // Adjust width and height proportionally to the container
-    height={2000}
+    width={1800} // Adjust width and height proportionally to the container
+    height={1800}
     priority
     className="object-contain"
   />
