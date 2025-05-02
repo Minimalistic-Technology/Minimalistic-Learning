@@ -1,4 +1,5 @@
-"use client";{/*started by sunny*/}
+"use client";
+import Image from "next/image";
 import { useState } from "react";
 
 const Navbar = () => {
@@ -7,7 +8,14 @@ const Navbar = () => {
     <nav className="bg-transparent py-4 px-6">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-blue-600 font-semibold text-lg md:text-xl">
+        <div className="flex items-center text-blue-600 font-semibold text-lg md:text-xl">
+        <Image 
+          src="/images/logo.png"
+          alt="Minimalistic Learning Logo" 
+          width={56} 
+          height={56} 
+          className="mr-2" 
+        />
           <span className="tracking-wider">MINIMALISTIC LEARNING</span>
         </div>
 
@@ -23,14 +31,24 @@ const Navbar = () => {
               About
             </a>
           </li>
-          <li>
+          {/* <li>
             <a href="/courses" className="hover:text-blue-600 transition duration-300">
               Courses
             </a>
-          </li>
+          </li> */}
           <li>
+            <a href="/blog" className="hover:text-blue-600 transition duration-300">
+            Blog's
+            </a>
+          </li>
+          {/* <li>
             <a href="/contactus" className="hover:text-blue-600 transition duration-300">
               Contact Us
+            </a>
+          </li> */}
+          <li>
+            <a href="/blog/createblog's" className="hover:text-blue-600 transition duration-300">
+            Post New Blog
             </a>
           </li>
         </ul>
@@ -76,7 +94,8 @@ const Navbar = () => {
           {isOpen && (
             //<div className="fixed top-0 left-0 h-full w-full bg-white p-4 shadow-md overflow-x-hidden overflow-y-scroll" style={{ height: '100vh', overflowY: 'scroll' }}></div>
             <div className="fixed top-0 left-0 h-[90%] w-full bg-white p-4 shadow-md overflow-x-hidden">
-              <div className="text-blue-600 font-semibold text-lg md:text-xl pb-2">
+              <div className="flex items-center text-blue-600 font-semibold text-lg md:text-xl pb-2">
+                <img src="/images/ml.jpg" alt="Minimalistic Learning Logo" className="h-8 mr-2" />
                 <span className="tracking-wider">MINIMALISTIC LEARNING</span>
               </div>
               <button
@@ -116,12 +135,20 @@ const Navbar = () => {
                     About
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="/courses"
                     className="hover:text-blue-600 transition duration-300"
                   >
                     Courses
+                  </a>
+                </li> */}
+                <li>
+                  <a
+                    href="/blog"
+                    className="hover:text-blue-600 transition duration-300"
+                  >
+                  Blog's
                   </a>
                 </li>
                 <li>
@@ -142,4 +169,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-{/*ended by sunny*/}

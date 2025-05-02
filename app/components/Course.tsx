@@ -4,21 +4,21 @@ import React, { useState } from "react";
 import { categories, courses } from "@/app/data/courseData";
 import Link from "next/link";
 
-// Helper function to generate clean slugs
 const slugify = (title: string) =>
   title.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, '-');
 
 const Course = () => {
-  const [activeCategory, setActiveCategory] = useState("All Courses");
+  const [activeCategory, setActiveCategory] = useState("All Blog's"); //"All Courses");
 
-  const filteredCourses = activeCategory === "All Courses"
+  const filteredCourses = activeCategory === "All Blog's" //"All Courses"
     ? courses
     : courses.filter(course => course.category === activeCategory);
 
   return (
     <div className="bg-[#daf0ff] px-4 sm:px-6 md:px-10 lg:px-20 py-8">
       <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-        Explore Course
+        {/* Explore Course */}
+        Explore Blog's
       </p>
 
       {/* Categories */}
@@ -64,9 +64,11 @@ const Course = () => {
                     ))}
                   </div>
 
-                  <Link href={`/coursesdetails/${slugify(course.title)}`}>
+                  {/* <Link href={`/coursesdetails/${slugify(course._id)}`}> */}
+                  <Link href="/blog">
                     <button className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
-                      Browse Certification
+                      {/* Browse Certification */}
+                      Browse Blog's
                     </button>
                   </Link>
                 </div>

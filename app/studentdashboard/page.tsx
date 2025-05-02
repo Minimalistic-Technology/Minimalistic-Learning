@@ -81,7 +81,10 @@ export default function StudentDashboard() {
                 </button>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gray-200 relative overflow-hidden">
-                    <Image src="" alt="Profile" />
+                    <Image src="https://cdn4.vectorstock.com/i/1000x1000/18/58/color-silhouette-cartoon-half-body-faceless-man-vector-15091858.jpg" 
+                    alt="Profile"
+                    width={50}
+                    height={50} />
                   </div>
                   <div>
                     <p className="text-sm font-medium">Jone Doe</p>

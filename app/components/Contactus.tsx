@@ -1,6 +1,6 @@
 import React from "react";
 import Footer from "./Footer";
-import { FaFacebookF, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 const ContactUs: React.FC = () => {
   return (
     <div className="bg-[#daf0ff] min-h-screen">
@@ -14,15 +14,27 @@ const ContactUs: React.FC = () => {
                 Have Questions? Your learning journey starts here! <br />
                 Connect with us for support, feedback, or assistance.
               </p>
+              <a
+                href="mailto:minimalisticlearning2024@gmail.com"
+                className="text-blue-600 hover:underline mb-2"
+              >
+                minimalisticlearning2024@gmail.com
+              </a>
               <div className="flex gap-6 mt-4">
-                <a href="https://www.facebook.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
+                {/* <a href="https://www.facebook.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
                   <FaFacebookF size={22} className="text-blue-600" />
-                </a>
-                <a href="https://x.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
+                </a> */}
+                <a href="https://x.com/Minimal_Learn" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
                   <FaTwitter size={22} className="text-blue-600" />
                 </a>
-                <a href="https://www.youtube.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
+                {/* <a href="https://www.youtube.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
                   <FaYoutube size={22} className="text-blue-600" />
+                </a> */}
+                {/* <a href="https://www.instagram.com/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
+                  <FaInstagram size={22} className="text-blue-600" />
+                </a> */}
+                <a href="https://www.linkedin.com/company/minimalisticlearning/" className="bg-[#daf0ff] p-3 rounded-full hover:bg-blue-200 transition">
+                  <FaLinkedinIn size={22} className="text-blue-600" />
                 </a>
               </div>
             </div>
@@ -42,8 +54,9 @@ const ContactUs: React.FC = () => {
                 required
               />
               <input
-                type="tel"
-                placeholder="Phone Number *"
+                // type="tel"
+                type="Message"
+                placeholder="Blog Title *"
                 className="w-full p-3 bg-transparent border border-blue-400 rounded-lg placeholder-gray-600 text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                 required
               />

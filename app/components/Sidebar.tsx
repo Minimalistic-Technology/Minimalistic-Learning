@@ -1,4 +1,4 @@
-'use client';{/*started by sunny */}
+'use client';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -92,4 +92,3 @@ export function Sidebar() {
     </>
   );
 }
-{/*ended by sunny*/}

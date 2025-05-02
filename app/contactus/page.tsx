@@ -1,10 +1,12 @@
 import React from 'react'
-import ContactUs from '../components/Contactus'
+import Glance from '../components/Glance'
+import Footer from '../components/Footer'
 
 const page = () => {
   return (
     <div>
-<ContactUs/>
+<Glance/>
+<Footer/>
     </div>
   )
 }
