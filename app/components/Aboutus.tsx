@@ -17,7 +17,35 @@ const AboutUs = () => {
       img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
     {
-      name: "Harsh Ratnani",
+      name: "Priyal Vyas",
+      role: "Visionary leader with a passion for education and technology innovation.",
+      img: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",
+    },
+    {
+      name: "Manan Doshi",
+      role:
+        "User Experience and User Interface Designer.",
+      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "Mahesh Kumar Thever",
+      role:
+        "User Experience and User Interface Designer.",
+      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "Sunny Radhakrishna",
+      role: "User Experience and User Interface Designer",
+      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "Sadashive Zore",
+      role:
+        "User Experience and User Interface Designer.",
+      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "Sandip Baranwal",
       role: "User Experience and User Interface Designer.",
       img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
     },
@@ -67,7 +95,7 @@ const AboutUs = () => {
             Meet Our Team
           </h2>
           {/* Team Members Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <div
                 key={index}

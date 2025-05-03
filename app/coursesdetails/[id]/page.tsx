@@ -7,7 +7,6 @@ import {ChevronDown, Phone, Check,Undo2 } from 'lucide-react';
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 import * as Accordion from "@radix-ui/react-accordion";
 
-// Slugify helper - must match Course.tsx logic
 const slugify = (title: string) =>
   title.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, '-');
 
@@ -21,7 +20,7 @@ const CourseDetails = ({ params }: Props) => {
   const slug = params.id;
 
   const course = courses.find(
-    (c) => slugify(c.title) === slug
+    (c) => slugify(c._id) === slug
   );
 
   if (!course) return notFound();

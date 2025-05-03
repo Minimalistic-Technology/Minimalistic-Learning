@@ -1,14 +1,18 @@
 
+import course from '../components/testing/page';
 export const categories = [
-    "All Courses",
+    // "All Courses",
+    "All Blog's",
     "Business",
     "Science & Technology",
     "Arts & Humanities",
     "Health"
   ];
 
+export { course };
 export const courses = [
     { 
+      _id: "101",
       title: "Introduction to Public Health",
       category: "Health",
       description: "Explore the basics of public health, including strategies for well-being. Learn about disease prevention, health promotion, epidemiology, and the role of public policies in shaping community health.",
@@ -35,6 +39,7 @@ export const courses = [
       ],
     },
     {
+      _id: "102",
       title: "Creative Writing Workshop",
       category: "Arts & Humanities",
       description: "Master the art of storytelling, poetry, and other forms of creative writing. Explore different writing styles, character development, plot structure, and literary techniques.",
@@ -61,6 +66,7 @@ export const courses = [
         ],
     },
     {
+      _id: "103",
       title: "Basics of Coding: Python for Beginners",
       category: "Science & Technology",
       description: "Start your journey in programming with easy-to-follow Python lessons. Learn the fundamentals of coding, including variables, loops, functions, and data structures.",
@@ -87,6 +93,7 @@ export const courses = [
       ],
     },
     {
+      _id: "104",
       title: "Financial Literacy 101",
       category: "Business",
       description: "Understand budgeting, saving, and investing to manage personal or business finances. Learn the fundamentals of financial planning, debt management, credit scores, and smart spending habits.",
@@ -113,6 +120,7 @@ export const courses = [
         ],
     },
     {
+      _id: "105",
       title: "Fundamentals of Data Science",
       category: "Science & Technology",
       description: "Understand data analysis, visualization, and the role of data in decision-making. Learn the basics of data collection, cleaning, and preprocessing.",
@@ -139,6 +147,7 @@ export const courses = [
         ],
     },
     {
+      _id: "106",
       title: "Nutrition and Wellness Essentials",
       category: "Health",
       description: "Learn about balanced diets, food nutrients, and how to maintain a healthy lifestyle. Understand the importance of macronutrients and micronutrients, meal planning, and hydration.",

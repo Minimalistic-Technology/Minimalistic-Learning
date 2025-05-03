@@ -22,10 +22,10 @@ export default function WhyUs() {
               Why choose Minimalistic Learning?
             </h2>
             <h3 className="text-2xl text-blue-500 mb-4">
-              Courses for All Levels
+              Blog's for All Levels
             </h3>
             <p className="text-gray-700 text-lg mb-6">
-              From beginners to advanced learners, we offer courses that cater
+              From beginners to advanced learners, we offer blog's that cater
               to all skill levels.
             </p>
             <button className="bg-gradient-to-r from-blue-400 to-purple-500 text-white py-2 px-6 rounded-lg shadow-md hover:from-blue-500 hover:to-purple-600 transition duration-300">
