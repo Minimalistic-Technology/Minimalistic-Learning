@@ -95,11 +95,11 @@ const BlogPage = () => {
           {/* Hero Image */}
           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
             <img 
-              src="https://cdn.logojoy.com/wp-content/uploads/2018/05/30164225/572.png"
+              src="/images/blog3.png"
               alt="Hero Image" 
               width={350}
               height={64}
-              className="rounded-lg object-cover"/>
+              className="rounded-full object-cover"/>
           </div>
         </div>
       </section>

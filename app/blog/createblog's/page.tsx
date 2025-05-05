@@ -104,11 +104,11 @@ const CreateBlogPage = () => {
           {/* Hero Image */}
           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
             <img 
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMAs05u9PYfgo7hbHpetcTrC9M466Zvk74lw&s"
+              src="/images/blog2.png"
               alt="Hero Image" 
               width={250}
               height={64}
-              className="rounded-lg object-cover"/>
+              className="rounded-full object-cover"/>
           </div>
         </div>
       </section>
