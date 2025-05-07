@@ -48,16 +48,15 @@ const BlogPage = () => {
       </section>
     
       <div className="mt-6">
-        <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          Latest Blog's
-        </p>
-        <InfiniteMovingCardsDemo />
+      <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+        Latest Blog's
+      </p>
+      <InfiniteMovingCardsDemo />
       </div>
 
       <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
         Famous Blog's
       </p>
-
       {/* Search, Category, and Create Button Section */}
       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
         <input
