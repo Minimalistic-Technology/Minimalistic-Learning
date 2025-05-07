@@ -71,7 +71,7 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Blog Title & Meta Info */}
-      <div className="max-w-7xl mx-auto -mt-16 relative z-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-screen-2xl mx-auto -mt-16 relative z-20 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight break-words">
             {blog.title}
@@ -112,7 +112,7 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Blog Content */}
-      <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 overflow-hidden">
           <div
             className="prose prose-sm sm:prose md:prose-lg lg:prose-xl max-w-full break-words"
@@ -122,7 +122,7 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Author Bio */}
-      <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-12">
+      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-12">
         <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
           <div className="flex items-center space-x-4">
             <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-bold">
@@ -139,7 +139,7 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Related Posts */}
-      <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-16">
+      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-16">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Related Posts</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {blogs.slice(0, 2).map((relatedBlog) =>
