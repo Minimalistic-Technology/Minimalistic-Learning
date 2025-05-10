@@ -1,4 +1,4 @@
-import Image from "next/image";{/*started by sunny*/}
+import Image from "next/image";
 import { Bookmark } from "lucide-react";
 
 interface CourseCardProps {
@@ -29,4 +29,4 @@ export function CourseCard({ title, description, image }: CourseCardProps) {
       </div>
     </div>
   );
-}{/*ended by sunny*/}
+}

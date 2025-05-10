@@ -104,11 +104,11 @@ const CreateBlogPage = () => {
           {/* Hero Image */}
           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
             <img 
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMAs05u9PYfgo7hbHpetcTrC9M466Zvk74lw&s"
+              src="/images/blog2.png"
               alt="Hero Image" 
               width={250}
               height={64}
-              className="rounded-lg object-cover"/>
+              className="rounded-full object-cover"/>
           </div>
         </div>
       </section>
@@ -300,24 +300,29 @@ const CreateBlogPage = () => {
                 
                 {/* Preview Section */}
                 {formData.description && (
-                  <div className="bg-[#daf0ff] border border-blue-400 rounded-xl p-4 mt-2">
+                  <div className="bg-[#daf0ff] border border-blue-400 rounded-xl p-4 mt-2 max-h-[400px] overflow-auto">
                     <h3 className="text-sm font-medium text-gray-700 mb-2">Preview</h3>
-                    <div className="prose max-w-none">
-                      {/* This is a simplified preview - in production you'd use a proper Markdown parser */}
-                      <div style={{ whiteSpace: 'pre-wrap' }}>
-                        {formData.description
+                    <div
+                      className="prose max-w-none break-words"
+                      style={{ whiteSpace: 'pre-wrap' }}
+                      dangerouslySetInnerHTML={{
+                        __html: formData.description
+                          .replace(/&/g, "&amp;")
+                          .replace(/</g, "&lt;")
+                          .replace(/>/g, "&gt;")
                           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                           .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
                           .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-                          .replace(/^\- (.*$)/gm, '<li>$1</li>')
+                          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                          .replace(/^- (.*$)/gm, '<ul><li>$1</li></ul>')
                           .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-                          .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')}
-                      </div>
-                    </div>
+                          .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                      }}
+                    />
                   </div>
                 )}
+
                 
                 {/* Tags */}
                 <div>
@@ -430,7 +435,6 @@ const CreateBlogPage = () => {
                     <option value="Cloud Computing">Cloud Computing</option>
                     <option value="Cybersecurity">Cybersecurity</option>
                     <option value="Mobile Development">Mobile Development</option>
-                    <option value="DevOps">DevOps</option>
                   </select>
                 </div>
                 

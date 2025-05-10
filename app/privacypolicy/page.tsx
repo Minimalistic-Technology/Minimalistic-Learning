@@ -1,11 +1,11 @@
 import React from 'react'
-import Glance from '../components/Glance'
+import PrivacyPolicy from '../components/PrivacyPolicy'
 import Footer from '../components/Footer'
 
 const page = () => {
   return (
     <div>
-<Glance/>
+<PrivacyPolicy/>
 <Footer/>
     </div>
   )

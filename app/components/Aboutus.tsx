@@ -6,48 +6,61 @@ const AboutUs = () => {
   const teamMembers = [
     {
       name: "Harsh Ratnani",
-      role:
-        "Visionary leader with a passion for education and technology innovation.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+      role:"Founder & CEO",
+      img: "https://pascualbrokers.com/wp-content/uploads/2020/02/dummy-profile.jpg",
     },
     {
       name: "Parth Doshi",
-      role:
-        "Expert in operational strategy and user-focused solutions, fostering collaboration and growth.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+      role:"Founder",
+      img: "https://pascualbrokers.com/wp-content/uploads/2020/02/dummy-profile.jpg",
     },
     {
-      name: "Priyal Vyas",
-      role: "Visionary leader with a passion for education and technology innovation.",
-      img: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",
+      name: "Sumit Borate",
+      role: "Data Science",
+      img: "/images/Sumitborate.jpeg",
+    },
+    {
+      name: "harsh Bhavsar",
+      role: "Digital Marketing Head",
+      img: "/images/harsh.jpg",
+    },
+    {
+      name: "Pops",
+      role: "Jr. Software Devloper",
+      img: "/images/pops.jpeg",
+    },
+    {
+      name: "Varshini Varma",
+      role: "Jr. Software Devloper",
+      img: "/images/Varshini.jpeg",
     },
     {
       name: "Manan Doshi",
       role:
-        "User Experience and User Interface Designer.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "Jr. Software Devloper",
+      img: "/images/manan.jpeg",
     },
     {
       name: "Mahesh Kumar Thever",
       role:
-        "User Experience and User Interface Designer.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      name: "Sunny Radhakrishna",
-      role: "User Experience and User Interface Designer",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      name: "Sadashive Zore",
-      role:
-        "User Experience and User Interface Designer.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "Jr. Software Devloper",
+      img: "/images/mahesh.jpeg",
     },
     {
       name: "Sandip Baranwal",
-      role: "User Experience and User Interface Designer.",
-      img: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600",
+      role: "Jr. Software Devloper",
+      img: "/images/sandip.jpeg",
+    },
+    {
+      name: "Sunny Radhakrishna",
+      role: "Jr. Software Devloper",
+      img: "/images/sunny.jpeg",
+    },
+    {
+      name: "Sadashiv Zore",
+      role:
+        "Jr. Software Devloper",
+      img: "/images/sadashiv.jpeg",
     },
   ];
 

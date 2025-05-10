@@ -1,4 +1,4 @@
-'use client';{/*started by sunny*/}
+'use client';
 
 import { GraduationCap, BookOpen, CheckCircle } from "lucide-react";
 
@@ -30,4 +30,4 @@ export function StatsCard({ title, value, bgColor, iconColor, type }: StatsCardP
       </div>
     </div>
   );
-}{/*ended by sunny */}
+}

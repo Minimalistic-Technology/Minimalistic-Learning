@@ -1,69 +1,12 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
-import Link from "next/link"; // ✅ Import Link
+import Link from "next/link";
 import Footer from "../components/Footer";
 import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
+import { blogs } from '@/app/lib/blogData';
 
-// Dummy blog data
-const blogs = [
-  {
-    id: 1,
-    title: "Understanding Artificial Intelligence: A Beginner's Guide",
-    description: "Learn the basics of AI, how it works, and why it’s transforming industries worldwide.",
-    category: "AI",
-    image: "https://t4.ftcdn.net/jpg/03/23/82/99/360_F_323829966_H32wLhoouiPinJ66KyggCvqQ2dFPuuQ1.jpg",
-    date: "April 20, 2025",
-    author: "Manan Doshi",
-  },
-  {
-    id: 2,
-    title: "Top 10 Web Development Trends in 2025",
-    description: "Stay ahead of the curve with these web development trends shaping the tech world.",
-    category: "Web Development",
-    image: "https://blog.zegocloud.com/wp-content/uploads/2024/03/types-of-web-development-services.jpg",
-    date: "April 18, 2025",
-    author: "Sunny Radhakrishna",
-  },
-  {
-    id: 3,
-    title: "How to Master Data Science in 2025",
-    description: "The ultimate roadmap to becoming a successful data scientist in today’s competitive world.",
-    category: "Data Science",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4RtGzBqVn9mzH1A7xCElSkgtkyFCD2Adkgw&s",
-    date: "April 15, 2025",
-    author: "Sandip Baranwal",
-  },
-  {
-    id: 4,
-    title: "Getting Started with Blockchain Technology",
-    description: "An easy introduction to blockchain and how it’s changing the digital landscape.",
-    category: "Blockchain",
-    image: "https://opini.ukwms.ac.id/wp-content/uploads/2024/07/blockchain1-1.jpg",
-    date: "April 10, 2025",
-    author: "Sadashive Zore",
-  },
-  {
-    id: 5,
-    title: "The Future of Cloud Computing: What to Expect",
-    description: "Explore upcoming innovations in cloud services and how they will impact businesses.",
-    category: "Cloud Computing",
-    image: "https://cdn.mos.cms.futurecdn.net/pL5rBKGq88cnoqgdJgCXGS.jpg",
-    date: "April 8, 2025",
-    author: "Sandip Baranwal",
-  },
-  {
-    id: 6,
-    title: "Cybersecurity Essentials: Protect Yourself Online",
-    description: "Learn the critical cybersecurity practices everyone should follow in 2025 and beyond.",
-    category: "Cybersecurity",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0BKyZk7T4dZWB9sE7B3dxn0oSkYRnNTPh2A&s",
-    date: "April 5, 2025",
-    author: "Mahesh Kumar Thevar",
-  },
-];
-
-const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity","Mobile Development"];
+const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
 
 const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,11 +38,11 @@ const BlogPage = () => {
           {/* Hero Image */}
           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
             <img 
-              src="https://cdn.logojoy.com/wp-content/uploads/2018/05/30164225/572.png"
+              src="/images/blog3.png"
               alt="Hero Image" 
               width={350}
               height={64}
-              className="rounded-lg object-cover"/>
+              className="rounded-full object-cover"/>
           </div>
         </div>
       </section>
@@ -154,9 +97,9 @@ const BlogPage = () => {
                 <span>{blog.author}</span>
                 <span>{blog.date}</span>
               </div>
-              <a href="#" className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
+              <Link href={`/blog/${blog.id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
                 Read More →
-              </a>
+              </Link>
             </div>
           </div>
         ))}
@@ -172,7 +115,6 @@ const BlogPage = () => {
       </div>
 
       <Footer />
-
     </div>
   );
 };

@@ -12,9 +12,9 @@ const Navbar = () => {
         <Image 
           src="/images/logo.png"
           alt="Minimalistic Learning Logo" 
-          width={56} 
-          height={56} 
-          className="mr-2" 
+          width={46} 
+          height={46} 
+          className="rounded-full mr-3" 
         />
           <span className="tracking-wider">MINIMALISTIC LEARNING</span>
         </div>
