@@ -807,10 +807,12 @@ interface Blog {
 const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
 
 const BlogPage = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState<string | null>(null);
   const blogsPerPage = 6;
 
   useEffect(() => {
@@ -822,15 +824,17 @@ const BlogPage = () => {
       })
       .catch((error) => {
         console.error("Error fetching blogs:", error);
+        setError("Failed to load blogs. Please try again later.");
         setIsLoading(false);
       });
   }, []);
 
-  const filteredBlogs = blogs.filter((blog) => {
+  // Only filter blogs when the array is available
+  const filteredBlogs = blogs ? blogs.filter((blog) => {
     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }) : [];
 
   const paginatedBlogs = filteredBlogs.slice(
     (currentPage - 1) * blogsPerPage,
@@ -845,6 +849,22 @@ const BlogPage = () => {
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600">Loading blogs...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-xl">{error}</p>
+          <button 
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -903,49 +923,53 @@ const BlogPage = () => {
             <option key={category} value={category}>{category}</option>
           ))}
         </select>
-        <Link href="/blog/createblog's">
+        <Link href="/blog/create-blogs">
           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
             + Create New Blog
           </button>
         </Link>
       </section>
-
       <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {paginatedBlogs.map((blog) => (
-          <article key={blog._id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col h-full">
-            <img src={blog.image || "/images/default-blog.jpg"} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-            <div className="p-4 flex flex-col flex-grow">
-              <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-              <h2 className="text-2xl font-bold mt-2 line-clamp-2">{blog.title}</h2>
-              {/* Added truncate classes for description text */}
-              <p className="text-gray-600 mt-2 text-sm flex-grow overflow-hidden line-clamp-3">
-                {blog.description}
-              </p>
-              <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-                <span>{blog.author}</span>
-                <span>{blog.date}</span>
+        {paginatedBlogs.length > 0 ? (
+          paginatedBlogs.map((blog) => (
+            <article key={blog._id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
+              <img src={blog.image || "/images/default-blog.jpg"} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
+              <div className="p-4 flex flex-col flex-grow">
+                <span className="text-md font-semibold text-blue-500">{blog.category}</span>
+                <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
+                <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
+                <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
+                  <span>{blog.author}</span>
+                  <span>{blog.date}</span>
+                </div>
+                <Link href={`/blog/${blog._id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
+                  Read More →
+                </Link>
               </div>
-              <Link href={`/blog/${blog._id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-                Read More →
-              </Link>
-            </div>
-          </article>
-        ))}
+            </article>
+          ))
+        ) : (
+          <div className="col-span-3 text-center py-12">
+            <p className="text-gray-600 text-xl">No blogs found matching your criteria.</p>
+          </div>
+        )}
       </section>
       
-      <div className="flex justify-center pb-12">
-        <nav className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button 
-              key={page} 
-              onClick={() => setCurrentPage(page)}
-              className={`px-4 py-2 rounded-md shadow-sm ${page === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}`}
-            >
-              {page}
-            </button>
-          ))}
-        </nav>
-      </div>
+      {totalPages > 0 && (
+        <div className="flex justify-center pb-12">
+          <nav className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button 
+                key={page} 
+                onClick={() => setCurrentPage(page)}
+                className={`px-4 py-2 rounded-md shadow-sm ${page === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}`}
+              >
+                {page}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
 
       <Footer />
     </div>
