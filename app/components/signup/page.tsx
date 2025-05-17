@@ -358,16 +358,19 @@ const SignUpPage = () => {
             <h2 className="text-xl font-semibold mb-4">Enter the OTP sent to your email</h2>
             <div className="flex justify-center gap-3 mb-4">
               {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  ref={(el) => (otpRefs.current[index] = el!)}
-                  type="text"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                  className="w-12 h-12 text-xl text-center border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            <input
+              key={index}
+              ref={(el) => {
+                otpRefs.current[index] = el!;
+              }}
+              type="text"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => handleOtpChange(index, e.target.value)}
+              onKeyDown={(e) => handleOtpKeyDown(e, index)}
+              className="w-12 h-12 text-xl text-center border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
               ))}
             </div>
             <button

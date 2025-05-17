@@ -93,7 +93,7 @@ const TestimonialsPage = () => {
     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
       <section className="py-16">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-          Testimonials
+          About us Testimonials
         </h1>
         <div className="max-w-6xl mx-auto px-6 grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((member) => (
