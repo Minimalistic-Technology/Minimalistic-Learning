@@ -807,7 +807,6 @@ interface Blog {
 const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
 
 const BlogPage = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
