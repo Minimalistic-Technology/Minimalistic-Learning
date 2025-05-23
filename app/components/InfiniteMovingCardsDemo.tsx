@@ -5,7 +5,13 @@ import { InfiniteMovingCards } from "./ui/infinite-moving-cards";
 
 export function InfiniteMovingCardsDemo() {
   return (
-    <div className="h-[20rem] rounded-md flex flex-col antialiased bg-[#daf0ff] dark:bg-blue-200 dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden">
+  <div
+  className="h-[20rem] rounded-md flex flex-col antialiased bg-[#daf0ff] dark:bg-blue-200 dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden"
+  style={{
+    maskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)',
+    WebkitMaskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)'
+  }}
+>
       <InfiniteMovingCards
         items={testimonials}
         direction="right"

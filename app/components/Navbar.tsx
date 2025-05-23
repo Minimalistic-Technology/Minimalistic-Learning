@@ -1,10 +1,19 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import { useAuth } from "../context/AuthContext";
+import { FaUserCircle } from "react-icons/fa";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, setUser } = useAuth();
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    setUser(null);
+    window.location.href = "/login";
+  };
+
   return (
     <nav className="bg-transparent py-4 px-6">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -21,7 +30,8 @@ const Navbar = () => {
             <span>MINIMALISTIC LEARNING </span>
           </div>
         </Link>
-        {/* Navigation Links */}
+
+        {/* Desktop Navigation Links */}
         <ul className="hidden md:flex space-x-6 lg:space-x-10 text-gray-700 font-medium items-center">
           {[
             { label: "Home", href: "/#" },
@@ -41,31 +51,55 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Buttons */}
-        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6 items-center font-sans">
-          <a
-            href="/components/signup"
-            className="text-blue-600 font-semibold px-4 py-2 rounded-md hover:text-blue-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 active:scale-95 active:text-blue-900"
-            aria-label="Sign up"
-          >
-            Sign up
-          </a>
-          <a
-            href="/logIn"
-            className="bg-blue-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 active:scale-95 active:bg-blue-800 flex items-center justify-center whitespace-nowrap"
-            aria-label="Log in"
-          >
-            Log in
-          </a>
+        {/* Auth Buttons */}
+        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6 items-center justify-center font-sans">
+          {user ? (
+            <>
+              <span className="text-blue-600 font-medium">Hi, {user}</span>
+              {/* Profile icon with link to /profile */}
+              <Link href="/profile" passHref>
+                <div
+                  aria-label="Profile"
+                  className="ml-2 cursor-pointer text-blue-600 hover:text-blue-800 transition-colors duration-300"
+                  style={{ fontSize: "36px", borderRadius: "50%" }}
+                >
+                  <FaUserCircle />
+                </div>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-white bg-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <a
+                href="/components/signup"
+                className="text-blue-600 font-semibold px-4 py-2 rounded-md hover:text-blue-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Sign up"
+              >
+                Sign up
+              </a>
+              <a
+                href="/login"
+                className="bg-blue-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Log in"
+              >
+                Log in
+              </a>
+            </>
+          )}
         </div>
 
-        {/* Mobile Menu Placeholder */}
+        {/* Mobile Menu */}
         <div className="md:hidden z-10">
           <button
             className="text-gray-700 focus:outline-none"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {/* Hamburger Menu Icon */}
+            {/* Hamburger Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -81,22 +115,19 @@ const Navbar = () => {
               />
             </svg>
           </button>
+
+          {/* Mobile Dropdown */}
           {isOpen && (
-            //<div className="fixed top-0 left-0 h-full w-full bg-white p-4 shadow-md overflow-x-hidden overflow-y-scroll" style={{ height: '100vh', overflowY: 'scroll' }}></div>
             <div className="fixed top-0 left-0 h-[90%] w-full bg-white p-4 shadow-md overflow-x-hidden">
               <div className="flex items-center text-blue-600 font-semibold text-lg md:text-xl pb-2">
-                <img
-                  src="/images/ml.jpg"
-                  alt="Minimalistic Learning Logo"
-                  className="h-8 mr-2"
-                />
+                <img src="/images/ml.jpg" alt="Logo" className="h-8 mr-2" />
                 <span className="tracking-wider">MINIMALISTIC LEARNING</span>
               </div>
               <button
-                className="absolute top-4 right-4 text-gray-700 focus:outline-none"
+                className="absolute top-4 right-4 text-gray-700"
                 onClick={() => setIsOpen(false)}
               >
-                {/* Close Button */}
+                {/* Close Icon */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6"
@@ -112,47 +143,56 @@ const Navbar = () => {
                   />
                 </svg>
               </button>
-              <ul className="space-y-4 text-gray-700 font-medium">
+              <ul className="space-y-4 text-gray-700 font-medium mt-4">
                 <li>
-                  <a
-                    href="#"
-                    className="hover:text-blue-600 transition duration-300"
-                  >
+                  <a href="/" className="hover:text-blue-600">
                     Home
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/aboutus"
-                    className="hover:text-blue-600 transition duration-300"
-                  >
+                  <a href="/aboutus" className="hover:text-blue-600">
                     About
                   </a>
                 </li>
-                {/* <li>
-                  <a
-                    href="/courses"
-                    className="hover:text-blue-600 transition duration-300"
-                  >
-                    Courses
-                  </a>
-                </li> */}
                 <li>
-                  <a
-                    href="/blog"
-                    className="hover:text-blue-600 transition duration-300"
-                  >
+                  <a href="/blog" className="hover:text-blue-600">
                     Blog's
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/contactus"
-                    className="hover:text-blue-600 transition duration-300"
-                  >
+                  <a href="/contactus" className="hover:text-blue-600">
                     Contact Us
                   </a>
                 </li>
+                {user ? (
+                  <>
+                    <li className="text-blue-600">Hi, {user}</li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="text-red-600 hover:underline"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <a
+                        href="/components/signup"
+                        className="hover:text-blue-600"
+                      >
+                        Sign Up
+                      </a>
+                    </li>
+                    <li>
+                      <a href="/login" className="hover:text-blue-600">
+                        Login
+                      </a>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           )}

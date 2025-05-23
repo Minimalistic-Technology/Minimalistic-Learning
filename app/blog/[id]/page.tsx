@@ -50,124 +50,136 @@ export default function BlogDetailPage() {
   const readingTime = calculateReadingTime(blog.content);
 
   return (
-    <div className="bg-[#daf0ff] min-h-screen overflow-x-hidden">
-      {/* Header with image */}
-      <div className="relative p-1">
-        <img
-          src={blog.image}
-          alt={blog.title}
-          className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover rounded-none sm:rounded-lg"
-        />
+  <div className="bg-[#daf0ff] min-h-screen overflow-x-hidden">
 
-        <div className="absolute top-4 left-4 z-30">
+  {/* Header with image and back button */}
+  <div className="relative p-1">
+    <img
+      src={blog.image}
+      alt={blog.title}
+      className="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover rounded-none sm:rounded-lg"
+    />
+    {/* Overlay for better back button visibility */}
+    <div className="absolute inset-0 bg-black/30 backdrop-blur-sm rounded-none sm:rounded-lg pointer-events-none"></div>
+
+    <div className="absolute top-4 left-4 z-30">
+      <Link
+        href="/blog"
+        className="flex items-center text-white bg-black/70 hover:bg-black/90 px-5 py-2 rounded-full font-semibold shadow-lg transition duration-300"
+      >
+        <ArrowLeft className="w-5 h-5 mr-3" />
+        Back
+      </Link>
+    </div>
+  </div>
+
+  {/* Title & Meta Info */}
+  <div className="max-w-screen-2xl mx-auto -mt-16 relative z-20 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white rounded-xl shadow-xl p-8 sm:p-12 lg:p-16">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight break-words">
+        {blog.title}
+      </h1>
+
+      <div className="mt-6 flex flex-wrap items-center text-gray-700 gap-x-8 gap-y-4 text-base sm:text-lg font-medium">
+        <div className="flex items-center space-x-3">
+          <User className="w-5 h-5 text-blue-600" />
+          <span>{blog.author}</span>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Calendar className="w-5 h-5 text-blue-600" />
+          <span>{blog.date}</span>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Clock className="w-5 h-5 text-blue-600" />
+          <span>{readingTime} min read</span>
+        </div>
+      </div>
+
+      <div className="mt-10 flex flex-wrap items-center justify-between border-t border-gray-200 pt-8 gap-6">
+        <div className="flex items-center space-x-6">
+          <button className="flex items-center text-gray-700 hover:text-blue-700 transition duration-300 font-semibold">
+            <Share2 className="w-6 h-6 mr-2" />
+            Share
+          </button>
+          <button className="flex items-center text-gray-700 hover:text-blue-700 transition duration-300 font-semibold">
+            <Bookmark className="w-6 h-6 mr-2" />
+            Save
+          </button>
+        </div>
+        <div className="flex items-center space-x-3">
+          <div className="h-3 w-3 rounded-full bg-green-500 shadow-md"></div>
+          <span className="text-sm text-gray-500 uppercase tracking-wide font-medium">Published</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Blog Content */}
+  <div className="max-w-screen-2xl mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white rounded-xl shadow-lg p-8 sm:p-12 prose prose-blue max-w-full break-words">
+      <div dangerouslySetInnerHTML={{ __html: formatContent(blog.content) }} />
+    </div>
+  </div>
+
+  {/* Author Bio */}
+  <div className="max-w-screen-2xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 mb-20">
+    <div className="bg-white rounded-xl shadow-lg p-8 flex items-center space-x-6">
+      <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white text-2xl font-extrabold shadow-lg">
+        {blog.author.charAt(0)}
+      </div>
+      <div>
+        <h3 className="text-xl font-bold text-gray-900">About {blog.author}</h3>
+        <p className="text-gray-700 mt-2 text-base sm:text-lg max-w-xl">
+          Professional writer and content creator with expertise in web development and digital marketing.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* Related Posts */}
+  <div className="max-w-screen-2xl mx-auto mt-16 px-6 sm:px-8 lg:px-12 mb-28">
+  <h2 className="text-3xl font-extrabold text-gray-900 mb-10 border-b-4 border-blue-600 pb-2">
+    Related Posts
+  </h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+    {blogs.slice(0, 2).map(
+      (relatedBlog) =>
+        relatedBlog.id !== blogId && (
           <Link
-            href="/blog"
-            className="flex items-center text-white bg-black/70 hover:bg-black/90 px-4 py-2 rounded-full transition duration-300"
+            href={`/blog/${relatedBlog.id}`}
+            key={relatedBlog.id}
+            className="block group rounded-xl bg-gradient-to-tr from-blue-50 to-white shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-transparent hover:border-blue-300"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Link>
-        </div>
-      </div>
-
-      {/* Blog Title & Meta Info */}
-      <div className="max-w-screen-2xl mx-auto -mt-16 relative z-20 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight break-words">
-            {blog.title}
-          </h1>
-
-          <div className="mt-6 flex flex-wrap items-center text-gray-600 gap-x-6 gap-y-3 text-sm sm:text-base">
-            <div className="flex items-center">
-              <User className="w-4 h-4 mr-2 text-blue-600" />
-              <span className="font-medium">{blog.author}</span>
+            <div className="relative h-56 md:h-64 overflow-hidden rounded-t-xl">
+              <img
+                src={relatedBlog.image}
+                alt={relatedBlog.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
-            <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-              <span>{blog.date}</span>
-            </div>
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-2 text-blue-600" />
-              <span>{readingTime} min read</span>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap items-center justify-between border-t border-gray-100 pt-6 gap-4">
-            <div className="flex items-center space-x-4">
-              <button className="flex items-center text-gray-600 hover:text-blue-600 transition duration-300">
-                <Share2 className="w-5 h-5 mr-2" />
-                Share
-              </button>
-              <button className="flex items-center text-gray-600 hover:text-blue-600 transition duration-300">
-                <Bookmark className="w-5 h-5 mr-2" />
-                Save
-              </button>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="h-2 w-2 rounded-full bg-green-500"></div>
-              <span className="text-sm text-gray-500">Published</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Blog Content */}
-      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:p-8 overflow-hidden">
-          <div
-            className="prose prose-sm sm:prose md:prose-lg lg:prose-xl max-w-full break-words"
-            dangerouslySetInnerHTML={{ __html: formatContent(blog.content) }}
-          />
-        </div>
-      </div>
-
-      {/* Author Bio */}
-      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-12">
-        <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-          <div className="flex items-center space-x-4">
-            <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-bold">
-              {blog.author.charAt(0)}
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900">About {blog.author}</h3>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                Professional writer and content creator with expertise in web development and digital marketing.
+            <div className="p-6">
+              <h3 className="font-extrabold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors duration-300 leading-snug">
+                {relatedBlog.title}
+              </h3>
+              <p className="text-sm text-gray-500 mt-3 tracking-wide">
+                {new Date(relatedBlog.date).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
               </p>
             </div>
-          </div>
-        </div>
-      </div>
+          </Link>
+        )
+    )}
+  </div>
+</div>
 
-      {/* Related Posts */}
-      <div className="max-w-screen-2xl mx-auto mt-8 px-4 sm:px-6 lg:px-8 mb-16">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Related Posts</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {blogs.slice(0, 2).map((relatedBlog) =>
-            relatedBlog.id !== blogId ? (
-              <Link href={`/blog/${relatedBlog.id}`} key={relatedBlog.id} className="block group">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-                  <div className="relative h-48">
-                    <img
-                      src={relatedBlog.image}
-                      alt={relatedBlog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition duration-300">
-                      {relatedBlog.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-2">{relatedBlog.date}</p>
-                  </div>
-                </div>
-              </Link>
-            ) : null
-          )}
-        </div>
-      </div>
 
-      <Footer />
-    </div>
+  <Footer />
+</div>
+
   );
 }
 

@@ -5,7 +5,7 @@ import { Providers } from "./Providers";
 import { cn } from "./lib/utils";
 import NextTopLoader from 'nextjs-toploader';
 import OfflineNotification from "./components/OfflineNavigator";
-
+import { AuthProvider } from "./context/AuthContext";
 export const metadata: Metadata = {
   title: "Minimalistic Learning",
   description: "Minimalistic Learning.",
@@ -26,15 +26,15 @@ export default function RootLayout({
         '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'
       )}
     >
-       <NextTopLoader
-          showSpinner={false}
-        />
-      <Providers>
-        <Navbar />
-        <OfflineNotification />
-        <main>{children}</main>
-      </Providers>
-    </body>
+       <NextTopLoader showSpinner={false} />
+        <AuthProvider>
+          <Providers>
+            <Navbar />
+            <OfflineNotification />
+            <main>{children}</main>
+          </Providers>
+        </AuthProvider>
+      </body>
   </html>
   );
 }
