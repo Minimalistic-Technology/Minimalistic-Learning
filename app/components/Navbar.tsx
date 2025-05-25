@@ -8,11 +8,14 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useAuth();
 
-  const handleLogout = () => {
-    localStorage.removeItem("username");
-    setUser(null);
-    window.location.href = "/login";
-  };
+ const handleLogout = () => {
+  localStorage.removeItem("username");
+  localStorage.removeItem("email"); 
+
+  setUser(null); 
+  window.location.href = "/login"; 
+};
+
 
   return (
     <nav className="bg-transparent py-4 px-6">

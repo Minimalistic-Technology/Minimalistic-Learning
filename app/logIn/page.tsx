@@ -21,9 +21,18 @@ const LoginPage = () => {
       const { accessToken, user } = response.data;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("username", user.username);
-    localStorage.setItem("email", user.email);
+     localStorage.setItem("email", user.email);
+     localStorage.setItem("id", user.id);
     setUser(user.username);
 
+    axios.interceptors.request.use((config) => {
+      const token = localStorage.getItem("accessToken");
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+    
       toast.success("Logged in successfully!");
       console.log("redirecting...");
       router.push("/");

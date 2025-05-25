@@ -20,9 +20,9 @@ const Course = () => {
 
   return (
     <div className="bg-[#daf0ff] px-4 sm:px-6 md:px-10 lg:px-20 py-8">
-      <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+      <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
         {/* Explore Course */}
-        Explore Blog's
+        Explore Blogs
       </p>
 
       {/* Categories */}

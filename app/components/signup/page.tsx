@@ -1,5 +1,5 @@
 // "use client";
-// import React, { useState, useRef } from 'react';
+
 // import Link from 'next/link';
 // import { Eye, EyeOff } from 'lucide-react'; // 👈 Import icons
 
@@ -289,14 +289,21 @@ const SignUpPage = () => {
     setContact(value);
   };
 
-  const validatePassword = (value: string) => {
-    if (!value) {
-      setError("Password is required.");
-    } else {
-      setError("");
-    }
-    setPassword(value);
-  };
+const validatePassword = (value: string) => {
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{12,}$/;
+
+  if (!value) {
+    setError("Password is required.");
+  } else if (!strongPasswordRegex.test(value)) {
+    setError(
+      "Password must be at least 12 characters and include uppercase, lowercase, number, and special character."
+    );
+  } else {
+    setError("");
+  }
+  setPassword(value);
+};
+
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -554,10 +561,13 @@ const SignUpPage = () => {
             >
               Already have an account? Log In
             </Link>
+              <div className="text-center mt-6">
+                <Link href="/logIn" className="text-blue-500 hover:underline">Already have an account? Log In</Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

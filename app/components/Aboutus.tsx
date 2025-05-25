@@ -85,7 +85,7 @@ const AboutUs = () => {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-8">
           {/* Journey Text */}
           <div className="md:w-1/2">
-            <h2 className="text-5xl font-bold leading-[1.3] mb-10 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h2 className="text-5xl font-bold leading-[1.3] mb-10 bg-black bg-clip-text text-transparent">
               Our Journey
             </h2>
 
@@ -119,7 +119,7 @@ const AboutUs = () => {
       {/* Meet Our Team Section */}
       <section className="py-16 bg-[#daf0ff]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-5xl font-bold text-center mb-10 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <h2 className="text-5xl font-bold text-center mb-10 bg-black bg-clip-text text-transparent">
             Meet Our Team
           </h2>
           {/* Team Members Grid */}

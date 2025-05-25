@@ -3,41 +3,161 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 
+// Define a type for user data
+type UserData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+type ProfilePayload = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+};
+
 export default function Profile_pg() {
-  const [userData, setUserData] = useState({
-    id: "",
-    Name: "",
-    Email: "",
+  // Use UserData type for userData state
+  const [userData, setUserData] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    email: "",
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState("");
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [successMsg, setSuccessMsg] = useState<string>("");
+
+  const [profileExists, setProfileExists] = useState<boolean>(false);
 
   useEffect(() => {
-    // Load user info from localStorage after login
-    const username = localStorage.getItem("username");
-    const email = localStorage.getItem("email");
+    const username = localStorage.getItem("username") || "";
+    const email = localStorage.getItem("email") || "";
 
-    if (username && email) {
+    const [firstName, lastName] = username.trim().split(" ", 2); // Safe split
+
+    if (email) {
       setUserData({
-        id: "N/A", // or from storage if available
-        Name: username,
-        Email: email,
+        firstName: firstName || "",
+        lastName: lastName || "",
+        email,
       });
+      setProfileExists(true);
     }
   }, []);
 
-  const handleUpdateProfile = () => {
-    if (!userData.Name.trim()) {
-      setError("Name cannot be empty");
+const handleSave = async () => {
+  setError("");
+  setSuccessMsg("");
+
+  if (
+    !userData.firstName.trim() ||
+    !userData.lastName.trim() ||
+    !userData.email.trim()
+  ) {
+    setError("First name, last name and email are required.");
+    return;
+  }
+
+  if (isEditing && (newPassword || confirmPassword || currentPassword)) {
+    if (!currentPassword) {
+      setError("Please enter your current password to change your password.");
       return;
     }
-    // Update localStorage with new name (email assumed constant)
-    localStorage.setItem("username", userData.Name);
+    if (newPassword !== confirmPassword) {
+      setError("New password and confirm password do not match.");
+      return;
+    }
+  }
 
+  try {
+    const payload: ProfilePayload = {
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+    };
+
+    if (isEditing && currentPassword) {
+      payload.currentPassword = currentPassword;
+      if (newPassword) payload.newPassword = newPassword;
+      if (confirmPassword) payload.confirmPassword = confirmPassword;
+    }
+
+    let response: Response;
+
+    // Try fetching profile first to check if it exists
+    const checkRes = await fetch(`http://localhost:5000/api/profile?email=${userData.email}`);
+    let profileData = null;
+
+    if (checkRes.ok) {
+      profileData = await checkRes.json();
+    }
+
+    // If profile does not exist, create it first
+    if (!profileData) {
+      if (!newPassword || newPassword !== confirmPassword) {
+        setError("To create a profile, password is required and should match confirm password.");
+        return;
+      }
+
+      // Add password for creation
+      payload.password = newPassword;
+
+      response = await fetch("http://localhost:5000/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      // Profile exists, proceed to update it
+      response = await fetch("http://localhost:5000/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.error || "An error occurred");
+      return;
+    }
+
+    setSuccessMsg(profileData ? "Profile updated successfully." : "Profile created successfully.");
+    localStorage.setItem("username", `${data.firstName} ${data.lastName}`);
+    localStorage.setItem("email", data.email);
+
+    setUserData({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+    });
+
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
     setIsEditing(false);
-    setError("");
-  };
+    setProfileExists(true);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+
+  } catch (err) {
+    setError("Failed to save profile.");
+    console.error(err);
+  }
+};
+
 
   return (
     <div className="min-h-screen">
@@ -54,9 +174,21 @@ export default function Profile_pg() {
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-10">
+        {successMsg && (
+          <div className="bg-green-100 text-green-700 p-4 rounded-md border border-green-300 flex justify-between items-center">
+            <p className="text-sm font-medium">{successMsg}</p>
+            <button
+              onClick={() => setSuccessMsg("")}
+              className="text-green-600 text-lg font-bold hover:text-green-800"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        <div className="flex lg:flex-row gap-8">
           {/* Left Section */}
-          <div className="lg:w-1/2 space-y-8">
+          <div className="lg:w-3/5 space-y-8">
             {/* Profile Info */}
             <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
               <h2 className="text-2xl font-bold text-black">Your Profile</h2>
@@ -64,20 +196,40 @@ export default function Profile_pg() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-blue-700 mb-1 text-sm">
-                    Name
+                    First Name
                   </label>
                   {isEditing ? (
                     <input
                       type="text"
-                      value={userData.Name}
+                      value={userData.firstName}
                       onChange={(e) =>
-                        setUserData({ ...userData, Name: e.target.value })
+                        setUserData({ ...userData, firstName: e.target.value })
                       }
                       className="w-full p-2 rounded-md border border-blue-300 bg-blue-50 text-black"
                     />
                   ) : (
                     <p className="p-2 bg-blue-100 rounded-md text-black">
-                      {userData.Name}
+                      {userData.firstName}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-blue-700 mb-1 text-sm">
+                    Last Name
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={userData.lastName}
+                      onChange={(e) =>
+                        setUserData({ ...userData, lastName: e.target.value })
+                      }
+                      className="w-full p-2 rounded-md border border-blue-300 bg-blue-50 text-black"
+                    />
+                  ) : (
+                    <p className="p-2 bg-blue-100 rounded-md text-black">
+                      {userData.lastName}
                     </p>
                   )}
                 </div>
@@ -87,13 +239,17 @@ export default function Profile_pg() {
                     Email
                   </label>
                   <p className="p-2 bg-blue-100 rounded-md text-black">
-                    {userData.Email}
+                    {userData.email}
                   </p>
                 </div>
+
                 <div>
                   {isEditing ? (
-                    <> <p> Want to change Password ?</p>
-                      <div>
+                    <>
+                      <p className="mb-2 font-semibold text-black">
+                        Change Password
+                      </p>
+                      <div className="mb-3">
                         <label className="block text-blue-700 mb-1 text-sm">
                           Current Password
                         </label>
@@ -101,9 +257,11 @@ export default function Profile_pg() {
                           type="password"
                           className="w-full p-2 rounded-md border border-blue-300 bg-blue-50 text-black"
                           placeholder="Enter current password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
                         />
                       </div>
-                      <div>
+                      <div className="mb-3">
                         <label className="block text-blue-700 mb-1 text-sm">
                           New Password
                         </label>
@@ -111,6 +269,8 @@ export default function Profile_pg() {
                           type="password"
                           className="w-full p-2 rounded-md border border-blue-300 bg-blue-50 text-black"
                           placeholder="Enter new password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
                         />
                       </div>
                       <div>
@@ -121,6 +281,8 @@ export default function Profile_pg() {
                           type="password"
                           className="w-full p-2 rounded-md border border-blue-300 bg-blue-50 text-black"
                           placeholder="Confirm new password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                       </div>
                     </>
@@ -137,30 +299,37 @@ export default function Profile_pg() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex justify-between mt-4">
                 {isEditing ? (
-                  <button
-                    onClick={handleUpdateProfile}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                  >
-                    Save Changes
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
+                    >
+                      Save
+                    </button>
+                  </>
                 ) : (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
                   >
-                    Edit Profile
+                    Edit
                   </button>
                 )}
+              </div> 
+            </div>
+             {/* My Blogs */}
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-2xl font-bold text-black mb-3">My Blogs</h2>
+                <p className="text-blue-800">No blogs to display.</p>
               </div>
-            </div>
-
-            {/* My Blogs */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold text-black mb-3">My Blogs</h2>
-              <p className="text-blue-800">No blogs to display.</p>
-            </div>
           </div>
 
           {/* Right Section: FAQs */}
@@ -203,6 +372,7 @@ export default function Profile_pg() {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );
