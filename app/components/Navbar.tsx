@@ -4,18 +4,32 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
+import axios from "axios";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useAuth();
 
- const handleLogout = () => {
-  localStorage.removeItem("username");
-  localStorage.removeItem("email"); 
+  const handleLogout = async () => {
+    try {
+    
+      await axios.post(
+        "http://localhost:5000/auth/logout",
+        {},
+       
+      );
 
-  setUser(null); 
-  window.location.href = "/login"; 
-};
+   
+      localStorage.removeItem("username");
+      localStorage.removeItem("email");
+      setUser(null);
 
+     
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Optionally show error to user
+    }
+  };
 
   return (
     <nav className="bg-transparent py-4 px-6">

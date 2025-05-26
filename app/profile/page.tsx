@@ -20,6 +20,16 @@ type ProfilePayload = {
   confirmPassword?: string;
 };
 
+interface Blog {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  author: string;
+  date: string;
+}
+
 export default function Profile_pg() {
   // Use UserData type for userData state
   const [userData, setUserData] = useState<UserData>({
@@ -31,6 +41,7 @@ export default function Profile_pg() {
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [userBlogs, setUserBlogs] = useState<Blog[]>([]);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -54,110 +65,154 @@ export default function Profile_pg() {
     }
   }, []);
 
-const handleSave = async () => {
-  setError("");
-  setSuccessMsg("");
+  useEffect(() => {
+    const fetchUserBlogs = async () => {
+      const token = localStorage.getItem("accessToken"); // Assuming you stored the JWT as 'token'
 
-  if (
-    !userData.firstName.trim() ||
-    !userData.lastName.trim() ||
-    !userData.email.trim()
-  ) {
-    setError("First name, last name and email are required.");
-    return;
-  }
-
-  if (isEditing && (newPassword || confirmPassword || currentPassword)) {
-    if (!currentPassword) {
-      setError("Please enter your current password to change your password.");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setError("New password and confirm password do not match.");
-      return;
-    }
-  }
-
-  try {
-    const payload: ProfilePayload = {
-      email: userData.email,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-    };
-
-    if (isEditing && currentPassword) {
-      payload.currentPassword = currentPassword;
-      if (newPassword) payload.newPassword = newPassword;
-      if (confirmPassword) payload.confirmPassword = confirmPassword;
-    }
-
-    let response: Response;
-
-    // Try fetching profile first to check if it exists
-    const checkRes = await fetch(`http://localhost:5000/api/profile?email=${userData.email}`);
-    let profileData = null;
-
-    if (checkRes.ok) {
-      profileData = await checkRes.json();
-    }
-
-    // If profile does not exist, create it first
-    if (!profileData) {
-      if (!newPassword || newPassword !== confirmPassword) {
-        setError("To create a profile, password is required and should match confirm password.");
+      if (!token) {
+        console.error("No token found in localStorage.");
         return;
       }
 
-      // Add password for creation
-      payload.password = newPassword;
+      try {
+        const response = await fetch("http://localhost:5000/blogs/my-blogs", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      response = await fetch("http://localhost:5000/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      // Profile exists, proceed to update it
-      response = await fetch("http://localhost:5000/api/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    }
+        const data = await response.json();
 
-    const data = await response.json();
+        if (!response.ok) {
+          console.error(
+            "Error fetching blogs:",
+            data.error || response.statusText
+          );
+          return;
+        }
 
-    if (!response.ok) {
-      setError(data.error || "An error occurred");
+        console.log("User Blogs:", data); // Or store them in state
+        setUserBlogs(data); // If you want to display them
+      } catch (err) {
+        console.error("Error while fetching blogs:", err);
+      }
+    };
+
+    fetchUserBlogs();
+  }, []);
+
+  const handleSave = async () => {
+    setError("");
+    setSuccessMsg("");
+
+    if (
+      !userData.firstName.trim() ||
+      !userData.lastName.trim() ||
+      !userData.email.trim()
+    ) {
+      setError("First name, last name and email are required.");
       return;
     }
 
-    setSuccessMsg(profileData ? "Profile updated successfully." : "Profile created successfully.");
-    localStorage.setItem("username", `${data.firstName} ${data.lastName}`);
-    localStorage.setItem("email", data.email);
+    if (isEditing && (newPassword || confirmPassword || currentPassword)) {
+      if (!currentPassword) {
+        setError("Please enter your current password to change your password.");
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        setError("New password and confirm password do not match.");
+        return;
+      }
+    }
 
-    setUserData({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-    });
+    try {
+      const payload: ProfilePayload = {
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+      };
 
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setIsEditing(false);
-    setProfileExists(true);
+      if (isEditing && currentPassword) {
+        payload.currentPassword = currentPassword;
+        if (newPassword) payload.newPassword = newPassword;
+        if (confirmPassword) payload.confirmPassword = confirmPassword;
+      }
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+      let response: Response;
 
-  } catch (err) {
-    setError("Failed to save profile.");
-    console.error(err);
-  }
-};
+      // Try fetching profile first to check if it exists
+      const checkRes = await fetch(
+        `http://localhost:5000/api/profile?email=${userData.email}`
+      );
+      let profileData = null;
 
+      if (checkRes.ok) {
+        profileData = await checkRes.json();
+      }
+
+      // If profile does not exist, create it first
+      if (!profileData) {
+        if (!newPassword || newPassword !== confirmPassword) {
+          setError(
+            "To create a profile, password is required and should match confirm password."
+          );
+          return;
+        }
+
+        // Add password for creation
+        payload.password = newPassword;
+
+        response = await fetch("http://localhost:5000/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        // Profile exists, proceed to update it
+        response = await fetch("http://localhost:5000/api/profile", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "An error occurred");
+        return;
+      }
+
+      setSuccessMsg(
+        profileData
+          ? "Profile updated successfully."
+          : "Profile created successfully."
+      );
+      localStorage.setItem("username", `${data.firstName} ${data.lastName}`);
+      localStorage.setItem("email", data.email);
+
+      setUserData({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+      });
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setIsEditing(false);
+      setProfileExists(true);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      setError("Failed to save profile.");
+      console.error(err);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -323,13 +378,45 @@ const handleSave = async () => {
                     Edit
                   </button>
                 )}
-              </div> 
-            </div>
-             {/* My Blogs */}
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-black mb-3">My Blogs</h2>
-                <p className="text-blue-800">No blogs to display.</p>
               </div>
+            </div>
+            {/* My Blogs */}
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold text-black mb-3">My Blogs</h2>
+             <section className="max-w-6xl mx-auto px-6 py-4 flex flex-wrap gap-5">
+  {userBlogs.length > 0 ? (
+    userBlogs.map((blog) => (
+      <div
+        key={blog._id}
+        className="bg-white border border-blue-200 rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105 flex flex-col p-5 h-44 w-full sm:w-[48%] lg:w-[31%]"
+      >
+        {/* Category */}
+        <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+          {blog.category}
+        </span>
+
+        {/* Title */}
+        <h2 className="text-lg font-semibold text-gray-800 leading-snug line-clamp-3 mb-auto">
+          {blog.title}
+        </h2>
+
+        {/* Read More Button */}
+        <a
+          href={`/blog/${blog._id}`}
+          className="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg px-4 py-2 transition"
+        >
+          Read More
+        </a>
+      </div>
+    ))
+  ) : (
+    <p className="w-full text-center text-gray-500 text-lg">
+      No blogs published yet.
+    </p>
+  )}
+</section>
+
+            </div>
           </div>
 
           {/* Right Section: FAQs */}
