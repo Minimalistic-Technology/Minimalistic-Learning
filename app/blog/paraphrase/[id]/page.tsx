@@ -230,7 +230,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
-import { Star } from "lucide-react";
 import {
   ArrowLeft,
   Calendar,
@@ -244,7 +243,6 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
-import axiosInstance from "@/app/axiosInstance/page";
 
 interface BlogType {
   _id: string;
@@ -253,6 +251,7 @@ interface BlogType {
   author: string;
   date: string;
   image: string;
+  paraphrased: string;
 }
 
 export default function BlogDetailPage() {
@@ -264,8 +263,6 @@ export default function BlogDetailPage() {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -287,17 +284,6 @@ export default function BlogDetailPage() {
     }
   }, [blogId]);
 
-  const handleRating = async (value: number) => {
-    setRating(value);
-    try {
-      await axiosInstance.put(`http://localhost:5000/blogs/${blogId}`, {
-        rating: value,
-      });
-      console.log("Rating submitted:", value);
-    } catch (error) {
-      console.error("Failed to submit rating", error);
-    }
-  };
   const handleLike = () => {
     setLiked(!liked);
   };
@@ -434,11 +420,11 @@ export default function BlogDetailPage() {
 
           {/* Blog Content */}
           <div className="mt-8">
-            {blog.description ? (
+            {blog.paraphrased ? (
               <div
                 className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words prose-headings:text-gray-800 prose-a:text-blue-600"
                 dangerouslySetInnerHTML={{
-                  __html: formatContent(blog.description),
+                  __html: formatContent(blog.paraphrased),
                 }}
               />
             ) : (
@@ -488,30 +474,6 @@ export default function BlogDetailPage() {
                   <MessageCircle className="w-5 h-5" />
                   <span>Comment</span>
                 </button>
-                {/* Stars Rating */}
-                <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                    >
-                      <Star
-                        className={`w-5 h-5 transition ${
-                          (hoverRating || rating) >= star
-                            ? "fill-yellow-400 stroke-yellow-400"
-                            : "stroke-gray-400"
-                        }`}
-                        fill={
-                          (hoverRating || rating) >= star
-                            ? "currentColor"
-                            : "none"
-                        }
-                      />
-                    </button>
-                  ))}
-                </div>
               </div>
               <div className="flex items-center space-x-3">
                 <span className="text-sm text-gray-500">Share:</span>

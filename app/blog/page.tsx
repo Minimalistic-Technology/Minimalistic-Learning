@@ -63,16 +63,16 @@
 
 //           {/* Hero Image */}
 //           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img 
+//             <img
 //               src="/images/blog3.png"
-//               alt="Hero Image" 
+//               alt="Hero Image"
 //               width={350}
 //               height={64}
 //               className="rounded-full object-cover"/>
 //           </div>
 //         </div>
 //       </section>
-    
+
 //       <div className="mt-6">
 //         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
 //           Latest Blog's
@@ -218,9 +218,9 @@
 //             </p>
 //           </div>
 //           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img 
+//             <img
 //               src="/images/blog3.png"
-//               alt="Hero Image" 
+//               alt="Hero Image"
 //               width={350}
 //               height={64}
 //               className="rounded-full object-cover"
@@ -369,9 +369,9 @@
 //             </p>
 //           </div>
 //           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img 
+//             <img
 //               src="/images/blog3.png"
-//               alt="Hero Image" 
+//               alt="Hero Image"
 //               width={350}
 //               height={64}
 //               className="rounded-full object-cover"
@@ -442,8 +442,8 @@
 //             { key: "page-2", label: "2" },
 //             { key: "page-next", label: "Next →" }
 //           ].map((button) => (
-//             <button 
-//               key={button.key} 
+//             <button
+//               key={button.key}
 //               className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50"
 //             >
 //               {button.label}
@@ -456,7 +456,6 @@
 //     </div>
 //   );
 // };
-
 
 // export default BlogPage;
 // 'use client';
@@ -536,9 +535,9 @@
 //             </p>
 //           </div>
 //           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img 
+//             <img
 //               src="/images/blog3.png"
-//               alt="Hero Image" 
+//               alt="Hero Image"
 //               width={350}
 //               height={64}
 //               className="rounded-full object-cover"
@@ -549,7 +548,7 @@
 
 //       <div className="mt-6">
 //         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Quotes 
+//           Latest Quotes
 //         </p>
 //         <InfiniteMovingCardsDemo />
 //       </div>
@@ -605,8 +604,8 @@
 //       <div className="flex justify-center pb-12">
 //         <nav className="flex gap-2">
 //           {paginationButtons.map((button) => (
-//             <button 
-//               key={button.id} 
+//             <button
+//               key={button.id}
 //               className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50"
 //             >
 //               {button.label}
@@ -701,9 +700,9 @@
 //             </p>
 //           </div>
 //           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img 
+//             <img
 //               src="/images/blog3.png"
-//               alt="Hero Image" 
+//               alt="Hero Image"
 //               width={350}
 //               height={64}
 //               className="rounded-full object-cover"
@@ -714,7 +713,7 @@
 
 //       <div className="mt-6">
 //         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Quotes 
+//           Latest Quotes
 //         </p>
 //         <InfiniteMovingCardsDemo />
 //       </div>
@@ -765,12 +764,12 @@
 //           </article>
 //         ))}
 //       </section>
-      
+
 //       <div className="flex justify-center pb-12">
 //         <nav className="flex gap-2">
 //           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-//             <button 
-//               key={page} 
+//             <button
+//               key={page}
 //               onClick={() => setCurrentPage(page)}
 //               className={`px-4 py-2 rounded-md shadow-sm ${page === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}`}
 //             >
@@ -814,6 +813,7 @@ interface Blog {
   category: string;
   author: string;
   date: string;
+  verified: boolean;
 }
 
 const BlogPage = () => {
@@ -823,6 +823,7 @@ const BlogPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const blogsPerPage = 6;
+  const [sortFilter, setSortFilter] = useState("default"); // default | mostViewed | mostRecent
 
   useEffect(() => {
     axios
@@ -837,14 +838,37 @@ const BlogPage = () => {
       });
   }, []);
 
-  const filteredBlogs = blogs.filter((blog) => {
-    const matchesCategory =
-      selectedCategory === "All" || blog.category === selectedCategory;
-    const matchesSearch = blog.title
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    // setIsLoading(true);
+
+    let url = "http://localhost:5000/blogs";
+    if (sortFilter === "mostViewed") {
+      url = "http://localhost:5000/blogs/most-viewed";
+    } else if (sortFilter === "mostRecent") {
+      url = "http://localhost:5000/blogs/most-recent";
+    }
+
+    axios
+      .get(url)
+      .then((response) => {
+        setBlogs(response.data);
+        setCurrentPage(1); // Reset to page 1 on filter change
+        //setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
+        setIsLoading(false);
+      });
+  }, [sortFilter]);
+
+  const filteredBlogs = blogs
+  .filter((blog) => blog.verified) // <--- Filter for verified blogs
+  .filter((blog) => {
+    const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
+    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
 
   const paginatedBlogs = filteredBlogs.slice(
     (currentPage - 1) * blogsPerPage,
@@ -856,13 +880,15 @@ const BlogPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-xl font-semibold text-blue-600 animate-pulse">Loading Blogs...</p>
+        <p className="text-xl font-semibold text-blue-600 animate-pulse">
+          Loading Blogs...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#daf0ff] via-white to-[#ecf5ff] text-gray-800 font-sans">
+    <div className="min-h-screen  text-gray-800 font-sans">
       {/* Hero Section */}
       <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
@@ -905,7 +931,7 @@ const BlogPage = () => {
       </div>
 
       <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
-        Famous Blogs
+        Explore Blogs
       </p>
 
       {/* Search & Filters */}
@@ -917,6 +943,7 @@ const BlogPage = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+
         <select
           className="w-full md:w-1/4 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
           value={selectedCategory}
@@ -934,7 +961,38 @@ const BlogPage = () => {
           </button>
         </Link>
       </section>
-
+      <div className="flex gap-4 mt-10 flex-wrap justify-center">
+        <button
+          onClick={() => setSortFilter("default")}
+          className={`px-4 py-2 rounded-xl font-medium border ${
+            sortFilter === "default"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-blue-600"
+          }`}
+        >
+          All Blogs
+        </button>
+        <button
+          onClick={() => setSortFilter("mostViewed")}
+          className={`px-4 py-2 rounded-xl font-medium border ${
+            sortFilter === "mostViewed"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-blue-600"
+          }`}
+        >
+          Most Viewed
+        </button>
+        <button
+          onClick={() => setSortFilter("mostRecent")}
+          className={`px-4 py-2 rounded-xl font-medium border ${
+            sortFilter === "mostRecent"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-blue-600"
+          }`}
+        >
+          Most Recent
+        </button>
+      </div>
       {/* Blog Cards */}
       <section className="max-w-7xl mx-auto px-6 py-16 grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {paginatedBlogs.map((blog) => (
@@ -965,28 +1023,44 @@ const BlogPage = () => {
                 {blog.title}
               </h2>
               <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed">
-                {blog.description}
+                {blog.description.length > 200
+                  ? blog.description.slice(0, 200) + "..."
+                  : blog.description}
               </p>
+
               <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
                 <span>{blog.author}</span>
                 <span>{blog.date}</span>
               </div>
-              <Link
-                href={`/blog/${blog._id}`}
-                className="mt-6 inline-flex items-center gap-2 self-start rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
-              >
-                Read More
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
+              <div className="mt-6 flex gap-2 justify-between">
+                <Link
+                  href={`/blog/${blog._id}`}
+                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
+                  Read More
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
+
+                <Link
+                  href={`/blog/paraphrase/${blog._id}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 text-sm font-semibold hover:bg-blue-600 hover:text-white transition"
+                >
+                  Paraphrased by AI
+                </Link>
+              </div>
             </div>
           </div>
         ))}

@@ -27,7 +27,7 @@ const Navbar = () => {
       window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
-      // Optionally show error to user
+     
     }
   };
 

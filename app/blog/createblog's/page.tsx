@@ -59,24 +59,30 @@ const CreateBlogPage = () => {
     });
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      // Create URL for preview
-      const fileUrl = URL.createObjectURL(files[0]);
-      setImagePreview(fileUrl);
+ const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  if (files && files[0]) {
+    const file = files[0];
 
-      // In a real app with file upload, you would handle the file differently
-      // For now we'll just set the image field to the filename
-      setFormData({ ...formData, image: files[0].name });
+    // Preview image using Object URL
+    const fileUrl = URL.createObjectURL(file);
+    setImagePreview(fileUrl);
 
-      // To implement actual file upload:
-      // 1. Create a FormData object
-      // 2. Append the file to it
-      // 3. Make a separate API call to upload the file
-      // 4. Get the URL or identifier back from the server
-    }
-  };
+    // Convert to base64
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // This reads file as base64
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+
+      // Set base64 string in formData
+      setFormData({ ...formData, image: base64String });
+
+      // If you only want filename, you can still keep that too
+      // setFormData({ ...formData, imageName: file.name, imageBase64: base64String });
+    };
+  }
+};
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
