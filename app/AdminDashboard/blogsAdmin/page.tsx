@@ -220,14 +220,14 @@ const BlogsAdminPage = () => {
                 >
                   Delete
                 </button>
-
+{/* 
                 <textarea
                   className="w-full p-2 border border-gray-300 rounded-md text-sm resize-none focus:ring-2 focus:ring-blue-400 focus:outline-none"
                   rows={3}
                   placeholder="Paraphrase here..."
                   value={paraphraseTexts[blog._id] || ""}
                   onChange={(e) => handleTextareaChange(blog._id, e.target.value)}
-                />
+                /> */}
 
                 {/* <button
                   onClick={() => handleParaphrase(blog._id)}
