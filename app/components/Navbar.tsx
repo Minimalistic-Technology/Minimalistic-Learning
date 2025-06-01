@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
@@ -8,28 +8,34 @@ import axios from "axios";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useAuth();
+  const [showMenu, setShowMenu] = useState(false);
+ const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogout = async () => {
     try {
-    
-      await axios.post(
-        "http://localhost:5000/auth/logout",
-        {},
-       
-      );
+      await axios.post("http://localhost:5000/auth/logout", {});
 
-   
       localStorage.removeItem("username");
       localStorage.removeItem("email");
       setUser(null);
 
-     
       window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
-     
     }
   };
+
+ useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   return (
     <nav className="bg-transparent py-4 px-6">
@@ -69,27 +75,47 @@ const Navbar = () => {
         </ul>
 
         {/* Auth Buttons */}
-        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-6 items-center justify-center font-sans">
+        <div className="flex flex-row md:flex-row space-y-3 md:space-y-0 md:space-x-6 items-center justify-center font-sans">
           {user ? (
-            <>
-              <span className="text-blue-600 font-medium">Hi, {user}</span>
-              {/* Profile icon with link to /profile */}
-              <Link href="/profile" passHref>
-                <div
-                  aria-label="Profile"
-                  className="ml-2 cursor-pointer text-blue-600 hover:text-blue-800 transition-colors duration-300"
-                  style={{ fontSize: "36px", borderRadius: "50%" }}
-                >
-                  <FaUserCircle />
-                </div>
-              </Link>
+            <div className="relative flex flex-row gap-3 text-left group">
+
+              {/* Profile Icon */}
               <button
-                onClick={handleLogout}
-                className="text-white bg-blue-600 font-semibold px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Profile Menu"
+                className="text-blue-600 hover:text-blue-800 transition-colors duration-300 text-3xl focus:outline-none"
               >
-                Logout
+                <FaUserCircle />
               </button>
-            </>
+               <span className="text-blue-600 font-medium mr-2">Hi, {user}</span>
+              {/* Dropdown menu */}
+              {showMenu && (
+                <div
+                  onMouseEnter={() => setShowMenu(true)}
+                  onMouseLeave={() => setShowMenu(false)}
+                  className="absolute right-0 mt-6 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10"
+                >
+                  <ul className="py-1 text-gray-700">
+                    <li>
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <a
