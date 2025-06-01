@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { format } from "date-fns";
 import axiosInstance from "@/app/axiosInstance/page";
-
+import ScrollProgressBar from "@/app/components/ScrollerProgress";
 interface Blog {
   _id: string;
   title: string;
@@ -106,6 +106,7 @@ const BlogsAdminPage = () => {
     );
 
   return (
+    <div> <ScrollProgressBar/>
     <div className="p-6 max-w-7xl mx-auto">
       {/* Filter Tabs */}
       <div className="flex gap-4 mb-6 flex-wrap">
@@ -113,8 +114,8 @@ const BlogsAdminPage = () => {
           { label: "All", value: "all" },
           { label: "Verified", value: "verified" },
           { label: "Not Verified", value: "notVerified" },
-          { label: "Paraphrased", value: "paraphrased" },
-          { label: "Not Paraphrased", value: "notParaphrased" },
+          // { label: "Paraphrased", value: "paraphrased" },
+          // { label: "Not Paraphrased", value: "notParaphrased" },
         ].map(({ label, value }) => (
           <button
             key={value}
@@ -197,11 +198,11 @@ const BlogsAdminPage = () => {
                 <span>{format(new Date(blog.date), "PPP")}</span>
               </div>
 
-              {blog.paraphrased && (
+              {/* {blog.paraphrased && (
                 <div className="text-sm italic text-green-800 bg-green-50 rounded p-2 mt-3 border border-green-200 select-text">
                   {blog.paraphrased}
                 </div>
-              )}
+              )} */}
 
               <div className="mt-5 flex flex-col gap-3">
                 {!blog.verified && (
@@ -228,12 +229,12 @@ const BlogsAdminPage = () => {
                   onChange={(e) => handleTextareaChange(blog._id, e.target.value)}
                 />
 
-                <button
+                {/* <button
                   onClick={() => handleParaphrase(blog._id)}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-semibold transition"
                 >
                   Paraphrase (AI)
-                </button>
+                </button> */}
               </div>
 
               <Link
@@ -256,6 +257,7 @@ const BlogsAdminPage = () => {
           </motion.div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

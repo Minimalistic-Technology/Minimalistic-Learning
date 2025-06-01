@@ -18,6 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+       <head>
+        <link rel="icon" href="/fevicon.ico" sizes="any" />
+      </head>
     <body
       className={cn(
         'min-h-screen bg-[#daf0ff] dark:bg-gray-950',

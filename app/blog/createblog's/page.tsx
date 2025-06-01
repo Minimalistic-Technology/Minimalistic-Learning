@@ -7,6 +7,8 @@ import { Camera, FileText, Calendar, User, Tag, Link } from "lucide-react";
 import axios from "axios";
 import axiosInstance from "app/axiosInstance/page";
 import { motion } from "framer-motion";
+import ScrollProgressBar from "@/app/components/ScrollerProgress";
+
 interface BlogFormData {
   title: string;
   description: string;
@@ -115,6 +117,7 @@ const CreateBlogPage = () => {
   };
 
   return (
+    <div> <ScrollProgressBar/>
     <div className="min-h-screen bg-[#daf0ff]">
       {/* Hero Section */}
        <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
@@ -623,6 +626,7 @@ const CreateBlogPage = () => {
         </div>
       </form>
       <Footer />
+    </div>
     </div>
   );
 };

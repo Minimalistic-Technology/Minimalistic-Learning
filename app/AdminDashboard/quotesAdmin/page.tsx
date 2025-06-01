@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import ScrollProgressBar from "@/app/components/ScrollerProgress";
 
 interface Quote {
   _id: string;
@@ -76,6 +77,7 @@ export default function QuotesAdminPage() {
   };
 
   return (
+    <div> <ScrollProgressBar/>
     <section className="max-w-7xl mx-auto p-8 bg-gray-50 rounded-xl shadow-lg mb-16">
       <h2 className="text-4xl font-extrabold text-blue-800 mb-8 border-b-4 border-blue-500 pb-3">
         Manage Motivational Quotes
@@ -256,5 +258,6 @@ export default function QuotesAdminPage() {
         </div>
       )}
     </section>
+ </div>
   );
 }

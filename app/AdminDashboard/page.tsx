@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FaBell } from 'react-icons/fa';
 import { Menu } from 'lucide-react';
 import axios from 'axios';
-
+import ScrollProgressBar from '../components/ScrollerProgress';
 interface Blog {
   _id: string;
   title: string;
@@ -69,6 +69,7 @@ const AdminDashboard = () => {
   ];
 
   return (
+    <div> <ScrollProgressBar></ScrollProgressBar>
     <div className="flex flex-wrap bg-blue-500 min-h-screen">
       <main className="flex-1 bg-[#daf0ff] min-h-screen">
         {/* Sidebar toggle button for mobile */}
@@ -168,6 +169,7 @@ const AdminDashboard = () => {
           </a>
         </section>
       </main>
+    </div>
     </div>
   );
 };

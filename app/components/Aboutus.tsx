@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { use } from "react";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
+import ScrollProgressBar from "./ScrollerProgress";
 const AboutUs = () => {
   const teamMembers = [
     {
@@ -79,6 +80,7 @@ const AboutUs = () => {
   ];
 
   return (
+    <div> <ScrollProgressBar/>
     <div className="bg-[#daf0ff] min-h-screen">
       {/* Our Journey Section */}
       <section className="py-16 relative">
@@ -162,6 +164,7 @@ const AboutUs = () => {
       <div>
         <Footer />
       </div>
+    </div>
     </div>
   );
 };

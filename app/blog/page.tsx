@@ -793,7 +793,7 @@ import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import axios from "axios";
-
+import ScrollProgressBar from "../components/ScrollerProgress";
 const categories = [
   "All",
   "AI",
@@ -814,6 +814,7 @@ interface Blog {
   author: string;
   date: string;
   verified: boolean;
+  rating : number;
 }
 
 const BlogPage = () => {
@@ -888,6 +889,7 @@ const BlogPage = () => {
   }
 
   return (
+    <div> <ScrollProgressBar />
     <div className="min-h-screen  text-gray-800 font-sans">
       {/* Hero Section */}
       <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
@@ -1029,9 +1031,11 @@ const BlogPage = () => {
               </p>
 
               <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
-                <span>{blog.author}</span>
-                <span>{blog.date}</span>
-              </div>
+  <span>{blog.author}</span>
+  <span>⭐ {blog.rating.toFixed(1)}</span>
+  <span>{new Date(blog.date).toLocaleDateString()}</span>
+</div>
+
               <div className="mt-6 flex gap-2 justify-between">
                 <Link
                   href={`/blog/${blog._id}`}
@@ -1054,12 +1058,12 @@ const BlogPage = () => {
                   </svg>
                 </Link>
 
-                <Link
+                {/* <Link
                   href={`/blog/paraphrase/${blog._id}`}
                   className="inline-flex items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 text-sm font-semibold hover:bg-blue-600 hover:text-white transition"
                 >
                   Paraphrased by AI
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
@@ -1086,6 +1090,7 @@ const BlogPage = () => {
       </div>
 
       <Footer />
+    </div>
     </div>
   );
 };

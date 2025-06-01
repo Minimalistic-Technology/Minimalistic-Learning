@@ -6,9 +6,11 @@ import Hero from "./components/Hero";
 import { InfiniteMovingCardsDemo } from "./components/InfiniteMovingCardsDemo";
 import Services from "./components/Services";
 import WhyUs from "./components/WhyUs";
+import ScrollProgressBar from "./components/ScrollerProgress";
 
 export default function Home() {
   return (
+    <div>  <ScrollProgressBar/>
     <div>
       <Hero />
       {/* <Course/> */}
@@ -18,6 +20,7 @@ export default function Home() {
       {/* <InfiniteMovingCardsDemo/> */}
       <Glance />
       <Footer />
+    </div>
     </div>
   );
 }
