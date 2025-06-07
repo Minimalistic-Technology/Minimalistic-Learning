@@ -1,18 +1,46 @@
-
 "use client";
-import React, { useState } from 'react';
-import Link from 'next/link';
-
+import React, { useState } from "react";
+import Link from "next/link";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { setUser } = useAuth();
 
-  const handleLogin = () => {
-    // Perform login logic here
-    alert('Login successful!');
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response =  await axios.post("http://localhost:5000/auth/login", { email, password });
+
+      const { accessToken, user } = response.data;
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("username", user.username);
+     localStorage.setItem("email", user.email);
+     localStorage.setItem("id", user.id);
+    setUser(user.username);
+
+    axios.interceptors.request.use((config) => {
+      const token = localStorage.getItem("accessToken");
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+    
+      toast.success("Logged in successfully!");
+      console.log("redirecting...");
+      router.push("/");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Login failed");
+      toast.error(err.response?.data?.error || "Login failed");
+    }
   };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg--100 p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden transition-all duration-300">
@@ -20,24 +48,26 @@ const LoginPage = () => {
           <h1 className="text-3xl font-bold text-center text-white">
             Welcome Back
           </h1>
-          <p className="text-center text-blue-100 mt-1">
-            Log in to continue
-          </p>
+          <p className="text-center text-blue-100 mt-1">Log in to continue</p>
         </div>
         <div className="p-8">
-          <div className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
               <input
-                type="text"
+                type="email"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-900"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -52,26 +82,53 @@ const LoginPage = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
                 >
                   {showPassword ? (
-                    <svg className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="h-5 w-5 text-gray-700"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   ) : (
-                    <svg className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      className="h-5 w-5 text-gray-700"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   )}
                 </button>
               </div>
               <div className="flex justify-end mt-1">
-                <a href="#" className="text-sm text-blue-600 hover:text-blue-800 transition">
+                <a
+                  href="#"
+                  className="text-sm text-blue-600 hover:text-blue-800 transition"
+                >
                   Forgot password?
                 </a>
               </div>
             </div>
             <button
               type="submit"
-              onClick={handleLogin}
               className="w-full p-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105 transition-all duration-300"
             >
               Log In
@@ -101,11 +158,14 @@ const LoginPage = () => {
               </button>
             </div> */}
             <div className="text-center mt-6">
-              <Link href="/components/signup" className="text-blue-500 font-medium hover:text-blue-700 transition">
+              <Link
+                href="/components/signup"
+                className="text-blue-500 font-medium hover:text-blue-700 transition"
+              >
                 Don't have an account? Sign Up
               </Link>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
