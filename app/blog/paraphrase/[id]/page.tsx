@@ -230,7 +230,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
-import { Star } from "lucide-react";
 import {
   ArrowLeft,
   Calendar,
@@ -244,8 +243,7 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
-import axiosInstance from "@/app/axiosInstance/page";
-import ScrollProgressBar from "@/app/components/ScrollerProgress";
+
 interface BlogType {
   _id: string;
   title: string;
@@ -253,7 +251,7 @@ interface BlogType {
   author: string;
   date: string;
   image: string;
-  category: String;
+  paraphrased: string;
 }
 
 export default function BlogDetailPage() {
@@ -264,11 +262,6 @@ export default function BlogDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
-
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-
-  const [relatedBlogs, setRelatedBlogs] = useState<BlogType[]>([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -291,36 +284,6 @@ export default function BlogDetailPage() {
     }
   }, [blogId]);
 
-
-  useEffect(() => {
-    const fetchRelatedBlogs = async () => {
-      if (blog?.category && blog?._id) {
-        try {
-          const response = await axios.get(
-            `http://localhost:5000/blogs/related?category=${blog.category}&excludeId=${blog._id}`
-          );
-          setRelatedBlogs(response.data);
-        } catch (error) {
-          console.error("Error fetching related blogs:", error);
-        }
-      }
-    };
-
-    fetchRelatedBlogs();
-  }, [blog]);
-
-
-  const handleRating = async (value: number) => {
-    setRating(value);
-    try {
-      await axiosInstance.put(`http://localhost:5000/blogs/${blogId}`, {
-        rating: value,
-      });
-      console.log("Rating submitted:", value);
-    } catch (error) {
-      console.error("Failed to submit rating", error);
-    }
-  };
   const handleLike = () => {
     setLiked(!liked);
   };
@@ -331,18 +294,15 @@ export default function BlogDetailPage() {
 
   if (isLoading) {
     return (
-      <div>  <ScrollProgressBar/>
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
         <div className="w-16 h-16 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
         <p className="mt-4 text-gray-600">Loading article...</p>
-      </div>
       </div>
     );
   }
 
   if (!blog) {
     return (
-      <div>  <ScrollProgressBar/>
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center px-4">
         <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
           <p className="text-red-600 text-xl font-semibold mb-2">
@@ -360,15 +320,13 @@ export default function BlogDetailPage() {
           </Link>
         </div>
       </div>
-      </div>
     );
   }
 
   const readingTime = calculateReadingTime(blog.description);
 
   return (
-    <div>  <ScrollProgressBar/>
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="bg-gradient-to-b from-[#eaf6ff] to-white min-h-screen overflow-x-hidden">
       {/* Sticky Navigation */}
       <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div className="max-w-screen-2xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -462,11 +420,11 @@ export default function BlogDetailPage() {
 
           {/* Blog Content */}
           <div className="mt-8">
-            {blog.description ? (
+            {blog.paraphrased ? (
               <div
                 className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words prose-headings:text-gray-800 prose-a:text-blue-600"
                 dangerouslySetInnerHTML={{
-                  __html: formatContent(blog.description),
+                  __html: formatContent(blog.paraphrased),
                 }}
               />
             ) : (
@@ -516,30 +474,6 @@ export default function BlogDetailPage() {
                   <MessageCircle className="w-5 h-5" />
                   <span>Comment</span>
                 </button>
-                {/* Stars Rating */}
-                <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                    >
-                      <Star
-                        className={`w-5 h-5 transition ${
-                          (hoverRating || rating) >= star
-                            ? "fill-yellow-400 stroke-yellow-400"
-                            : "stroke-gray-400"
-                        }`}
-                        fill={
-                          (hoverRating || rating) >= star
-                            ? "currentColor"
-                            : "none"
-                        }
-                      />
-                    </button>
-                  ))}
-                </div>
               </div>
               <div className="flex items-center space-x-3">
                 <span className="text-sm text-gray-500">Share:</span>
@@ -591,45 +525,44 @@ export default function BlogDetailPage() {
       </div>
 
       {/* Related Posts */}
- {relatedBlogs.length > 0 && (
-  <div className="mt-16 pt-12 border-t border-gray-300 px-4 sm:px-6 lg:px-8">
-    <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">Related Blogs</h3>
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {relatedBlogs.map((related) => (
-        <Link
-          key={related._id}
-          href={`/blog/${related._id}`}
-          className="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden border border-gray-100"
-        >
-          <img
-            src={related.image}
-            alt={related.title}
-            className="h-44 w-full object-cover group-hover:scale-105 transition-transform duration-200"
-          />
-          <div className="p-5">
-            <h4 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
-              {related.title}
-            </h4>
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {related.description.replace(/<[^>]+>/g, "").slice(0, 100)}...
-            </p>
-            <div className="text-xs text-gray-400 mt-3 flex justify-between items-center">
-              <span>{related.date}</span>
-              <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
-                {related.category}
-              </span>
-            </div>
+      <div className="bg-gray-50 py-12">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            Related Articles
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+              >
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-5">
+                  <h3 className="font-bold text-lg text-gray-900 mb-2">
+                    Related Article Title
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    A brief description of the related article that might
+                    interest the reader.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">5 min read</span>
+                    <Link
+                      href="#"
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    >
+                      Read more
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
-
+        </div>
+      </div>
 
       <Footer />
     </div>
-     </div>
   );
 }
 
