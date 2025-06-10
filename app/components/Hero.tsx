@@ -24,7 +24,7 @@ const Hero = () => {
             your dreams
           </p>
 
-          <Link href="/blog/createblog's">
+          <Link href="/blog/createblogs">
             <button className="relative overflow-hidden px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105">
               <span className="relative z-10"> Create New Blog</span>
             </button>

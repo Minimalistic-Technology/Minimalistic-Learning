@@ -104,7 +104,7 @@
 //         </select>
 
 //         {/* Create New Blog Button */}
-//         <Link href="/blog/createblog's">
+//         <Link href="/blog/createblogs">
 //           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
 //             + Create New Blog
 //           </button>
@@ -257,7 +257,7 @@
 //             <option key={category} value={category}>{category}</option>
 //           ))}
 //         </select>
-//         <Link href="/blog/createblog's">
+//         <Link href="/blog/createblogs">
 //           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
 //             + Create New Blog
 //           </button>
@@ -574,7 +574,7 @@
 //             <option key={category} value={category}>{category}</option>
 //           ))}
 //         </select>
-//         <Link href="/blog/createblog's">
+//         <Link href="/blog/createblogs">
 //           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
 //             + Create New Blog
 //           </button>
@@ -957,7 +957,7 @@ const BlogPage = () => {
             </option>
           ))}
         </select>
-        <Link href="/blog/createblog's">
+        <Link href="/blog/createblogs">
           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition duration-300">
             + Create New Blog
           </button>

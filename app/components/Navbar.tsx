@@ -60,7 +60,7 @@ const Navbar = () => {
             { label: "Home", href: "/#" },
             { label: "About", href: "/aboutus" },
             { label: "Blog's", href: "/blog" },
-            { label: "Post New Blog", href: "/blog/createblog's" },
+            { label: "Post New Blog", href: "/blog/createblogs" },
           ].map((link, i) => (
             <li key={i}>
               <a
