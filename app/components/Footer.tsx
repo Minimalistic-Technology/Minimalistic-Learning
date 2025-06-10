@@ -62,7 +62,7 @@ const Footer = () => {
             <li>
             <button
                 onClick={() => setIsOpen(true)}
-                className="hover:text-gray-50 transition"
+                className="text-sm font-medium hover:underline-offset-4 hover:text-white transition"
               >
                 Privacy Policy
               </button>
