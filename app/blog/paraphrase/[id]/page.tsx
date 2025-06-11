@@ -227,7 +227,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "utils/api"
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import {
@@ -267,8 +267,8 @@ export default function BlogDetailPage() {
     const fetchBlog = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `http://localhost:5000/blogs/${blogId}`
+        const response = await api.get(
+          `/blogs/${blogId}`
         );
         setBlog(response.data);
       } catch (error) {

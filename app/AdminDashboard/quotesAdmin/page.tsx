@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-
+import api from "utils/api";
 interface Quote {
   _id: string;
   quote: string;
@@ -20,61 +20,60 @@ export default function QuotesAdminPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  useEffect(() => {
+  
+ useEffect(() => {
+  const fetchQuotes = async () => {
     setLoading(true);
-    fetch("http://localhost:5000/quotes/latest")
-      .then((res) => res.json())
-      .then((data) => setQuotes(data))
-      .catch(() => setError("Failed to load quotes"))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this quote?")) return;
-    setDeletingId(id);
     try {
-      await fetch(`http://localhost:5000/quotes/${id}`, {
-        method: "DELETE",
-      });
-      setQuotes((prev) => prev.filter((q) => q._id !== id));
-    } catch {
-      alert("Failed to delete quote");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("http://localhost:5000/quotes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quote: quoteInput,
-          name: nameInput,
-          title: titleInput,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Failed to add quote");
-
-      const newQuote = await res.json();
-      setQuotes((prev) => [newQuote, ...prev]);
-      setQuoteInput("");
-      setNameInput("");
-      setTitleInput("");
-    } catch {
-      setError("Error creating quote. Try again.");
+      const response = await api.get("/quotes/latest");
+      setQuotes(response.data);
+    } catch (err) {
+      setError("Failed to load quotes");
     } finally {
       setLoading(false);
     }
   };
+
+  fetchQuotes();
+}, []);
+
+const handleDelete = async (id: string) => {
+  if (!confirm("Are you sure you want to delete this quote?")) return;
+  setDeletingId(id);
+  try {
+    await api.delete(`/quotes/${id}`);
+    setQuotes((prev) => prev.filter((q) => q._id !== id));
+  } catch (err) {
+    alert("Failed to delete quote");
+  } finally {
+    setDeletingId(null);
+  }
+};
+
+ 
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+
+  try {
+    const response = await api.post("/quotes", {
+      quote: quoteInput,
+      name: nameInput,
+      title: titleInput,
+    });
+
+    const newQuote = response.data;
+    setQuotes((prev) => [newQuote, ...prev]);
+    setQuoteInput("");
+    setNameInput("");
+    setTitleInput("");
+  } catch (err) {
+    setError("Error creating quote. Try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div> <ScrollProgressBar/>

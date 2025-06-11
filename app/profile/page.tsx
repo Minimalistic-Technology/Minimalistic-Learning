@@ -47,7 +47,7 @@ export default function Profile_pg() {
   const [error, setError] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
 
-  const [profileExists, setProfileExists] = useState<boolean>(false);
+
 
   useEffect(() => {
     const username = localStorage.getItem("username") || "";
@@ -61,7 +61,7 @@ export default function Profile_pg() {
         lastName: lastName || "",
         email,
       });
-      setProfileExists(true);
+     
     }
   }, []);
 
@@ -203,7 +203,6 @@ export default function Profile_pg() {
       setNewPassword("");
       setConfirmPassword("");
       setIsEditing(false);
-      setProfileExists(true);
 
       setTimeout(() => {
         window.location.reload();

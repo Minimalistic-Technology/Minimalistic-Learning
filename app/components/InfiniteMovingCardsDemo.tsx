@@ -53,7 +53,7 @@
 
 import React, { useEffect, useState } from "react";
 import { InfiniteMovingCards } from "./ui/infinite-moving-cards";
-
+import api from "utils/api";
 // Define the type for a single testimonial item
 interface Testimonial {
   id: string;        // Made `id` required now after processing
@@ -66,28 +66,31 @@ export function InfiniteMovingCardsDemo() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/quotes/latest")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch quotes");
-        }
-        return response.json();
-      })
-      .then((data: Omit<Testimonial, 'id'>[]) => {
-        // Ensure every testimonial has a unique `id`
-        const withUniqueIds: Testimonial[] = data.map((item, index) => ({
-          ...item,
-          id: `${item.name.replace(/\s+/g, "-").toLowerCase()}-${index}`
-        }));
-        setTestimonials(withUniqueIds);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching quotes:", error);
-        setIsLoading(false);
-      });
-  }, []);
+
+useEffect(() => {
+  const fetchQuotes = async () => {
+    try {
+      const response = await api.get<Omit<Testimonial, 'id'>[]>(
+        "/quotes/latest"
+      );
+
+      const data = response.data;
+
+      const withUniqueIds: Testimonial[] = data.map((item, index) => ({
+        ...item,
+        id: `${item.name.replace(/\s+/g, "-").toLowerCase()}-${index}`,
+      }));
+
+      setTestimonials(withUniqueIds);
+    } catch (error) {
+      console.error("Error fetching quotes:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchQuotes();
+}, []);
 
   if (isLoading) {
     return (

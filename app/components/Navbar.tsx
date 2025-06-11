@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
-import axios from "axios";
+import api from "utils/api";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useAuth();
@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/auth/logout", {});
+      await api.post("/auth/logout", {});
 
       localStorage.removeItem("username");
       localStorage.removeItem("email");

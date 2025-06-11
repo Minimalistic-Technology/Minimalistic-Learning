@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import axios from "axios";
+import api from "utils/api";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response =  await axios.post("http://localhost:5000/auth/login", { email, password });
+      const response =  await api.post("/auth/login", { email, password });
 
       const { accessToken, user } = response.data;
     localStorage.setItem("accessToken", accessToken);
@@ -25,7 +25,7 @@ const LoginPage = () => {
      localStorage.setItem("id", user.id);
     setUser(user.username);
 
-    axios.interceptors.request.use((config) => {
+    api.interceptors.request.use((config) => {
       const token = localStorage.getItem("accessToken");
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;

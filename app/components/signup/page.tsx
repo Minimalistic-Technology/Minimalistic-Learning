@@ -225,7 +225,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import axios from "axios";
+import api from "utils/api"
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -321,7 +321,7 @@ const SignUpPage = () => {
     ) {
       try {
         // First, attempt signup
-        await axios.post("http://localhost:5000/auth/signup", {
+        await api.post("/auth/signup", {
           username: `${firstName} ${lastName}`,
           email,
           password,
@@ -332,7 +332,7 @@ const SignUpPage = () => {
         );
         // If signup is successful, send OTP
         try {
-          await axios.post("http://localhost:5000/api/otp/send-otp", {
+          await api.post("/api/otp/send-otp", {
             name: `${firstName} ${lastName}`,
             email,
           });

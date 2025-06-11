@@ -792,7 +792,7 @@ import Footer from "../components/Footer";
 import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import axios from "axios";
+import api from "utils/api"
 import ScrollProgressBar from "../components/ScrollerProgress";
 const categories = [
   "All",
@@ -827,8 +827,8 @@ const BlogPage = () => {
   const [sortFilter, setSortFilter] = useState("default"); // default | mostViewed | mostRecent
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/blogs")
+    api
+      .get("/blogs")
       .then((response) => {
         setBlogs(response.data);
         setIsLoading(false);
@@ -849,7 +849,7 @@ const BlogPage = () => {
       url = "http://localhost:5000/blogs/most-recent";
     }
 
-    axios
+    api
       .get(url)
       .then((response) => {
         setBlogs(response.data);

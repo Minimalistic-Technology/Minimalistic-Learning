@@ -94,7 +94,7 @@ const CreateBlogPage = () => {
     try {
       // Make API call to the backend
       const response = await axiosInstance.post(
-        "http://localhost:5000/blogs",
+        "/blogs",
         formData
       );
 
