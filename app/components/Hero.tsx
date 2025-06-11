@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,26 +11,26 @@ const Hero = () => {
   return (
     <section className="h-[90vh] flex items-center justify-center px-6 md:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        {/* Left Section */}
+        <div className="order-2 md:order-1">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-4">
+            Yours Learning <span className="text-blue-600">Journey</span> Starts
+            with
+            <br />
+            <span className="text-blue-600">Here</span>
+          </h1>
+          <p className="text-gray-700 text-lg md:text-xl mb-6">
+            Explore diverse courses, connect with top instructors, and achieve
+            your dreams
+          </p>
 
-{/* Left Section */}
-<div className="order-2 md:order-1">
-  <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight mb-4">
-    Yours Learning <span className="text-blue-600">Journey</span> Starts with
-    <br />
-    <span className="text-blue-600">Here</span>
-  </h1>
-  <p className="text-gray-700 text-lg md:text-xl mb-6">
-    Explore diverse courses, connect with top instructors, and achieve
-    your dreams
-  </p>
-
-        <Link href="/blog/createblog's">
-          <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-          Create New Blog
-          </button>
-        </Link>
-  {/* Slim Search Bar */}
-  {/* <div className="flex items-center w-full bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+          <Link href="/blog/createblogs">
+            <button className="relative overflow-hidden px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105">
+              <span className="relative z-10"> Create New Blog</span>
+            </button>
+          </Link>
+          {/* Slim Search Bar */}
+          {/* <div className="flex items-center w-full bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
     <span className="text-gray-400 pl-3 ">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -59,24 +60,29 @@ const Hero = () => {
       Start Learning
     </button>
   </div> */}
-</div>
+        </div>
 
-{/* Right Section: Image */}
-<div className="order-1 md:order-2 flex justify-center md:justify-end">
-<div className="relative w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
-  <Image
-    src="/images/herostudent.png" // Corrected image path
-    alt="Learning Illustration"
-    width={1800} // Adjust width and height proportionally to the container
-    height={1800}
-    priority
-    className="object-contain"
-  />
-</div>
-
-
-</div>
-
+        {/* Right Section: Image */}
+        <div className="order-1 md:order-2 flex justify-center md:justify-end">
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 0.6,
+              scale: { type: "spring", duration: 0.4, bounce: 0.5 },
+            }}
+            className="relative w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden"
+          >
+            <Image
+              src="/images/herostudent.png"
+              alt="Learning Illustration"
+              width={1800}
+              height={1800}
+              priority
+              className="object-contain"
+            />
+          </motion.div>
+        </div>
       </div>
     </section>
   );
