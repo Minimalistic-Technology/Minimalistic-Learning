@@ -19,19 +19,19 @@ const LoginPage = () => {
       const response =  await api.post("/auth/login", { email, password });
 
       const { accessToken, user } = response.data;
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("username", user.username);
-     localStorage.setItem("email", user.email);
-     localStorage.setItem("id", user.id);
-    setUser(user.username);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("username", user.username);
+      localStorage.setItem("email", user.email);
+      localStorage.setItem("id", user.id);
+      setUser(user.username);
 
-    api.interceptors.request.use((config) => {
-      const token = localStorage.getItem("accessToken");
-      if (token && config.headers) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
+      api.interceptors.request.use((config) => {
+        const token = localStorage.getItem("accessToken");
+        if (token && config.headers) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      });
     
       toast.success("Logged in successfully!");
       console.log("redirecting...");

@@ -67,30 +67,30 @@ export function InfiniteMovingCardsDemo() {
   const [isLoading, setIsLoading] = useState(true);
 
 
-useEffect(() => {
-  const fetchQuotes = async () => {
-    try {
-      const response = await api.get<Omit<Testimonial, 'id'>[]>(
-        "/quotes/latest"
-      );
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const response = await api.get<Omit<Testimonial, 'id'>[]>(
+          "/quotes/latest"
+        );
 
-      const data = response.data;
+        const data = response.data;
 
-      const withUniqueIds: Testimonial[] = data.map((item, index) => ({
-        ...item,
-        id: `${item.name.replace(/\s+/g, "-").toLowerCase()}-${index}`,
-      }));
+        const withUniqueIds: Testimonial[] = data.map((item, index) => ({
+          ...item,
+          id: `${item.name.replace(/\s+/g, "-").toLowerCase()}-${index}`,
+        }));
 
-      setTestimonials(withUniqueIds);
-    } catch (error) {
-      console.error("Error fetching quotes:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setTestimonials(withUniqueIds);
+      } catch (error) {
+        console.error("Error fetching quotes:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchQuotes();
-}, []);
+    fetchQuotes();
+  }, []);
 
   if (isLoading) {
     return (
@@ -99,14 +99,14 @@ useEffect(() => {
       </div>
     );
   }
-return (
-  <div
-  className="h-[20rem] rounded-md flex flex-col antialiased bg-[#daf0ff] dark:bg-blue-200 dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden"
-  style={{
-    maskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)',
-    WebkitMaskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)'
-  }}
->
+  return (
+    <div
+      className="h-[20rem] rounded-md flex flex-col antialiased bg-[#daf0ff] dark:bg-blue-200 dark:bg-grid-white/[0.05] items-center justify-center relative overflow-hidden"
+      style={{
+        maskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 1%, black 10%, black 90%, transparent 99%)'
+      }}
+    >
       <InfiniteMovingCards
         items={testimonials}
         direction="right"

@@ -9,7 +9,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
- const menuRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogout = async () => {
     try {
@@ -25,7 +25,7 @@ const Navbar = () => {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowMenu(false);
@@ -63,13 +63,13 @@ const Navbar = () => {
             { label: "Post New Blog", href: "/blog/createblogs" },
           ].map((link, i) => (
             <li key={i}>
-              <a
+              <Link
                 href={link.href}
                 className="relative group transition duration-300 text-gray-700 hover:text-blue-600"
               >
                 {link.label}
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -87,7 +87,7 @@ const Navbar = () => {
               >
                 <FaUserCircle />
               </button>
-               <span className="text-blue-600 font-medium mr-2">Hi, {user}</span>
+              <span className="text-blue-600 font-medium mr-2">Hi, {user}</span>
               {/* Dropdown menu */}
               {showMenu && (
                 <div
@@ -118,20 +118,20 @@ const Navbar = () => {
             </div>
           ) : (
             <>
-              <a
+              <Link
                 href="/components/signup"
                 className="text-blue-600 font-semibold px-4 py-2 rounded-md hover:text-blue-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Sign up"
               >
                 Sign up
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/login"
                 className="bg-blue-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Log in"
               >
                 Log in
-              </a>
+              </Link>
             </>
           )}
         </div>
@@ -188,24 +188,24 @@ const Navbar = () => {
               </button>
               <ul className="space-y-4 text-gray-700 font-medium mt-4">
                 <li>
-                  <a href="/" className="hover:text-blue-600">
+                  <Link href="/" className="hover:text-blue-600">
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/aboutus" className="hover:text-blue-600">
+                  <Link href="/aboutus" className="hover:text-blue-600">
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/blog" className="hover:text-blue-600">
+                  <Link href="/blog" className="hover:text-blue-600">
                     Blog's
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/contactus" className="hover:text-blue-600">
+                  <Link href="/contactus" className="hover:text-blue-600">
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
                 {user ? (
                   <>
@@ -222,17 +222,17 @@ const Navbar = () => {
                 ) : (
                   <>
                     <li>
-                      <a
+                      <Link
                         href="/components/signup"
                         className="hover:text-blue-600"
                       >
                         Sign Up
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a href="/login" className="hover:text-blue-600">
+                      <Link href="/login" className="hover:text-blue-600">
                         Login
-                      </a>
+                      </Link>
                     </li>
                   </>
                 )}

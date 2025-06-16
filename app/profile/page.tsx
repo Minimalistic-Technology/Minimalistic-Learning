@@ -382,38 +382,38 @@ export default function Profile_pg() {
             {/* My Blogs */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold text-black mb-3">My Blogs</h2>
-             <section className="max-w-6xl mx-auto px-6 py-4 flex flex-wrap gap-5">
-  {userBlogs.length > 0 ? (
-    userBlogs.map((blog) => (
-      <div
-        key={blog._id}
-        className="bg-white border border-blue-200 rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105 flex flex-col p-5 h-44 w-full sm:w-[48%] lg:w-[31%]"
-      >
-        {/* Category */}
-        <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
-          {blog.category}
-        </span>
+              <section className="max-w-6xl mx-auto px-6 py-4 flex flex-wrap gap-5">
+                {userBlogs.length > 0 ? (
+                  userBlogs.map((blog) => (
+                    <div
+                      key={blog._id}
+                      className="bg-white border border-blue-200 rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105 flex flex-col p-5 h-44 w-full sm:w-[48%] lg:w-[31%]"
+                    >
+                      {/* Category */}
+                      <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-2">
+                        {blog.category}
+                      </span>
 
-        {/* Title */}
-        <h2 className="text-lg font-semibold text-gray-800 leading-snug line-clamp-3 mb-auto">
-          {blog.title}
-        </h2>
+                      {/* Title */}
+                      <h2 className="text-lg font-semibold text-gray-800 leading-snug line-clamp-3 mb-auto">
+                        {blog.title}
+                      </h2>
 
-        {/* Read More Button */}
-        <a
-          href={`/blog/${blog._id}`}
-          className="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg px-4 py-2 transition"
-        >
+                      {/* Read More Button */}
+                      <a
+                        href={`/blog/${blog._id}`}
+                        className="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg px-4 py-2 transition"
+                      >
           Read More
-        </a>
-      </div>
-    ))
-  ) : (
-    <p className="w-full text-center text-gray-500 text-lg">
+                      </a>
+                    </div>
+                  ))
+                ) : (
+                  <p className="w-full text-center text-gray-500 text-lg">
       No blogs published yet.
-    </p>
-  )}
-</section>
+                  </p>
+                )}
+              </section>
 
             </div>
           </div>

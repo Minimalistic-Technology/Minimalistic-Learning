@@ -19,16 +19,16 @@ export default async function Home() {
   // }
   return (
     <div>  <ScrollProgressBar/>
-    <div>
-      <Hero />
-      {/* <Course/> */}
-      <Explore/>
-      <Services />
-      <WhyUs/>
-      {/* <InfiniteMovingCardsDemo/> */}
-      <Glance />
-      <Footer />
-    </div>
+      <div>
+        <Hero />
+        {/* <Course/> */}
+        <Explore/>
+        <Services />
+        <WhyUs/>
+        {/* <InfiniteMovingCardsDemo/> */}
+        <Glance />
+        <Footer />
+      </div>
     </div>
   );
 }

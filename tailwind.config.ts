@@ -30,7 +30,7 @@ export default {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
-         spotlight: {
+        spotlight: {
           "0%": {
             opacity: '0',
             transform: "translate(-72%, -62%) scale(0.5)",

@@ -89,21 +89,21 @@ const BlogsAdminPage = () => {
   // Filtering logic based on filter state
   const filteredBlogs = blogs.filter((blog) => {
     switch (filter) {
-      case "verified":
-        return blog.verified === true;
-      case "notVerified":
-        return !blog.verified;
-      case "paraphrased":
-        return !!blog.paraphrased;
-      case "notParaphrased":
-        return !blog.paraphrased;
-      default:
-        return true; // all
+    case "verified":
+      return blog.verified === true;
+    case "notVerified":
+      return !blog.verified;
+    case "paraphrased":
+      return !!blog.paraphrased;
+    case "notParaphrased":
+      return !blog.paraphrased;
+    default:
+      return true; // all
     }
   });
 
   if (loading)
-    return <LoadingSkeleton />
+    return <LoadingSkeleton />;
 
   return (
     <div>
@@ -136,10 +136,10 @@ const BlogsAdminPage = () => {
         {/* Blogs Grid */}
         <div >
           <BlogsGrid
-  blogs={filteredBlogs}
-  onVerify={handleVerify}
-  onDelete={handleDelete}
-/>
+            blogs={filteredBlogs}
+            onVerify={handleVerify}
+            onDelete={handleDelete}
+          />
 
         </div>
       </div>

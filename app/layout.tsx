@@ -18,18 +18,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-       <head>
+      <head>
         <link rel="icon" href="/fevicon.ico" sizes="any" />
       </head>
-    <body
-      className={cn(
-        'min-h-screen bg-[#daf0ff] dark:bg-gray-950',
-        'antialiased',
-        // Prevent content shift
-        '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'
-      )}
-    >
-       <NextTopLoader showSpinner={false} />
+      <body
+        className={cn(
+          'min-h-screen bg-[#daf0ff] dark:bg-gray-950',
+          'antialiased',
+          // Prevent content shift
+          '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'
+        )}
+      >
+        <NextTopLoader showSpinner={false} />
         <AuthProvider>
           <Providers>
             <Navbar />
@@ -38,6 +38,6 @@ export default function RootLayout({
           </Providers>
         </AuthProvider>
       </body>
-  </html>
+    </html>
   );
 }

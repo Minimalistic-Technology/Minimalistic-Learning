@@ -227,7 +227,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import api from "utils/api"
+import api from "utils/api";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import {

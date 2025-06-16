@@ -4,13 +4,13 @@ import React, { useState, useEffect } from "react";
 
 const PrivacyPolicyPage: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "unset";
-  }
-}, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isOpen]);
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       <h1 className="text-3xl font-bold mb-4 text-center">Welcome to MinimalisticLearning</h1>
@@ -22,18 +22,18 @@ useEffect(() => {
       </button>
 
       {isOpen && (
- <div
-    onClick={() => setIsOpen(false)}
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-  >
-    <div
-      onClick={(e) => e.stopPropagation()}
-      className="bg-white w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-lg p-6 shadow-xl relative transition-all transform scale-100"
-    >
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-lg p-6 shadow-xl relative transition-all transform scale-100"
+          >
             <button
               onClick={() => setIsOpen(false)}
-               aria-label="Close Privacy Policy"
-  className="absolute top-3 right-4 text-2xl text-gray-600 hover:text-black"
+              aria-label="Close Privacy Policy"
+              className="absolute top-3 right-4 text-2xl text-gray-600 hover:text-black"
             >
               &times;
             </button>

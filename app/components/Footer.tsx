@@ -60,7 +60,7 @@ const Footer = () => {
           <h2 className="text-lg font-semibold mb-4">Terms</h2>
           <ul className="space-y-2 text-gray-200">
             <li>
-            <button
+              <button
                 onClick={() => setIsOpen(true)}
                 className="text-sm font-medium hover:underline-offset-4 hover:text-white transition"
               >
@@ -137,8 +137,8 @@ const Footer = () => {
         © 2025 Minimalistic Learning. All rights reserved.
       </div>
 
-       {/* Privacy Policy Modal */}
-       {isOpen && (
+      {/* Privacy Policy Modal */}
+      {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-[#daf0ff] w-full max-w-3xl max-h-[80vh] overflow-y-auto rounded-lg p-6 shadow-xl relative">
             <button

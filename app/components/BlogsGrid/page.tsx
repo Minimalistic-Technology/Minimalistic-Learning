@@ -103,7 +103,7 @@ const BlogsGrid: React.FC<BlogsGridProps> = ({ blogs, onVerify, onDelete }) => {
               <span>{blog.author || "Unknown Author"}</span>
               <span>{format(new Date(blog.date), "PPP")}</span>
             </div>
-             {/* {blog.paraphrased && (
+            {/* {blog.paraphrased && (
                 <div className="text-sm italic text-green-800 bg-green-50 rounded p-2 mt-3 border border-green-200 select-text">
                   {blog.paraphrased}
                 </div>

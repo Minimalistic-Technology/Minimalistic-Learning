@@ -2,7 +2,7 @@
 
 export default function UserAuth() {
   // const { user } = useSelector((state: any) => state.auth);
-  const user = false
+  const user = false;
   if (user) {
     return true;
   } else {

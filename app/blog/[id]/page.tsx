@@ -332,10 +332,10 @@ export default function BlogDetailPage() {
   if (isLoading) {
     return (
       <div>  <ScrollProgressBar/>
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
-        <p className="mt-4 text-gray-600">Loading article...</p>
-      </div>
+        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
+          <p className="mt-4 text-gray-600">Loading article...</p>
+        </div>
       </div>
     );
   }
@@ -343,23 +343,23 @@ export default function BlogDetailPage() {
   if (!blog) {
     return (
       <div>  <ScrollProgressBar/>
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center px-4">
-        <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
-          <p className="text-red-600 text-xl font-semibold mb-2">
+        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center px-4">
+          <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
+            <p className="text-red-600 text-xl font-semibold mb-2">
             🚫 Blog not found
-          </p>
-          <p className="text-gray-600 mb-6">
+            </p>
+            <p className="text-gray-600 mb-6">
             The article you're looking for doesn't exist or has been removed.
-          </p>
-          <Link
-            href="/blog"
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            </p>
+            <Link
+              href="/blog"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Blogs
-          </Link>
+            </Link>
+          </div>
         </div>
-      </div>
       </div>
     );
   }
@@ -368,268 +368,268 @@ export default function BlogDetailPage() {
 
   return (
     <div>  <ScrollProgressBar/>
-    <div className="min-h-screen overflow-x-hidden">
-      {/* Sticky Navigation */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
-        <div className="max-w-screen-2xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <Link
-            href="/blog"
-            className="flex items-center text-blue-600 hover:text-blue-800 transition"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Articles
-          </Link>
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleSave}
-              className={`flex items-center px-3 py-1 rounded-full text-sm ${
-                saved
-                  ? "bg-blue-100 text-blue-600"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              } transition`}
+      <div className="min-h-screen overflow-x-hidden">
+        {/* Sticky Navigation */}
+        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
+          <div className="max-w-screen-2xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <Link
+              href="/blog"
+              className="flex items-center text-blue-600 hover:text-blue-800 transition"
             >
-              <Bookmark
-                className={`w-4 h-4 mr-1 ${
-                  saved ? "fill-blue-600 stroke-blue-600" : ""
-                }`}
-              />
-              {saved ? "Saved" : "Save"}
-            </button>
-            <div className="flex items-center space-x-2">
-              <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                <Twitter className="w-4 h-4 text-gray-700" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Articles
+            </Link>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleSave}
+                className={`flex items-center px-3 py-1 rounded-full text-sm ${
+                  saved
+                    ? "bg-blue-100 text-blue-600"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                } transition`}
+              >
+                <Bookmark
+                  className={`w-4 h-4 mr-1 ${
+                    saved ? "fill-blue-600 stroke-blue-600" : ""
+                  }`}
+                />
+                {saved ? "Saved" : "Save"}
               </button>
-              <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                <Facebook className="w-4 h-4 text-gray-700" />
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                <Linkedin className="w-4 h-4 text-gray-700" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                  <Twitter className="w-4 h-4 text-gray-700" />
+                </button>
+                <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                  <Facebook className="w-4 h-4 text-gray-700" />
+                </button>
+                <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                  <Linkedin className="w-4 h-4 text-gray-700" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Header with image */}
-      <div className="relative">
-        <div className="absolute inset-0 bg-black/30 z-10"></div>
-        <img
-          src={blog.image}
-          alt={blog.title}
-          className="w-full h-[400px] sm:h-[500px] md:h-[600px] object-cover"
-        />
+        {/* Header with image */}
+        <div className="relative">
+          <div className="absolute inset-0 bg-black/30 z-10"></div>
+          <img
+            src={blog.image}
+            alt={blog.title}
+            className="w-full h-[400px] sm:h-[500px] md:h-[600px] object-cover"
+          />
 
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/80 to-transparent pt-32 pb-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-screen-xl mx-auto">
-            <div className="flex items-center space-x-2 text-white/80 text-sm mb-4">
-              <span className="px-3 py-1 bg-blue-600/90 rounded-full">
+          <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/80 to-transparent pt-32 pb-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-screen-xl mx-auto">
+              <div className="flex items-center space-x-2 text-white/80 text-sm mb-4">
+                <span className="px-3 py-1 bg-blue-600/90 rounded-full">
                 Featured
-              </span>
-              <span className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                {readingTime} min read
-              </span>
+                </span>
+                <span className="flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  {readingTime} min read
+                </span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                {blog.title}
+              </h1>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              {blog.title}
-            </h1>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-30">
-        <div className="bg-white rounded-t-xl shadow-xl p-6 sm:p-8">
-          {/* Author info bar */}
-          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-30">
+          <div className="bg-white rounded-t-xl shadow-xl p-6 sm:p-8">
+            {/* Author info bar */}
+            <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold">
+                  {blog.author.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">{blog.author}</p>
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="w-3 h-3 mr-1" />
+                    <span>{blog.date}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <span className="text-sm text-gray-500">Published</span>
+              </div>
+            </div>
+
+            {/* Blog Content */}
+            <div className="mt-8">
+              {blog.description ? (
+                <div
+                  className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words prose-headings:text-gray-800 prose-a:text-blue-600"
+                  dangerouslySetInnerHTML={{
+                    __html: formatContent(blog.description),
+                  }}
+                />
+              ) : (
+                <p>No content to display</p>
+              )}
+            </div>
+
+            {/* Tags */}
+            <div className="mt-10 pt-6 border-t border-gray-100">
+              <h4 className="text-sm font-medium text-gray-500 mb-3">TAGS</h4>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
+                Web Development
+                </span>
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
+                UI/UX
+                </span>
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
+                NextJS
+                </span>
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
+                Design
+                </span>
+              </div>
+            </div>
+
+            {/* Engagement */}
+            <div className="mt-8 pt-6 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={handleLike}
+                    className={`flex items-center space-x-2 ${
+                      liked
+                        ? "text-blue-600"
+                        : "text-gray-500 hover:text-blue-600"
+                    } transition`}
+                  >
+                    <ThumbsUp
+                      className={`w-5 h-5 ${
+                        liked ? "fill-blue-600 stroke-blue-600" : ""
+                      }`}
+                    />
+                    <span>{liked ? "Liked" : "Like"}</span>
+                  </button>
+                  <button className="flex items-center space-x-2 text-gray-500 hover:text-blue-600 transition">
+                    <MessageCircle className="w-5 h-5" />
+                    <span>Comment</span>
+                  </button>
+                  {/* Stars Rating */}
+                  <div className="flex items-center space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => handleRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                      >
+                        <Star
+                          className={`w-5 h-5 transition ${
+                            (hoverRating || rating) >= star
+                              ? "fill-yellow-400 stroke-yellow-400"
+                              : "stroke-gray-400"
+                          }`}
+                          fill={
+                            (hoverRating || rating) >= star
+                              ? "currentColor"
+                              : "none"
+                          }
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm text-gray-500">Share:</span>
+                  <div className="flex items-center space-x-2">
+                    <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                      <Twitter className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                      <Facebook className="w-4 h-4 text-gray-700" />
+                    </button>
+                    <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
+                      <Linkedin className="w-4 h-4 text-gray-700" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Author Bio */}
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-16">
+          <div className="bg-blue-50 rounded-xl shadow-md p-6 sm:p-8 border border-blue-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+            About the Author
+            </h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
                 {blog.author.charAt(0)}
               </div>
               <div>
-                <p className="font-medium text-gray-900">{blog.author}</p>
-                <div className="flex items-center text-sm text-gray-500">
-                  <Calendar className="w-3 h-3 mr-1" />
-                  <span>{blog.date}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <div className="h-2 w-2 rounded-full bg-green-500"></div>
-              <span className="text-sm text-gray-500">Published</span>
-            </div>
-          </div>
-
-          {/* Blog Content */}
-          <div className="mt-8">
-            {blog.description ? (
-              <div
-                className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words prose-headings:text-gray-800 prose-a:text-blue-600"
-                dangerouslySetInnerHTML={{
-                  __html: formatContent(blog.description),
-                }}
-              />
-            ) : (
-              <p>No content to display</p>
-            )}
-          </div>
-
-          {/* Tags */}
-          <div className="mt-10 pt-6 border-t border-gray-100">
-            <h4 className="text-sm font-medium text-gray-500 mb-3">TAGS</h4>
-            <div className="flex flex-wrap gap-2">
-              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                Web Development
-              </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                UI/UX
-              </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                NextJS
-              </span>
-              <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                Design
-              </span>
-            </div>
-          </div>
-
-          {/* Engagement */}
-          <div className="mt-8 pt-6 border-t border-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={handleLike}
-                  className={`flex items-center space-x-2 ${
-                    liked
-                      ? "text-blue-600"
-                      : "text-gray-500 hover:text-blue-600"
-                  } transition`}
-                >
-                  <ThumbsUp
-                    className={`w-5 h-5 ${
-                      liked ? "fill-blue-600 stroke-blue-600" : ""
-                    }`}
-                  />
-                  <span>{liked ? "Liked" : "Like"}</span>
-                </button>
-                <button className="flex items-center space-x-2 text-gray-500 hover:text-blue-600 transition">
-                  <MessageCircle className="w-5 h-5" />
-                  <span>Comment</span>
-                </button>
-                {/* Stars Rating */}
-                <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => handleRating(star)}
-                      onMouseEnter={() => setHoverRating(star)}
-                      onMouseLeave={() => setHoverRating(0)}
-                    >
-                      <Star
-                        className={`w-5 h-5 transition ${
-                          (hoverRating || rating) >= star
-                            ? "fill-yellow-400 stroke-yellow-400"
-                            : "stroke-gray-400"
-                        }`}
-                        fill={
-                          (hoverRating || rating) >= star
-                            ? "currentColor"
-                            : "none"
-                        }
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-500">Share:</span>
-                <div className="flex items-center space-x-2">
-                  <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                    <Twitter className="w-4 h-4 text-gray-700" />
-                  </button>
-                  <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                    <Facebook className="w-4 h-4 text-gray-700" />
-                  </button>
-                  <button className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition">
-                    <Linkedin className="w-4 h-4 text-gray-700" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Author Bio */}
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-16">
-        <div className="bg-blue-50 rounded-xl shadow-md p-6 sm:p-8 border border-blue-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">
-            About the Author
-          </h3>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
-              {blog.author.charAt(0)}
-            </div>
-            <div>
-              <h4 className="text-xl font-bold text-gray-900">{blog.author}</h4>
-              <p className="text-gray-600 mt-2">
+                <h4 className="text-xl font-bold text-gray-900">{blog.author}</h4>
+                <p className="text-gray-600 mt-2">
                 Professional writer and content creator with expertise in web
                 development and digital marketing. With over 5 years of
                 experience creating engaging content for tech audiences.
-              </p>
-              <div className="mt-4 flex items-center space-x-3">
-                <button className="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
+                </p>
+                <div className="mt-4 flex items-center space-x-3">
+                  <button className="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
                   Follow
-                </button>
-                <button className="text-sm font-medium text-gray-600 hover:text-gray-800 transition">
+                  </button>
+                  <button className="text-sm font-medium text-gray-600 hover:text-gray-800 transition">
                   More articles
-                </button>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Related Posts */}
- {relatedBlogs.length > 0 && (
-  <div className="mt-16 pt-12 border-t border-gray-300 px-4 sm:px-6 lg:px-8">
-    <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">Related Blogs</h3>
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {relatedBlogs.map((related) => (
-        <Link
-          key={related._id}
-          href={`/blog/${related._id}`}
-          className="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden border border-gray-100"
-        >
-          <img
-            src={related.image}
-            alt={related.title}
-            className="h-44 w-full object-cover group-hover:scale-105 transition-transform duration-200"
-          />
-          <div className="p-5">
-            <h4 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
-              {related.title}
-            </h4>
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {related.description.replace(/<[^>]+>/g, "").slice(0, 100)}...
-            </p>
-            <div className="text-xs text-gray-400 mt-3 flex justify-between items-center">
-              <span>{related.date}</span>
-              <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
-                {related.category}
-              </span>
+        {/* Related Posts */}
+        {relatedBlogs.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-gray-300 px-4 sm:px-6 lg:px-8">
+            <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">Related Blogs</h3>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {relatedBlogs.map((related) => (
+                <Link
+                  key={related._id}
+                  href={`/blog/${related._id}`}
+                  className="group block bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden border border-gray-100"
+                >
+                  <img
+                    src={related.image}
+                    alt={related.title}
+                    className="h-44 w-full object-cover group-hover:scale-105 transition-transform duration-200"
+                  />
+                  <div className="p-5">
+                    <h4 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2">
+                      {related.title}
+                    </h4>
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {related.description.replace(/<[^>]+>/g, "").slice(0, 100)}...
+                    </p>
+                    <div className="text-xs text-gray-400 mt-3 flex justify-between items-center">
+                      <span>{related.date}</span>
+                      <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
+                        {related.category}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
+        )}
 
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
-     </div>
   );
 }
 

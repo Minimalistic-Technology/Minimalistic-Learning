@@ -792,7 +792,7 @@ import Footer from "../components/Footer";
 import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import api from "utils/api"
+import api from "utils/api";
 import ScrollProgressBar from "../components/ScrollerProgress";
 const categories = [
   "All",
@@ -863,12 +863,12 @@ const BlogPage = () => {
   }, [sortFilter]);
 
   const filteredBlogs = blogs
-  .filter((blog) => blog.verified) // <--- Filter for verified blogs
-  .filter((blog) => {
-    const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+    .filter((blog) => blog.verified) // <--- Filter for verified blogs
+    .filter((blog) => {
+      const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
+      const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
 
 
   const paginatedBlogs = filteredBlogs.slice(
@@ -890,207 +890,207 @@ const BlogPage = () => {
 
   return (
     <div> <ScrollProgressBar />
-    <div className="min-h-screen  text-gray-800 font-sans">
-      {/* Hero Section */}
-      <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
-          <div className="w-full md:w-1/2 text-center md:text-left space-y-6 animate-fade-in">
-            <h1 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-gray-800 leading-tight tracking-tight">
+      <div className="min-h-screen  text-gray-800 font-sans">
+        {/* Hero Section */}
+        <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
+          <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
+            <div className="w-full md:w-1/2 text-center md:text-left space-y-6 animate-fade-in">
+              <h1 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-gray-800 leading-tight tracking-tight">
               Insights, Tutorials, and Tech News
-            </h1>
-            <p className="text-gray-700 text-[clamp(1.125rem,2.5vw,1.875rem)]">
+              </h1>
+              <p className="text-gray-700 text-[clamp(1.125rem,2.5vw,1.875rem)]">
               Stay updated with the latest in tech and learning.
-            </p>
-          </div>
-          <div className="w-full md:w-1/2 flex justify-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: 0.6,
-                scale: { type: "spring", duration: 0.6, bounce: 0.5 },
-              }}
-              viewport={{ once: true, amount: 0.6 }}
-            >
-              <Image
-                src="/images/blog3.png"
-                alt="Tech illustration"
-                width={260}
-                height={200}
-                className="w-72 h-72 object-cover rounded-full shadow-2xl ring-4 ring-white transition-transform duration-300 hover:scale-105"
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trending / Infinite Cards */}
-      <div className="mt-6">
-        <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-black to-pink-500 bg-clip-text text-transparent">
-          Latest Quotes
-        </p>
-        <InfiniteMovingCardsDemo />
-      </div>
-
-      <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
-        Explore Blogs
-      </p>
-
-      {/* Search & Filters */}
-      <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-        <input
-          type="text"
-          placeholder="Search Blog's..."
-          className="w-full md:w-1/3 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        <select
-          className="w-full md:w-1/4 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-        <Link href="/blog/createblogs">
-          <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition duration-300">
-            + Create New Blog
-          </button>
-        </Link>
-      </section>
-      <div className="flex gap-4 mt-10 flex-wrap justify-center">
-        <button
-          onClick={() => setSortFilter("default")}
-          className={`px-4 py-2 rounded-xl font-medium border ${
-            sortFilter === "default"
-              ? "bg-blue-600 text-white"
-              : "bg-white text-blue-600"
-          }`}
-        >
-          All Blogs
-        </button>
-        <button
-          onClick={() => setSortFilter("mostViewed")}
-          className={`px-4 py-2 rounded-xl font-medium border ${
-            sortFilter === "mostViewed"
-              ? "bg-blue-600 text-white"
-              : "bg-white text-blue-600"
-          }`}
-        >
-          Most Viewed
-        </button>
-        <button
-          onClick={() => setSortFilter("mostRecent")}
-          className={`px-4 py-2 rounded-xl font-medium border ${
-            sortFilter === "mostRecent"
-              ? "bg-blue-600 text-white"
-              : "bg-white text-blue-600"
-          }`}
-        >
-          Most Recent
-        </button>
-      </div>
-      {/* Blog Cards */}
-      <section className="max-w-7xl mx-auto px-6 py-16 grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {paginatedBlogs.map((blog) => (
-          <div
-            key={blog._id}
-            className="bg-white border border-blue-200 rounded-3xl shadow-xl hover:shadow-2xl transition-transform duration-300 hover:scale-105 flex flex-col overflow-hidden"
-          >
-            <div className="relative h-56 w-full overflow-hidden rounded-t-3xl">
-              <motion.img
-                src={blog.image}
-                alt={blog.title}
-                initial={{ opacity: 0, scale: 0.95 }}
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 flex justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{
-                  duration: 0.5,
-                  scale: { type: "spring", bounce: 0.4 },
+                  duration: 0.6,
+                  scale: { type: "spring", duration: 0.6, bounce: 0.5 },
                 }}
-                viewport={{ once: true, amount: 0.5 }}
-                className="object-cover w-full h-full transition-transform duration-300 ease-in-out hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-t-3xl pointer-events-none" />
+                viewport={{ once: true, amount: 0.6 }}
+              >
+                <Image
+                  src="/images/blog3.png"
+                  alt="Tech illustration"
+                  width={260}
+                  height={200}
+                  className="w-72 h-72 object-cover rounded-full shadow-2xl ring-4 ring-white transition-transform duration-300 hover:scale-105"
+                />
+              </motion.div>
             </div>
-            <div className="p-6 flex flex-col flex-grow">
-              <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
-                {blog.category}
-              </span>
-              <h2 className="text-xl font-bold mt-2 text-gray-900 leading-snug">
-                {blog.title}
-              </h2>
-              <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed">
-                {blog.description.length > 200
-                  ? blog.description.slice(0, 200) + "..."
-                  : blog.description}
-              </p>
+          </div>
+        </section>
 
-              <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
-  <span>{blog.author}</span>
-  <span>⭐ {blog.rating.toFixed(1)}</span>
-  <span>{new Date(blog.date).toLocaleDateString()}</span>
-</div>
+        {/* Trending / Infinite Cards */}
+        <div className="mt-6">
+          <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-black to-pink-500 bg-clip-text text-transparent">
+          Latest Quotes
+          </p>
+          <InfiniteMovingCardsDemo />
+        </div>
 
-              <div className="mt-6 flex gap-2 justify-between">
-                <Link
-                  href={`/blog/${blog._id}`}
-                  className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
-                >
-                  Read More
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
+        <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
+        Explore Blogs
+        </p>
+
+        {/* Search & Filters */}
+        <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search Blog's..."
+            className="w-full md:w-1/3 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          <select
+            className="w-full md:w-1/4 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <Link href="/blog/createblogs">
+            <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition duration-300">
+            + Create New Blog
+            </button>
+          </Link>
+        </section>
+        <div className="flex gap-4 mt-10 flex-wrap justify-center">
+          <button
+            onClick={() => setSortFilter("default")}
+            className={`px-4 py-2 rounded-xl font-medium border ${
+              sortFilter === "default"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-blue-600"
+            }`}
+          >
+          All Blogs
+          </button>
+          <button
+            onClick={() => setSortFilter("mostViewed")}
+            className={`px-4 py-2 rounded-xl font-medium border ${
+              sortFilter === "mostViewed"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-blue-600"
+            }`}
+          >
+          Most Viewed
+          </button>
+          <button
+            onClick={() => setSortFilter("mostRecent")}
+            className={`px-4 py-2 rounded-xl font-medium border ${
+              sortFilter === "mostRecent"
+                ? "bg-blue-600 text-white"
+                : "bg-white text-blue-600"
+            }`}
+          >
+          Most Recent
+          </button>
+        </div>
+        {/* Blog Cards */}
+        <section className="max-w-7xl mx-auto px-6 py-16 grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {paginatedBlogs.map((blog) => (
+            <div
+              key={blog._id}
+              className="bg-white border border-blue-200 rounded-3xl shadow-xl hover:shadow-2xl transition-transform duration-300 hover:scale-105 flex flex-col overflow-hidden"
+            >
+              <div className="relative h-56 w-full overflow-hidden rounded-t-3xl">
+                <motion.img
+                  src={blog.image}
+                  alt={blog.title}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.5,
+                    scale: { type: "spring", bounce: 0.4 },
+                  }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  className="object-cover w-full h-full transition-transform duration-300 ease-in-out hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-t-3xl pointer-events-none" />
+              </div>
+              <div className="p-6 flex flex-col flex-grow">
+                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+                  {blog.category}
+                </span>
+                <h2 className="text-xl font-bold mt-2 text-gray-900 leading-snug">
+                  {blog.title}
+                </h2>
+                <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed">
+                  {blog.description.length > 200
+                    ? blog.description.slice(0, 200) + "..."
+                    : blog.description}
+                </p>
+
+                <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
+                  <span>{blog.author}</span>
+                  <span>⭐ {blog.rating.toFixed(1)}</span>
+                  <span>{new Date(blog.date).toLocaleDateString()}</span>
+                </div>
+
+                <div className="mt-6 flex gap-2 justify-between">
+                  <Link
+                    href={`/blog/${blog._id}`}
+                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
+                  Read More
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </Link>
 
-                {/* <Link
+                  {/* <Link
                   href={`/blog/paraphrase/${blog._id}`}
                   className="inline-flex items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 text-sm font-semibold hover:bg-blue-600 hover:text-white transition"
                 >
                   Paraphrased by AI
                 </Link> */}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Pagination */}
-      <div className="flex justify-center pb-12">
-        <nav className="flex gap-2">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-white border border-blue-200 text-gray-700 hover:bg-blue-50"
-              }`}
-            >
-              {i + 1}
-            </button>
           ))}
-        </nav>
-      </div>
+        </section>
 
-      <Footer />
-    </div>
+        {/* Pagination */}
+        <div className="flex justify-center pb-12">
+          <nav className="flex gap-2">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-4 py-2 rounded-lg font-medium transition ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-white border border-blue-200 text-gray-700 hover:bg-blue-50"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <Footer />
+      </div>
     </div>
   );
 };
