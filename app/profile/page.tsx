@@ -431,8 +431,8 @@ export default function Profile_pg() {
                     1. How do I publish a blog?
                   </h4>
                   <p>
-                    Go to the "Create Blog" section, fill in the title, content,
-                    and click "Publish".
+                    Go to the &quot;Create Blog&quot; section, fill in the title, content,
+                    and click &quot;Publish&quot;.
                   </p>
                 </div>
                 <div>
@@ -440,7 +440,7 @@ export default function Profile_pg() {
                     2. Can I edit a published blog?
                   </h4>
                   <p>
-                    Yes, you can edit or delete blogs from the "My Blogs"
+                    Yes, you can edit or delete blogs from the &quot;My Blogs&quot;
                     section anytime.
                   </p>
                 </div>

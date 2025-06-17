@@ -31,9 +31,9 @@ type FilterType =
 const BlogsAdminPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  const [paraphraseTexts, setParaphraseTexts] = useState<
-    Record<string, string>
-  >({});
+  // const [paraphraseTexts, setParaphraseTexts] = useState<
+  //   Record<string, string>
+  // >({});
   const [filter, setFilter] = useState<FilterType>("all");
 
   useEffect(() => {

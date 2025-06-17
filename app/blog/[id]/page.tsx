@@ -234,9 +234,9 @@ import { Star } from "lucide-react";
 import {
   ArrowLeft,
   Calendar,
-  User,
+  //User,
   Clock,
-  Share2,
+  //Share2,
   Bookmark,
   ThumbsUp,
   MessageCircle,
@@ -349,7 +349,7 @@ export default function BlogDetailPage() {
             🚫 Blog not found
             </p>
             <p className="text-gray-600 mb-6">
-            The article you're looking for doesn't exist or has been removed.
+            The article you&apos;re looking for doesn&apos;t exist or has been removed.
             </p>
             <Link
               href="/blog"

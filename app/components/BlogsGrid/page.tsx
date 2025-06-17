@@ -24,8 +24,8 @@ interface Blog {
 
 interface BlogsGridProps {
   blogs: Blog[];
-  onVerify: (id: string) => void;
-  onDelete: (id: string) => void;
+  onVerify: (_id: string) => void;
+  onDelete: (_id: string) => void;
 }
 
 const BlogsGrid: React.FC<BlogsGridProps> = ({ blogs, onVerify, onDelete }) => {

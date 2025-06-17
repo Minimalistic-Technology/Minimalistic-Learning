@@ -1,6 +1,6 @@
 import React from "react";
 import Footer from "./Footer";
-import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+import { FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 const ContactUs: React.FC = () => {
   return (
     <div className="bg-[#daf0ff] min-h-screen">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 // Define the type for the onDateSelect callback
 interface CalendarProps {
-  onDateSelect?: (date: number) => void; // Callback function that receives a number (day)
+  onDateSelect?: (_date: number) => void; // Callback function that receives a number (day)
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onDateSelect }) => {

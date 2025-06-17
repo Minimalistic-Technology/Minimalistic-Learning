@@ -42,7 +42,7 @@ const PrivacyPolicyPage: React.FC = () => {
               <h2 className="text-2xl font-bold">Privacy Policy – MinimalisticLearning</h2>
               <p><strong>Effective Date:</strong> May 3, 2025</p>
               <p>
-                At MinimalisticLearning ("we", "our", "us"), your privacy is our priority. This Privacy Policy outlines how we collect, use, disclose, and manage your data in compliance with the General Data Protection Regulation (GDPR) and the Indian Information Technology Act, 2000 (as amended by the IT Rules, 2024).
+                At MinimalisticLearning (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;), your privacy is our priority. This Privacy Policy outlines how we collect, use, disclose, and manage your data in compliance with the General Data Protection Regulation (GDPR) and the Indian Information Technology Act, 2000 (as amended by the IT Rules, 2024).
               </p>
               <p>By using MinimalisticLearning, you agree to the terms of this Privacy Policy.</p>
               <hr />

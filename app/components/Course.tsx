@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { categories, courses } from "@/app/data/courseData";
 import Link from "next/link";
 
-const slugify = (title: string) =>
-  title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-");
+// const slugify = (title: string) =>
+//   title
+//     .toLowerCase()
+//     .replace(/[^a-z0-9\s]/g, "")
+//     .replace(/\s+/g, "-");
 
 const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All Blog's"); //"All Courses");
@@ -81,7 +81,7 @@ const Course = () => {
 
                   <Link href="/blog">
                     <button className="relative overflow-hidden px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg transition-all duration-300 hover:scale-105">
-                      <span className="relative z-10">Browse Blog's</span>
+                      <span className="relative z-10">Browse Blogs</span>
                     </button>
                   </Link>
                 </div>

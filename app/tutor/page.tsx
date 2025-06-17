@@ -1,11 +1,11 @@
 
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Course from "../components/Course";
 import Footer from "../components/Footer";
 import SearchBarCourse from "../components/SearchBarCourse";
-import TutorProfile from "../components/TutorProfile";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+//import TutorProfile from "../components/TutorProfile";
+//import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Page = () => {
   return (

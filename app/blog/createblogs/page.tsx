@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
-import { Camera, FileText, Calendar, User, Tag, Link } from "lucide-react";
+import { Camera, Calendar, User, Tag, Link } from "lucide-react";
 import axios from "axios";
 import axiosInstance from "app/axiosInstance/page";
 import { motion } from "framer-motion";

@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  //const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { setUser } = useAuth();
 
@@ -37,7 +37,7 @@ const LoginPage = () => {
       console.log("redirecting...");
       router.push("/");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Login failed");
+      //setError(err.response?.data?.error || "Login failed");
       toast.error(err.response?.data?.error || "Login failed");
     }
   };
@@ -162,7 +162,7 @@ const LoginPage = () => {
                 href="/components/signup"
                 className="text-blue-500 font-medium hover:text-blue-700 transition"
               >
-                Don't have an account? Sign Up
+                Don&apos;t have an account? Sign Up
               </Link>
             </div>
           </form>

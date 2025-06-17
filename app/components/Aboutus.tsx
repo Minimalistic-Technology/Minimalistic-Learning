@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { use } from "react";
+import React from "react";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
 import ScrollProgressBar from "./ScrollerProgress";
