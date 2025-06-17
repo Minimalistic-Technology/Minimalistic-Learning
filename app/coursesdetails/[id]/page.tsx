@@ -7,6 +7,8 @@
 // import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 // import * as Accordion from "@radix-ui/react-accordion";
 
+import exp from "constants";
+
 // const slugify = (title: string) =>
 //   title.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, '-');
 
@@ -260,3 +262,17 @@
 // };
 
 // export default CourseDetails;
+
+const CourseDetails = () => {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-blue-50">
+      <div className="max-w-2xl w-full p-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Course Details</h1>
+        <p className="text-gray-600 mb-6">
+          Under construction! 
+        </p>
+      </div>
+    </div>
+  );
+};
+export default CourseDetails;

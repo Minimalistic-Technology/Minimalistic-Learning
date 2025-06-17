@@ -244,7 +244,7 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
-import axiosInstance from "@/app/axiosInstance/page";
+import axiosInstance from "@/utils/axiosInstance/page";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 interface BlogType {
   _id: string;

@@ -96,7 +96,7 @@
 //   },
 // };
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { JWTPayload, SignJWT, importJWK } from 'jose';
+//import { JWTPayload, SignJWT, importJWK } from 'jose';
 import bcrypt from 'bcrypt';
 import GoogleProvider from 'next-auth/providers/google';
 import { NextAuthOptions } from 'next-auth';

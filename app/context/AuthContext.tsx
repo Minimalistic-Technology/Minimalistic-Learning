@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   user: string | null;
-  setUser: (_user: string | null) => void;
+  setUser: (user: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

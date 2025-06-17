@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import api from "utils/api";
-import axiosInstance from "@/app/axiosInstance/page";
+import axiosInstance from "@/utils/axiosInstance/page";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-import LoadingSkeleton from "app/components/loading/page";
-import BlogsGrid from "@/app/components/BlogsGrid/page";
+import LoadingSkeleton from "@/app/components/loading";
+import BlogsGrid from "@/app/components/BlogsGrid";
 interface Blog {
   _id: string;
   title: string;

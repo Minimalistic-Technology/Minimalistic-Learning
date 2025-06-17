@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
 import { Camera, Calendar, User, Tag, Link } from "lucide-react";
 import axios from "axios";
-import axiosInstance from "app/axiosInstance/page";
+import axiosInstance from "@/utils/axiosInstance/page";
 import { motion } from "framer-motion";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 

@@ -8,11 +8,11 @@
     "indent": ["error", 2],
     // "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "no-unused-vars": "error",
+    // "no-unused-vars": "error",
     "no-unused-labels" :  "error",
     "no-console": "warn",
     // "no-magic-numbers" : "error",
-    "no-mixed-operators":"error"
+    "no-mixed-operators": "error"
     // "no-var":"error"
   }
 }

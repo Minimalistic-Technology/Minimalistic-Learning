@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const Hero = () => {
- // const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <section className="h-[90vh] flex items-center justify-center px-6 md:px-12">

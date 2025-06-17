@@ -235,7 +235,7 @@ import {
   Calendar,
   //User,
   Clock,
- // Share2,
+  // Share2,
   Bookmark,
   ThumbsUp,
   MessageCircle,
@@ -267,9 +267,7 @@ export default function BlogDetailPage() {
     const fetchBlog = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get(
-          `/blogs/${blogId}`
-        );
+        const response = await api.get(`/blogs/${blogId}`);
         setBlog(response.data);
       } catch (error) {
         console.error("Error fetching blog:", error);
@@ -309,7 +307,8 @@ export default function BlogDetailPage() {
             🚫 Blog not found
           </p>
           <p className="text-gray-600 mb-6">
-            The article you&apos;re looking for doesn&apos;t exist or has been removed.
+            The article you&apos;re looking for doesn&apos;t exist or has been
+            removed.
           </p>
           <Link
             href="/blog"
