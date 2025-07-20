@@ -1,6 +1,6 @@
 "use client";
 
-import { logIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ export function CredentialsForm() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
 
-    const logInResponse = await logIn("credentials", {
+    const logInResponse = await signIn("credentials", {
       email: data.get("email"),
       password: data.get("password"),
       redirect: false,

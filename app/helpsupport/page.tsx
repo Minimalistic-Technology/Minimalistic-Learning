@@ -190,7 +190,7 @@ const HelpSupportPage = () => {
           Help & Support
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          We're here to help! Find answers to common questions or reach out to us directly.
+          We&apos;re here to help! Find answers to common questions or reach out to us directly.
         </p>
       </section>
 

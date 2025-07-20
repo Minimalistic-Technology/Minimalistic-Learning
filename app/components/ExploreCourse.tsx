@@ -19,9 +19,9 @@ export default function ExploreCourse() {
       sx={{ width: "100%", typography: "body1", fontWeight: "bold" }}
       className="max-w-7xl mx-auto h-full"
     >
-    <p className="text-3xl md:text-6xl text-center pb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+      <p className="text-3xl md:text-6xl text-center pb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
   Explore Course
-</p>
+      </p>
       <TabContext value={value}>
         <Box>
           <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
@@ -155,7 +155,7 @@ export default function ExploreCourse() {
           </div>
         </TabPanel>
         <TabPanel value="2" sx={{ typography: "body1", fontWeight: "bold" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
             {new Array(2).fill(0).map((item:any, index:any) => (
               <div className="w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-md p-4" key={index}>
                 <div className="">
@@ -254,10 +254,10 @@ export default function ExploreCourse() {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
         </TabPanel>
         <TabPanel value="3" sx={{ typography: "body1", fontWeight: "bold" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
             {new Array(3).fill(0).map((item:any, index:any) => (
               <div className="w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-md p-4" key={index}>
                 <div className="">
@@ -354,10 +354,10 @@ export default function ExploreCourse() {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
         </TabPanel>
         <TabPanel value="4" sx={{ typography: "body1", fontWeight: "bold" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
             {new Array(4).fill(0).map((item:any, index:any) => (
               <div className="w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-md p-4" key={index}>
                 <div className="">
@@ -454,10 +454,10 @@ export default function ExploreCourse() {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
         </TabPanel>
         <TabPanel value="5" sx={{ typography: "body1", fontWeight: "bold" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 ">
             {new Array(5).fill(0).map((item:any, index:any) => (
               <div className="w-full bg-white rounded-xl shadow-md overflow-hidden md:max-w-md p-4" key={index}>
                 <div className="">
@@ -554,9 +554,9 @@ export default function ExploreCourse() {
                 </div>
               </div>
             ))}
-        </div>
+          </div>
         </TabPanel>
       </TabContext>
-    </Box>
-  );
+    </Box>
+  );
 }

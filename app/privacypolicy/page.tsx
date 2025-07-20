@@ -1,14 +1,14 @@
-import React from 'react'
-import PrivacyPolicy from '../components/PrivacyPolicy'
-import Footer from '../components/Footer'
+import React from 'react';
+import PrivacyPolicy from '../components/PrivacyPolicy';
+import Footer from '../components/Footer';
 
 const page = () => {
   return (
     <div>
-<PrivacyPolicy/>
-<Footer/>
+      <PrivacyPolicy/>
+      <Footer/>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

@@ -182,41 +182,43 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap",
+          "flex min-w-full shrink-0 gap-6 py-6 w-max flex-nowrap",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
-        {items.map((item, idx) => (
+        {items.map((item) => (
           <li
-            key={`${item.name.replace(/\s+/g, "-").toLowerCase()}-${idx}`} // ✅ Ensures uniqueness
-            className="w-[350px] max-w-full relative rounded-2xl border border-b-0 flex-shrink-0 border-blue-500 px-8 py-6 md:w-[450px]"
+            key={item.name}
+            className="w-[350px] md:w-[450px] flex-shrink-0 rounded-3xl border border-blue-600 border-opacity-50 px-8 py-8
+          bg-gradient-to-b from-blue-600 via-blue-700 to-blue-900
+          shadow-lg hover:shadow-2xl transition-shadow duration-300
+          hover:scale-[1.04] transform-gpu cursor-pointer"
             style={{
-              background: "linear-gradient(180deg, #bae6fd, #3b82f6)",
+              boxShadow:
+            "inset 0 0 10px rgb(59 130 246 / 0.6), 0 8px 20px rgb(14 165 233 / 0.3)",
             }}
           >
             <blockquote>
-              <div
-                aria-hidden="true"
-                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
-              />
-              <span className="relative z-20 text-sm leading-[1.6] text-gray-800 font-normal">
+              <span className="relative z-20 block text-sm leading-relaxed text-white font-light drop-shadow-md">
                 {item.quote}
               </span>
-              <div className="relative z-20 mt-6 flex flex-row items-center">
-                <span className="flex flex-col gap-1">
-                  <span className="text-md leading-[1.6] text-gray-100 font-normal">
+              <div className="relative z-20 mt-8 flex items-center gap-4">
+           
+                <div className="flex flex-col">
+                  <span className="text-lg font-semibold text-white drop-shadow-sm">
                     {item.name}
                   </span>
-                  <span className="text-md leading-[1.6] text-white font-normal">
+                  <span className="text-md font-medium text-blue-200 drop-shadow-sm">
                     {item.title}
                   </span>
-                </span>
+                </div>
               </div>
             </blockquote>
           </li>
         ))}
       </ul>
     </div>
+
   );
 };

@@ -96,12 +96,12 @@
 //   },
 // };
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { JWTPayload, SignJWT, importJWK } from 'jose';
+//import { JWTPayload, SignJWT, importJWK } from 'jose';
 import bcrypt from 'bcrypt';
 import GoogleProvider from 'next-auth/providers/google';
 import { NextAuthOptions } from 'next-auth';
 import { Session } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+//import { JWT } from 'next-auth/jwt';
 import connectDB from './connectDB';
 import User from '../models/user';
 
@@ -115,19 +115,19 @@ export interface ExtendedSession extends Session {
   };
 }
 
-const generateJWT = async (payload: JWTPayload) => {
-  const secret = process.env.JWT_SECRET || 'secret';
+// const generateJWT = async (payload: JWTPayload) => {
+//   const secret = process.env.JWT_SECRET || 'secret';
 
-  const jwk = await importJWK({ k: secret, alg: 'HS256', kty: 'oct' });
+//   const jwk = await importJWK({ k: secret, alg: 'HS256', kty: 'oct' });
 
-  const jwt = await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('365d')
-    .sign(jwk);
+//   const jwt = await new SignJWT(payload)
+//     .setProtectedHeader({ alg: 'HS256' })
+//     .setIssuedAt()
+//     .setExpirationTime('365d')
+//     .sign(jwk);
 
-  return jwt;
-};
+//   return jwt;
+// };
 
 export const authOptions: NextAuthOptions = {
   providers: [

@@ -147,7 +147,7 @@ export default function TutorDashboard() {
             <div className="col-span-2 space-y-4">
               {/* Schedule Section Header */}
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg text-blue-800 font-semibold">Today's Lesson Schedule</h2>
+                <h2 className="text-lg text-blue-800 font-semibold">Today&apos;s Lesson Schedule</h2>
                 <button className="text-blue-800 hover:text-blue-600">View All</button>
               </div>
 

@@ -1,5 +1,5 @@
-import React from 'react'
-import AboutUs from '../components/Aboutus'
+import React from 'react';
+import AboutUs from '../components/Aboutus';
 
 
 
@@ -7,11 +7,11 @@ const page = () => {
   return (
     <div>
 
-<AboutUs/>
+      <AboutUs/>
 
 
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

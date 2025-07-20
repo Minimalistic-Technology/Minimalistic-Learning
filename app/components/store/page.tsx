@@ -11,29 +11,29 @@ interface Product {
 }
 
 const FakeStore: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     axios
-    .get("https://fakestoreapi.com/products")
-    .then((res) => setProducts(res.data))     
-    .catch((error) => console.error("Error fetching products:", error));
-    }, []);
+      .get("https://fakestoreapi.com/products")
+      .then((res) => setProducts(res.data))     
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
 
-    return (
+  return (
     <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4">🛒 Fake Store Products</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <h2 className="text-2xl font-bold mb-4">🛒 Fake Store Products</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
-            <div key={product.id} className="border p-4 rounded-lg shadow-lg">
+          <div key={product.id} className="border p-4 rounded-lg shadow-lg">
             <img src={product.image} alt={product.title} className="h-40 w-full object-contain mb-2" />
             <h3 className="text-lg font-semibold">{product.title}</h3>
             <p className="text-green-600 font-bold">${product.price}</p>
-            </div>
+          </div>
         ))}
-        </div>
+      </div>
     </div>
-    );
+  );
 };
 
 export default FakeStore;

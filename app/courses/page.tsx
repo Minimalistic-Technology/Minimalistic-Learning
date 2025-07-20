@@ -69,3 +69,11 @@
 //   );
 // };
 // export default Page;
+
+export default function Page() {
+  return (
+    <div className="p-10 text-center text-gray-600">
+      Courses page under construction.
+    </div>
+  );
+}

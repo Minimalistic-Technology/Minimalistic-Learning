@@ -1,11 +1,11 @@
 
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Course from "../components/Course";
 import Footer from "../components/Footer";
 import SearchBarCourse from "../components/SearchBarCourse";
-import TutorProfile from "../components/TutorProfile";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+//import TutorProfile from "../components/TutorProfile";
+//import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 const Page = () => {
   return (
@@ -64,19 +64,19 @@ const Page = () => {
            Choose Three Topics To Create Minimalistic Learning Experience
         </p>
         <div>
-            <div className="mx-auto px-20">
-              <textarea
-                placeholder="Write your feedback..."
-                className="w-full bg-transparent h-8 p-0.5 border border-purple-500 rounded-lg "
-              ></textarea>
-              <textarea
-                placeholder="Additional comments..."
-                className="w-full bg-transparent h-32 p-4 border border-purple-500 rounded-lg"
-              ></textarea>
-            </div>
-            <button className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg block ml-auto">
+          <div className="mx-auto px-20">
+            <textarea
+              placeholder="Write your feedback..."
+              className="w-full bg-transparent h-8 p-0.5 border border-purple-500 rounded-lg "
+            ></textarea>
+            <textarea
+              placeholder="Additional comments..."
+              className="w-full bg-transparent h-32 p-4 border border-purple-500 rounded-lg"
+            ></textarea>
+          </div>
+          <button className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg block ml-auto">
               Submit Feedback
-            </button>
+          </button>
         </div>
       </section>
       <Footer />

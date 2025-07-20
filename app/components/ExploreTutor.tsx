@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from 'next/image';
+import React from 'react';
 
 const ExploreTutor = () => {
   return (
@@ -44,7 +44,7 @@ const ExploreTutor = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default ExploreTutor
+export default ExploreTutor;

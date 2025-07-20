@@ -10,12 +10,12 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     <>
       <SessionProvider>
         <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
         >
-            <RecoilRoot>{children}</RecoilRoot>
+          <RecoilRoot>{children}</RecoilRoot>
         </ThemeProvider>
       </SessionProvider>
     </>

@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import React from 'react'
+//import Image from 'next/image';
+import React from 'react';
 
 const SearchBarCourse = () => {
   return (
-<div className="bg-[#daf0ff]">
+    <div className="bg-[#daf0ff]">
       {/* User Info */}
       <div className="flex justify-end items-center p-10 gap-4 bg-[#daf0ff]">
         <span className="text-gray-600 text-lg">John Doe</span>
@@ -28,20 +28,20 @@ const SearchBarCourse = () => {
 
         {/* Search Bar */}
         <div className="flex justify-center items-center gap-4 mb-10">
-      <input
-        type="text"
-        placeholder="Search Courses"
-        className="w-96 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button className="px-6 py-3 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">
+          <input
+            type="text"
+            placeholder="Search Courses"
+            className="w-96 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button className="px-6 py-3 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">
         Filter by ▼
-      </button>
+          </button>
+        </div>
+      </main>
     </div>
-    </main>
-    </div>
-        );
-      }
+  );
+};
 
 
       
-export default SearchBarCourse
+export default SearchBarCourse;
