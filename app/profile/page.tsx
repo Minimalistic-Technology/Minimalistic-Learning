@@ -75,7 +75,7 @@ export default function Profile_pg() {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/blogs/my-blogs", {
+        const response = await fetch("http://localhost:5000/api/blog/my-blogs", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -144,7 +144,7 @@ export default function Profile_pg() {
 
       // Try fetching profile first to check if it exists
       const checkRes = await fetch(
-        `http://localhost:5000/api/profile?email=${userData.email}`
+        `http://localhost:5000/api/profile/profile?email=${userData.email}`
       );
       let profileData = null;
 
@@ -164,14 +164,14 @@ export default function Profile_pg() {
         // Add password for creation
         payload.password = newPassword;
 
-        response = await fetch("http://localhost:5000/api/profile", {
+        response = await fetch("http://localhost:5000/api/profile/profile", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
       } else {
         // Profile exists, proceed to update it
-        response = await fetch("http://localhost:5000/api/profile", {
+        response = await fetch("http://localhost:5000/api/profile/profile", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

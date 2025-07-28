@@ -254,6 +254,7 @@ interface BlogType {
   date: string;
   image: string;
   category: String;
+  tags: string[];
 }
 
 export default function BlogDetailPage() {
@@ -275,7 +276,7 @@ export default function BlogDetailPage() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/blogs/${blogId}`
+          `http://localhost:5000/api/blog/${blogId}`
         );
         setBlog(response.data);
       } catch (error) {
@@ -291,13 +292,12 @@ export default function BlogDetailPage() {
     }
   }, [blogId]);
 
-
   useEffect(() => {
     const fetchRelatedBlogs = async () => {
       if (blog?.category && blog?._id) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/blogs/related?category=${blog.category}&excludeId=${blog._id}`
+            `http://localhost:5000/api/blog/related?category=${blog.category}&excludeId=${blog._id}`
           );
           setRelatedBlogs(response.data);
         } catch (error) {
@@ -309,11 +309,10 @@ export default function BlogDetailPage() {
     fetchRelatedBlogs();
   }, [blog]);
 
-
   const handleRating = async (value: number) => {
     setRating(value);
     try {
-      await axiosInstance.put(`http://localhost:5000/blogs/${blogId}`, {
+      await axiosInstance.put(`http://localhost:5000/api/blog/${blogId}`, {
         rating: value,
       });
       console.log("Rating submitted:", value);
@@ -328,10 +327,28 @@ export default function BlogDetailPage() {
   const handleSave = () => {
     setSaved(!saved);
   };
+  const cleanMarkdown = (text: string) => {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/^#+\s+(.*$)/gm, '<p class="font-bold text-lg">$1</p>')
+      .replace(/^- (.*$)/gm, "<li>• $1</li>")
+      .replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" class="text-blue-600">$1</a>'
+      )
+      .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>")
+      .replace(
+        /`([^`]+)`/g,
+        '<code class="bg-gray-100 px-1 rounded">$1</code>'
+      );
+  };
 
   if (isLoading) {
     return (
-      <div>  <ScrollProgressBar/>
+      <div>
+        {" "}
+        <ScrollProgressBar />
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
           <div className="w-16 h-16 border-t-4 border-blue-600 border-solid rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600">Loading article...</p>
@@ -342,21 +359,24 @@ export default function BlogDetailPage() {
 
   if (!blog) {
     return (
-      <div>  <ScrollProgressBar/>
+      <div>
+        {" "}
+        <ScrollProgressBar />
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center px-4">
           <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
             <p className="text-red-600 text-xl font-semibold mb-2">
-            🚫 Blog not found
+              🚫 Blog not found
             </p>
             <p className="text-gray-600 mb-6">
-            The article you&apos;re looking for doesn&apos;t exist or has been removed.
+              The article you&apos;re looking for doesn&apos;t exist or has been
+              removed.
             </p>
             <Link
               href="/blog"
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Blogs
+              Back to Blogs
             </Link>
           </div>
         </div>
@@ -367,7 +387,9 @@ export default function BlogDetailPage() {
   const readingTime = calculateReadingTime(blog.description);
 
   return (
-    <div>  <ScrollProgressBar/>
+    <div>
+      {" "}
+      <ScrollProgressBar />
       <div className="min-h-screen overflow-x-hidden">
         {/* Sticky Navigation */}
         <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100">
@@ -377,7 +399,7 @@ export default function BlogDetailPage() {
               className="flex items-center text-blue-600 hover:text-blue-800 transition"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Articles
+              Back to Articles
             </Link>
             <div className="flex items-center space-x-3">
               <button
@@ -423,7 +445,7 @@ export default function BlogDetailPage() {
             <div className="max-w-screen-xl mx-auto">
               <div className="flex items-center space-x-2 text-white/80 text-sm mb-4">
                 <span className="px-3 py-1 bg-blue-600/90 rounded-full">
-                Featured
+                  Featured
                 </span>
                 <span className="flex items-center">
                   <Clock className="w-4 h-4 mr-1" />
@@ -464,9 +486,9 @@ export default function BlogDetailPage() {
             <div className="mt-8">
               {blog.description ? (
                 <div
-                  className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words prose-headings:text-gray-800 prose-a:text-blue-600"
+                  className="prose prose-sm sm:prose lg:prose-lg max-w-full break-words"
                   dangerouslySetInnerHTML={{
-                    __html: formatContent(blog.description),
+                    __html: cleanMarkdown(blog.description),
                   }}
                 />
               ) : (
@@ -478,18 +500,14 @@ export default function BlogDetailPage() {
             <div className="mt-10 pt-6 border-t border-gray-100">
               <h4 className="text-sm font-medium text-gray-500 mb-3">TAGS</h4>
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                Web Development
-                </span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                UI/UX
-                </span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                NextJS
-                </span>
-                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition">
-                Design
-                </span>
+                {blog.tags?.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 cursor-pointer transition"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
             </div>
 
@@ -564,25 +582,27 @@ export default function BlogDetailPage() {
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-16">
           <div className="bg-blue-50 rounded-xl shadow-md p-6 sm:p-8 border border-blue-100">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
-            About the Author
+              About the Author
             </h3>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
                 {blog.author.charAt(0)}
               </div>
               <div>
-                <h4 className="text-xl font-bold text-gray-900">{blog.author}</h4>
+                <h4 className="text-xl font-bold text-gray-900">
+                  {blog.author}
+                </h4>
                 <p className="text-gray-600 mt-2">
-                Professional writer and content creator with expertise in web
-                development and digital marketing. With over 5 years of
-                experience creating engaging content for tech audiences.
+                  Professional writer and content creator with expertise in web
+                  development and digital marketing. With over 5 years of
+                  experience creating engaging content for tech audiences.
                 </p>
                 <div className="mt-4 flex items-center space-x-3">
                   <button className="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
-                  Follow
+                    Follow
                   </button>
                   <button className="text-sm font-medium text-gray-600 hover:text-gray-800 transition">
-                  More articles
+                    More articles
                   </button>
                 </div>
               </div>
@@ -593,7 +613,9 @@ export default function BlogDetailPage() {
         {/* Related Posts */}
         {relatedBlogs.length > 0 && (
           <div className="mt-16 pt-12 border-t border-gray-300 px-4 sm:px-6 lg:px-8">
-            <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">Related Blogs</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-10 text-center">
+              Related Blogs
+            </h3>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {relatedBlogs.map((related) => (
                 <Link
@@ -611,7 +633,10 @@ export default function BlogDetailPage() {
                       {related.title}
                     </h4>
                     <p className="text-sm text-gray-600 line-clamp-2">
-                      {related.description.replace(/<[^>]+>/g, "").slice(0, 100)}...
+                      {related.description
+                        .replace(/<[^>]+>/g, "")
+                        .slice(0, 100)}
+                      ...
                     </p>
                     <div className="text-xs text-gray-400 mt-3 flex justify-between items-center">
                       <span>{related.date}</span>
@@ -625,7 +650,6 @@ export default function BlogDetailPage() {
             </div>
           </div>
         )}
-
 
         <Footer />
       </div>

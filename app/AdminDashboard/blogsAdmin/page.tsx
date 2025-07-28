@@ -38,7 +38,7 @@ const BlogsAdminPage = () => {
 
   useEffect(() => {
     api
-      .get("/blogs")
+      .get("/api/blog")
       .then((res) => {
         const sortedBlogs = res.data.sort(
           (a: Blog, b: Blog) =>
@@ -53,7 +53,7 @@ const BlogsAdminPage = () => {
   }, []);
 
   const handleVerify = (id: string) => {
-    axiosInstance.put(`/blogs/${id}`, { verified: true }).then(() => {
+    axiosInstance.put(`/api/blog/${id}`, { verified: true }).then(() => {
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
@@ -62,11 +62,11 @@ const BlogsAdminPage = () => {
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    axiosInstance.delete(`/blogs/${id}`).then(() => {
+    axiosInstance.delete(`/api/blog/${id}`).then(() => {
       setBlogs((prev) => prev.filter((b) => b._id !== id));
     });
   };
-
+  
   // const handleParaphrase = (id: string) => {
   //   const text = paraphraseTexts[id];
   //   if (!text || text.trim() === "") {

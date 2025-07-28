@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState,useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
 import { Camera, Calendar, User, Tag, Link } from "lucide-react";
@@ -18,19 +18,27 @@ interface BlogFormData {
   author: string;
   tags: string[];
   minutes: number;
+  authorId: string; // Add this field
 }
 
 const CreateBlogPage = () => {
-  const [formData, setFormData] = useState<BlogFormData>({
-    title: "",
-    description: "",
-    category: "",
-    image: "",
-    date: new Date().toISOString().split("T")[0], // Default to today's date
-    author: "",
-    tags: [],
-    minutes: 1, // Default reading time
-  });
+const [formData, setFormData] = useState<BlogFormData>({
+  title: "",
+  description: "",
+  category: "",
+  image: "",
+  date: new Date().toISOString().split("T")[0],
+  author: "",
+  tags: [],
+  minutes: 1,
+  authorId: "", // Add empty initially
+});
+useEffect(() => {
+  const authorId = localStorage.getItem("id"); // this is saved at login
+  if (authorId) {
+    setFormData((prev) => ({ ...prev, authorId }));
+  }
+}, []);
 
   const [currentTag, setCurrentTag] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -94,7 +102,7 @@ const CreateBlogPage = () => {
     try {
       // Make API call to the backend
       const response = await axiosInstance.post(
-        "/blogs",
+        "/api/blog",
         formData
       );
 

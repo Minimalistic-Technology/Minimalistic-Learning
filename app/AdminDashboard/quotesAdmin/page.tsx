@@ -25,7 +25,7 @@ export default function QuotesAdminPage() {
     const fetchQuotes = async () => {
       setLoading(true);
       try {
-        const response = await api.get("/quotes/latest");
+        const response = await api.get("/api/quotes/latest");
         setQuotes(response.data);
       } catch (err) {
         setError("Failed to load quotes");
@@ -41,7 +41,7 @@ export default function QuotesAdminPage() {
     if (!confirm("Are you sure you want to delete this quote?")) return;
     setDeletingId(id);
     try {
-      await api.delete(`/quotes/${id}`);
+      await api.delete(`/api/quotes/${id}`);
       setQuotes((prev) => prev.filter((q) => q._id !== id));
     } catch (err) {
       alert("Failed to delete quote");
@@ -57,7 +57,7 @@ export default function QuotesAdminPage() {
     setError(null);
 
     try {
-      const response = await api.post("/quotes", {
+      const response = await api.post("/api/quotes", {
         quote: quoteInput,
         name: nameInput,
         title: titleInput,

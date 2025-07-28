@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import emailjs from "emailjs-com";
 
 const ContactForm = () => {
-  const form = useRef<HTMLFormElement>(null); // Type-safe form reference
+  const form = useRef<HTMLFormElement>(null); 
 
   const sendEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ const ContactForm = () => {
       .then(
         () => {
           alert("Message sent successfully!");
-          form.current?.reset(); // Optional chaining to safely reset
+          form.current?.reset(); 
         },
         (error) => {
           alert("Failed to send message. Please try again.");

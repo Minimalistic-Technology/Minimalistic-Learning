@@ -40,8 +40,8 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const blogsRes = await axios.get('http://localhost:5000/blogs');
-        const quotesRes = await axios.get('http://localhost:5000/quotes/latest');
+        const blogsRes = await axios.get('http://localhost:5000/api/blog');
+        const quotesRes = await axios.get('http://localhost:5000/api/quotes/latest');
 
         const sortedBlogs = blogsRes.data.sort(
           (a: Blog, b: Blog) => parseYYMMDD(b.date).getTime() - parseYYMMDD(a.date).getTime()
@@ -82,11 +82,11 @@ const AdminDashboard = () => {
           </button>
 
           {/* Top Bar */}
-          <div className="flex justify-end items-center bg-white shadow-md px-8 py-4">
-            <div className="relative cursor-pointer mr-4">
-              <FaBell className="text-gray-600 text-xl" />
-              <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1">2</span>
-            </div>
+          <div className="flex justify-between items-center bg-white shadow-md px-8 py-4">
+            <div className="p-6">
+            <p className="text-md text-blue-500">Welcome back,</p>
+            <h2 className="text-2xl font-semibold text-gray-900 flex items-center">John Doe 👋</h2>
+          </div>
             <div className="flex items-center space-x-2">
               <img
                 src="https://cdn-icons-png.flaticon.com/128/1999/1999625.png"
@@ -97,10 +97,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Welcome */}
-          <div className="p-6">
-            <p className="text-md text-blue-500">Welcome back,</p>
-            <h2 className="text-2xl font-semibold text-gray-900 flex items-center">John Doe 👋</h2>
-          </div>
+          
 
           {/* Stats Cards */}
           <section className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
