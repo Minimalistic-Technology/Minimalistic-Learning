@@ -321,7 +321,7 @@ const SignUpPage = () => {
     ) {
       try {
         // First, attempt signup
-        await api.post("api/v1/auth/signup", {
+        await api.post("/api/ml/signup", {
           username: `${firstName} ${lastName}`,
           email,
           password,
@@ -332,7 +332,7 @@ const SignUpPage = () => {
         );
         // If signup is successful, send OTP
         try {
-          await api.post("/api/otp/send-otp", {
+          await api.post("/api/ml/otp/send-otp", {
             name: `${firstName} ${lastName}`,
             email,
           });

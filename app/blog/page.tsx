@@ -828,7 +828,7 @@ const BlogPage = () => {
 
   useEffect(() => {
     api
-      .get("/api/blog")
+      .get("/api/ml/")
       .then((response) => {
         setBlogs(response.data);
         setIsLoading(false);
@@ -842,11 +842,11 @@ const BlogPage = () => {
   useEffect(() => {
     // setIsLoading(true);
 
-    let url = "http://localhost:5000/api/blog";
+    let url = "http://api.minimalistictechnology.com/api/ml/";
     if (sortFilter === "mostViewed") {
-      url = "http://localhost:5000/api/blog/most-viewed";
+      url = "http://api.minimalistictechnology.com/api/ml/most-viewed";
     } else if (sortFilter === "mostRecent") {
-      url = "http://localhost:5000/api/blog/most-recent";
+      url = "http://api.minimalistictechnology.com/api/ml/most-recent";
     }
 
     api
