@@ -276,7 +276,7 @@ export default function BlogDetailPage() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:5000/api/blog/${blogId}`
+          `https://api.minimalisticlearning.com/api/ml/${blogId}`
         );
         setBlog(response.data);
       } catch (error) {
@@ -297,7 +297,7 @@ export default function BlogDetailPage() {
       if (blog?.category && blog?._id) {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/blog/related?category=${blog.category}&excludeId=${blog._id}`
+            `http://api.minimalisticlearning.com/api/ml/related?category=${blog.category}&excludeId=${blog._id}`
           );
           setRelatedBlogs(response.data);
         } catch (error) {
@@ -312,7 +312,7 @@ export default function BlogDetailPage() {
   const handleRating = async (value: number) => {
     setRating(value);
     try {
-      await axiosInstance.put(`http://localhost:5000/api/blog/${blogId}`, {
+      await axiosInstance.put(`http://api.minimalisticlearning.com/api/ml/update/${blogId}`, {
         rating: value,
       });
       console.log("Rating submitted:", value);

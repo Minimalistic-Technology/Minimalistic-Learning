@@ -47,8 +47,6 @@ export default function Profile_pg() {
   const [error, setError] = useState<string>("");
   const [successMsg, setSuccessMsg] = useState<string>("");
 
-
-
   useEffect(() => {
     const username = localStorage.getItem("username") || "";
     const email = localStorage.getItem("email") || "";
@@ -61,7 +59,6 @@ export default function Profile_pg() {
         lastName: lastName || "",
         email,
       });
-     
     }
   }, []);
 
@@ -75,13 +72,16 @@ export default function Profile_pg() {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/blog/my-blogs", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://api.minimalistictechnology.com/api/ml/my-blogs",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -102,11 +102,11 @@ export default function Profile_pg() {
 
     fetchUserBlogs();
   }, []);
-
   const handleSave = async () => {
     setError("");
     setSuccessMsg("");
 
+    // Basic validation
     if (
       !userData.firstName.trim() ||
       !userData.lastName.trim() ||
@@ -116,15 +116,11 @@ export default function Profile_pg() {
       return;
     }
 
-    if (isEditing && (newPassword || confirmPassword || currentPassword)) {
-      if (!currentPassword) {
-        setError("Please enter your current password to change your password.");
-        return;
-      }
-      if (newPassword !== confirmPassword) {
-        setError("New password and confirm password do not match.");
-        return;
-      }
+    // Get the token from localStorage
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setError("You need to be logged in to update your profile.");
+      return;
     }
 
     try {
@@ -134,85 +130,91 @@ export default function Profile_pg() {
         lastName: userData.lastName,
       };
 
-      if (isEditing && currentPassword) {
-        payload.currentPassword = currentPassword;
-        if (newPassword) payload.newPassword = newPassword;
-        if (confirmPassword) payload.confirmPassword = confirmPassword;
-      }
-
-      let response: Response;
-
-      // Try fetching profile first to check if it exists
-      const checkRes = await fetch(
-        `http://localhost:5000/api/profile/profile?email=${userData.email}`
-      );
-      let profileData = null;
-
-      if (checkRes.ok) {
-        profileData = await checkRes.json();
-      }
-
-      // If profile does not exist, create it first
-      if (!profileData) {
-        if (!newPassword || newPassword !== confirmPassword) {
+      // Only include password fields if they're being changed
+      if (isEditing && newPassword) {
+        if (!currentPassword) {
           setError(
-            "To create a profile, password is required and should match confirm password."
+            "Please enter your current password to change your password."
           );
           return;
         }
-
-        // Add password for creation
+        if (newPassword !== confirmPassword) {
+          setError("New password and confirm password do not match.");
+          return;
+        }
         payload.password = newPassword;
-
-        response = await fetch("http://localhost:5000/api/profile/profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-      } else {
-        // Profile exists, proceed to update it
-        response = await fetch("http://localhost:5000/api/profile/profile", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        payload.confirmPassword = confirmPassword;
+        payload.currentPassword = currentPassword;
       }
 
-      const data = await response.json();
+      // First try to update the profile
+      const updateResponse = await fetch(
+        "https://api.minimalisticlearning.com/api/ml/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-      if (!response.ok) {
-        setError(data.error || "An error occurred");
+      if (updateResponse.ok) {
+        // Update successful
+        const data = await updateResponse.json();
+        setSuccessMsg("Profile updated successfully.");
+        localStorage.setItem("username", `${data.firstName} ${data.lastName}`);
+        localStorage.setItem("email", data.email);
+        setIsEditing(false);
         return;
       }
 
-      setSuccessMsg(
-        profileData
-          ? "Profile updated successfully."
-          : "Profile created successfully."
-      );
-      localStorage.setItem("username", `${data.firstName} ${data.lastName}`);
-      localStorage.setItem("email", data.email);
+      // If update failed with "Profile not found", try to create it
+      const errorData = await updateResponse.json();
+      if (errorData.error === "Profile not found") {
+        if (!newPassword) {
+          setError("To create a profile, password is required.");
+          return;
+        }
 
-      setUserData({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-      });
+        const createResponse = await fetch(
+          "https://api.minimalisticlearning.com/api/ml/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              ...payload,
+              password: newPassword,
+              confirmPassword: confirmPassword,
+            }),
+          }
+        );
 
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setIsEditing(false);
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+        if (createResponse.ok) {
+          const data = await createResponse.json();
+          setSuccessMsg("Profile created successfully.");
+          localStorage.setItem(
+            "username",
+            `${data.firstName} ${data.lastName}`
+          );
+          localStorage.setItem("email", data.email);
+          setIsEditing(false);
+        } else {
+          const createError = await createResponse.json();
+          setError(createError.error || "Failed to create profile");
+        }
+      } else {
+        setError(errorData.error || "Failed to update profile");
+      }
     } catch (err) {
       setError("Failed to save profile.");
       console.error(err);
     }
   };
-
   return (
     <div className="min-h-screen">
       <div className="max-w-6xl mx-auto rounded-2xl p-8 space-y-10">
@@ -404,17 +406,16 @@ export default function Profile_pg() {
                         href={`/blog/${blog._id}`}
                         className="mt-4 inline-block text-center bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg px-4 py-2 transition"
                       >
-          Read More
+                        Read More
                       </a>
                     </div>
                   ))
                 ) : (
                   <p className="w-full text-center text-gray-500 text-lg">
-      No blogs published yet.
+                    No blogs published yet.
                   </p>
                 )}
               </section>
-
             </div>
           </div>
 
@@ -431,8 +432,8 @@ export default function Profile_pg() {
                     1. How do I publish a blog?
                   </h4>
                   <p>
-                    Go to the &quot;Create Blog&quot; section, fill in the title, content,
-                    and click &quot;Publish&quot;.
+                    Go to the &quot;Create Blog&quot; section, fill in the
+                    title, content, and click &quot;Publish&quot;.
                   </p>
                 </div>
                 <div>
@@ -440,8 +441,8 @@ export default function Profile_pg() {
                     2. Can I edit a published blog?
                   </h4>
                   <p>
-                    Yes, you can edit or delete blogs from the &quot;My Blogs&quot;
-                    section anytime.
+                    Yes, you can edit or delete blogs from the &quot;My
+                    Blogs&quot; section anytime.
                   </p>
                 </div>
                 <div>

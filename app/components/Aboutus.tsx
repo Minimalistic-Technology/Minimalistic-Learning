@@ -20,7 +20,7 @@ const AboutUs = () => {
   useEffect(() => {
     const fetchTeamMembers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/team/team");
+        const response = await axios.get("https://api.minimalistictechnology.com/api/team");
         setTeamMembers(response.data); 
       } catch (error) {
         console.error("Failed to fetch team data:", error);

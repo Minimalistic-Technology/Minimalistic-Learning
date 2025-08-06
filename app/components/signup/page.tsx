@@ -228,7 +228,7 @@ import Link from "next/link";
 import api from "utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
+import axios from "axios";
 const SignUpPage = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -332,7 +332,7 @@ const SignUpPage = () => {
         );
         // If signup is successful, send OTP
         try {
-          await api.post("/api/ml/otp/send-otp", {
+          await api.post("/api/ml/send-otp", {
             name: `${firstName} ${lastName}`,
             email,
           });
@@ -370,7 +370,7 @@ const SignUpPage = () => {
     }
     try {
       // Verify OTP
-      //await axios.post('http://localhost:5000/api/otp/verify-otp', { email, otp });
+      await api.post('/api/ml/verify-otp', { email, otp });
       toast.success("Account created successfully!");
       router.push("/login");
     } catch (err: any) {

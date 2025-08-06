@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import api from "utils/api";
+import axios from "axios";
 import axiosInstance from "@/utils/axiosInstance/page";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 import LoadingSkeleton from "@/app/components/loading";
@@ -37,8 +38,8 @@ const BlogsAdminPage = () => {
   const [filter, setFilter] = useState<FilterType>("all");
 
   useEffect(() => {
-    api
-      .get("/api/blog")
+     axios
+      .get("https://api.minimalisticlearning.com/api/ml")
       .then((res) => {
         const sortedBlogs = res.data.sort(
           (a: Blog, b: Blog) =>
@@ -53,7 +54,7 @@ const BlogsAdminPage = () => {
   }, []);
 
   const handleVerify = (id: string) => {
-    axiosInstance.put(`/api/blog/${id}`, { verified: true }).then(() => {
+    axiosInstance.put(`/api/ml/update/${id}`, { verified: true }).then(() => {
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
@@ -62,7 +63,7 @@ const BlogsAdminPage = () => {
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    axiosInstance.delete(`/api/blog/${id}`).then(() => {
+    axiosInstance.delete(`/api/ml/delete/${id}`).then(() => {
       setBlogs((prev) => prev.filter((b) => b._id !== id));
     });
   };

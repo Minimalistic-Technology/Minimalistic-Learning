@@ -842,11 +842,11 @@ const BlogPage = () => {
   useEffect(() => {
     // setIsLoading(true);
 
-    let url = "http://api.minimalistictechnology.com/api/ml/";
+    let url = "https://api.minimalistictechnology.com/api/ml";
     if (sortFilter === "mostViewed") {
-      url = "http://api.minimalistictechnology.com/api/ml/most-viewed";
+      url = "https://api.minimalistictechnology.com/api/ml/most-viewed";
     } else if (sortFilter === "mostRecent") {
-      url = "http://api.minimalistictechnology.com/api/ml/most-recent";
+      url = "https://api.minimalistictechnology.com/api/ml/most-recent";
     }
 
     api

@@ -40,20 +40,20 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const blogsRes = await axios.get('http://localhost:5000/api/blog');
-        const quotesRes = await axios.get('http://localhost:5000/api/quotes/latest');
+        const blogsRes = await axios.get('https://api.minimalisticlearning.com/api/ml');
+      //  const quotesRes = await axios.get('https://api.minimalisticlearning.com/api/ml/latest');
 
         const sortedBlogs = blogsRes.data.sort(
           (a: Blog, b: Blog) => parseYYMMDD(b.date).getTime() - parseYYMMDD(a.date).getTime()
         );
 
-        const sortedQuotes = quotesRes.data.sort(
-          (a: QuoteBlog, b: QuoteBlog) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        // const sortedQuotes = quotesRes.data.sort(
+        //   (a: QuoteBlog, b: QuoteBlog) =>
+        //     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        // );
 
         setBlogs(sortedBlogs);
-        setQuotes(sortedQuotes);
+      //  setQuotes(sortedQuotes);
       } catch (err) {
         console.error(err);
       }
@@ -95,9 +95,6 @@ const AdminDashboard = () => {
               />
             </div>
           </div>
-
-          {/* Welcome */}
-          
 
           {/* Stats Cards */}
           <section className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
