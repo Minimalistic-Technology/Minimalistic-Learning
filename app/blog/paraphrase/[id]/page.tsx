@@ -267,7 +267,7 @@ export default function BlogDetailPage() {
     const fetchBlog = async () => {
       try {
         setIsLoading(true);
-        const response = await api.get(`/blogs/${blogId}`);
+        const response = await api.get(`/api/blog/${blogId}`);
         setBlog(response.data);
       } catch (error) {
         console.error("Error fetching blog:", error);

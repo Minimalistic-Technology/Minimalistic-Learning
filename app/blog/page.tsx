@@ -814,7 +814,7 @@ interface Blog {
   author: string;
   date: string;
   verified: boolean;
-  rating : number;
+  rating: number;
 }
 
 const BlogPage = () => {
@@ -828,7 +828,7 @@ const BlogPage = () => {
 
   useEffect(() => {
     api
-      .get("/blogs")
+      .get("/api/ml/")
       .then((response) => {
         setBlogs(response.data);
         setIsLoading(false);
@@ -842,11 +842,11 @@ const BlogPage = () => {
   useEffect(() => {
     // setIsLoading(true);
 
-    let url = "http://localhost:5000/blogs";
+    let url = "https://api.minimalistictechnology.com/api/ml";
     if (sortFilter === "mostViewed") {
-      url = "http://localhost:5000/blogs/most-viewed";
+      url = "https://api.minimalistictechnology.com/api/ml/most-viewed";
     } else if (sortFilter === "mostRecent") {
-      url = "http://localhost:5000/blogs/most-recent";
+      url = "https://api.minimalistictechnology.com/api/ml/most-recent";
     }
 
     api
@@ -865,11 +865,13 @@ const BlogPage = () => {
   const filteredBlogs = blogs
     .filter((blog) => blog.verified) // <--- Filter for verified blogs
     .filter((blog) => {
-      const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-      const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || blog.category === selectedCategory;
+      const matchesSearch = blog.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-
 
   const paginatedBlogs = filteredBlogs.slice(
     (currentPage - 1) * blogsPerPage,
@@ -877,6 +879,19 @@ const BlogPage = () => {
   );
 
   const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
+
+  const cleanMarkdown = (text: string) => {
+    if (!text) return "";
+
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold markers
+      .replace(/\*(.*?)\*/g, "$1") // Remove italic markers
+      .replace(/^#+\s+(.*$)/gm, "$1") // Remove heading markers
+      .replace(/^- (.*$)/gm, "• $1") // Convert lists to simple bullets
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)") // Convert links to plain text
+      .replace(/```([\s\S]*?)```/g, "$1") // Remove code block markers
+      .replace(/`([^`]+)`/g, "$1"); // Remove inline code markers
+  };
 
   if (isLoading) {
     return (
@@ -889,17 +904,19 @@ const BlogPage = () => {
   }
 
   return (
-    <div> <ScrollProgressBar />
+    <div>
+      {" "}
+      <ScrollProgressBar />
       <div className="min-h-screen  text-gray-800 font-sans">
         {/* Hero Section */}
         <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
           <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
             <div className="w-full md:w-1/2 text-center md:text-left space-y-6 animate-fade-in">
               <h1 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-gray-800 leading-tight tracking-tight">
-              Insights, Tutorials, and Tech News
+                Insights, Tutorials, and Tech News
               </h1>
               <p className="text-gray-700 text-[clamp(1.125rem,2.5vw,1.875rem)]">
-              Stay updated with the latest in tech and learning.
+                Stay updated with the latest in tech and learning.
               </p>
             </div>
             <div className="w-full md:w-1/2 flex justify-center">
@@ -927,13 +944,13 @@ const BlogPage = () => {
         {/* Trending / Infinite Cards */}
         <div className="mt-6">
           <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-black to-pink-500 bg-clip-text text-transparent">
-          Latest Quotes
+            Latest Quotes
           </p>
           <InfiniteMovingCardsDemo />
         </div>
 
         <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
-        Explore Blogs
+          Explore Blogs
         </p>
 
         {/* Search & Filters */}
@@ -959,7 +976,7 @@ const BlogPage = () => {
           </select>
           <Link href="/blog/createblogs">
             <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition duration-300">
-            + Create New Blog
+              + Create New Blog
             </button>
           </Link>
         </section>
@@ -972,7 +989,7 @@ const BlogPage = () => {
                 : "bg-white text-blue-600"
             }`}
           >
-          All Blogs
+            All Blogs
           </button>
           <button
             onClick={() => setSortFilter("mostViewed")}
@@ -982,7 +999,7 @@ const BlogPage = () => {
                 : "bg-white text-blue-600"
             }`}
           >
-          Most Viewed
+            Most Viewed
           </button>
           <button
             onClick={() => setSortFilter("mostRecent")}
@@ -992,7 +1009,7 @@ const BlogPage = () => {
                 : "bg-white text-blue-600"
             }`}
           >
-          Most Recent
+            Most Recent
           </button>
         </div>
         {/* Blog Cards */}
@@ -1024,10 +1041,10 @@ const BlogPage = () => {
                 <h2 className="text-xl font-bold mt-2 text-gray-900 leading-snug">
                   {blog.title}
                 </h2>
-                <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed">
+                <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed whitespace-pre-line">
                   {blog.description.length > 200
-                    ? blog.description.slice(0, 200) + "..."
-                    : blog.description}
+                    ? cleanMarkdown(blog.description.slice(0, 200)) + "..."
+                    : cleanMarkdown(blog.description)}
                 </p>
 
                 <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
@@ -1041,7 +1058,7 @@ const BlogPage = () => {
                     href={`/blog/${blog._id}`}
                     className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
                   >
-                  Read More
+                    Read More
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4"

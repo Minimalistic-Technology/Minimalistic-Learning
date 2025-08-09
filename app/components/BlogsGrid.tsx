@@ -29,6 +29,20 @@ interface BlogsGridProps {
 }
 
 const BlogsGrid: React.FC<BlogsGridProps> = ({ blogs, onVerify, onDelete }) => {
+  
+  const cleanMarkdown = (text: string) => {
+    if (!text) return "";
+
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold markers
+      .replace(/\*(.*?)\*/g, "$1") // Remove italic markers
+      .replace(/^#+\s+(.*$)/gm, "$1") // Remove heading markers
+      .replace(/^- (.*$)/gm, "• $1") // Convert lists to simple bullets
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)") // Convert links to plain text
+      .replace(/```([\s\S]*?)```/g, "$1") // Remove code block markers
+      .replace(/`([^`]+)`/g, "$1"); // Remove inline code markers
+  };
+  
   if (blogs.length === 0) {
     return (
       <p className="text-center text-gray-500 col-span-full">
@@ -80,10 +94,10 @@ const BlogsGrid: React.FC<BlogsGridProps> = ({ blogs, onVerify, onDelete }) => {
               {blog.title}
             </h2>
 
-            <p className="text-gray-700 mt-2 text-sm flex-grow leading-relaxed">
+            <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed whitespace-pre-line">
               {blog.description.length > 200
-                ? blog.description.slice(0, 200) + "..."
-                : blog.description}
+                ? cleanMarkdown(blog.description.slice(0, 200)) + "..."
+                : cleanMarkdown(blog.description)}
             </p>
 
             {blog.tags && blog.tags.length > 0 && (
