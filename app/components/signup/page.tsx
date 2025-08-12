@@ -321,7 +321,7 @@ const SignUpPage = () => {
     ) {
       try {
         // First, attempt signup
-        await api.post("/api/ml/signup", {
+        await api.post("/api/ml/auth/signup", {
           username: `${firstName} ${lastName}`,
           email,
           password,

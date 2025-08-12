@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await api.post("api/ml/logout", {});
+      await api.post("api/ml/auth/logout", {});
 
       localStorage.removeItem("username");
       localStorage.removeItem("email");
