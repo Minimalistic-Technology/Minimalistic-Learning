@@ -102,7 +102,7 @@ useEffect(() => {
     try {
       // Make API call to the backend
       const response = await axiosInstance.post(
-        "/api/ml/create",
+        "/api/ml/blog/create",
         formData
       );
 

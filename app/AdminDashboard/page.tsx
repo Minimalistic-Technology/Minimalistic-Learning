@@ -40,7 +40,7 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const blogsRes = await axios.get('https://api.minimalisticlearning.com/api/ml');
+        const blogsRes = await axios.get('https://api.minimalisticlearning.com/api/ml/quote/latest');
       //  const quotesRes = await axios.get('https://api.minimalisticlearning.com/api/ml/latest');
 
         const sortedBlogs = blogsRes.data.sort(

@@ -73,7 +73,7 @@ export default function Profile_pg() {
 
       try {
         const response = await fetch(
-          "https://api.minimalistictechnology.com/api/ml/my-blogs",
+          "https://api.minimalistictechnology.com/api/ml/profile/my-blogs",
           {
             method: "GET",
             headers: {
@@ -149,7 +149,7 @@ export default function Profile_pg() {
 
       // First try to update the profile
       const updateResponse = await fetch(
-        "https://api.minimalisticlearning.com/api/ml/update",
+        "https://api.minimalisticlearning.com/api/ml/profile/update",
         {
           method: "PUT",
           headers: {
@@ -179,7 +179,7 @@ export default function Profile_pg() {
         }
 
         const createResponse = await fetch(
-          "https://api.minimalisticlearning.com/api/ml/create",
+          "https://api.minimalisticlearning.com/api/ml/profile/create",
           {
             method: "POST",
             headers: {

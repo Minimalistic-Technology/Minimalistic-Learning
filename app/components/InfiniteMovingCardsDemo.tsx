@@ -71,7 +71,7 @@ export function InfiniteMovingCardsDemo() {
     const fetchQuotes = async () => {
       try {
         const response = await api.get<Omit<Testimonial, 'id'>[]>(
-          "/api/ml/latest"
+          "/api/ml/quote/latest"
         );
 
         const data = response.data;

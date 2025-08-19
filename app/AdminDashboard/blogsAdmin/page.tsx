@@ -39,7 +39,7 @@ const BlogsAdminPage = () => {
 
   useEffect(() => {
      axios
-      .get("https://api.minimalisticlearning.com/api/ml")
+      .get("https://api.minimalisticlearning.com/api/ml/blog/")
       .then((res) => {
         const sortedBlogs = res.data.sort(
           (a: Blog, b: Blog) =>
@@ -54,7 +54,7 @@ const BlogsAdminPage = () => {
   }, []);
 
   const handleVerify = (id: string) => {
-    axiosInstance.put(`/api/ml/update/${id}`, { verified: true }).then(() => {
+    axiosInstance.put(`/api/ml/blog/update/${id}`, { verified: true }).then(() => {
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
@@ -63,7 +63,7 @@ const BlogsAdminPage = () => {
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    axiosInstance.delete(`/api/ml/delete/${id}`).then(() => {
+    axiosInstance.delete(`/api/ml/blog/delete/${id}`).then(() => {
       setBlogs((prev) => prev.filter((b) => b._id !== id));
     });
   };
