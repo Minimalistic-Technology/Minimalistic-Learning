@@ -14,7 +14,11 @@ const nextConfig = {
       "encrypted-tbn0.gstatic.com",
       "sidgs.com",
       "pascualbrokers.com",
-      "res.cloudinary.com"
+      "res.cloudinary.com",
+      "plurilock.com",
+      "blog.zegocloud.com",
+      "opini.ukwms.ac.id",
+      "cdn.mos.cms.futurecdn.net"
     ], // allow the placeholder domain
   },
 };

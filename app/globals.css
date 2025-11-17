@@ -66,3 +66,19 @@ body {
   color: #333;
   line-height: 1.6;
 }
+
+.text-gradient {
+  background: linear-gradient(90deg, #036cff 2.34%, #3700ff 100.78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+} 
+
+body {
+  background-color: #daf0ff; /* <-- DELETE THIS LINE */
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
