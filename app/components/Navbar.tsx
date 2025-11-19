@@ -11,7 +11,6 @@ const navLinks = [
   { label: "Blogs", href: "/blog" },
   { label: "Post New Blog", href: "/blog/createblogs" },
   { label: "Profile", href: "/AdminDashboard/user" },
-  { label: "Admin Dashboard", href: "/AdminDashboard" },
 ];
 
 const Navbar = () => {
@@ -109,12 +108,6 @@ const Navbar = () => {
                   >
                     Profile
                   </Link>
-                  <Link
-                    href="/AdminDashboard"
-                    className="block px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
-                  >
-                    Admin Dashboard
-                  </Link>
                   <button
                     onClick={handleLogout}
                     className="block w-full px-4 py-3 text-left text-sm font-semibold text-rose-500 transition hover:bg-rose-50"
@@ -126,10 +119,10 @@ const Navbar = () => {
             </div>
           ) : (
             <Link
-              href="/AdminDashboard"
+              href="/auth/login"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#2563eb] to-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl"
             >
-              Launch Admin
+              Login
             </Link>
           )}
           <div className="md:hidden">
@@ -228,11 +221,11 @@ const Navbar = () => {
                     ) : (
                       <li>
                         <Link
-                          href="/AdminDashboard"
+                          href="/auth/login"
                           onClick={() => setIsOpen(false)}
                           className="inline-flex w-full items-center justify-center rounded-2xl bg-[#2563eb] px-4 py-2 font-semibold text-white shadow-sm"
                         >
-                          Launch Admin
+                          Login
                         </Link>
                       </li>
                     )}
