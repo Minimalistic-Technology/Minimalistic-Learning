@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import ScrollProgressBar from "../components/ScrollerProgress";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { adminAPI } from "../lib/api";
+// API integration removed
 
 type TrendTone = "success" | "info" | "warning";
 
@@ -404,50 +404,23 @@ const AdminDashboard = () => {
   const refreshDashboard = useCallback(
     async (options: { silent?: boolean } = {}) => {
       setIsRefreshing(true);
-      try {
-        const response = await adminAPI.getDashboardStats();
-        const { totals, latest } = response.data;
-        
-        setUserCount(totals.users);
-        setStats(buildStats(totals.users, totals.blogs, totals.quotes));
-        
-        // Map blogs from API response
-        const mappedBlogs: Blog[] = latest.blogs.map((blog: any) => ({
-          _id: blog._id || blog.id,
-          title: blog.title,
-          description: blog.content?.substring(0, 100) || blog.description || "",
-          date: blog.createdAt || blog.date,
-          author: blog.author?.username || blog.author?.email || blog.author || "Unknown",
-        }));
-        setBlogs(mappedBlogs);
-        
-        // Map quotes from API response
-        const mappedQuotes: QuoteBlog[] = latest.quotes.map((quote: any) => ({
-          _id: quote._id || quote.id,
-          quote: quote.text || quote.quote,
-          name: quote.authorName || quote.name || "Unknown",
-          title: quote.authorTitle || quote.title || "",
-          createdAt: quote.createdAt || new Date().toISOString(),
-        }));
-        setQuotes(mappedQuotes);
-        
+      // Simulate API call delay
+      setTimeout(() => {
+        // Use mock data
+        const mockTotals = { users: 1250, blogs: 342, quotes: 89 };
+        setUserCount(mockTotals.users);
+        setStats(buildStats(mockTotals.users, mockTotals.blogs, mockTotals.quotes));
+        setBlogs(mockBlogs);
+        setQuotes(mockQuotes);
         setInsights((prev) => mutateInsights(prev));
         setLastRefresh(new Date());
         setIsLoading(false);
+        setIsRefreshing(false);
         
         if (!options.silent) {
           toast.success("Dashboard metrics refreshed");
         }
-      } catch (error: any) {
-        console.error("Dashboard refresh error:", error);
-        const errorMessage = error.response?.data?.message || "Unable to refresh dashboard metrics";
-        if (!options.silent) {
-          toast.error(errorMessage);
-        }
-        setIsLoading(false);
-      } finally {
-        setIsRefreshing(false);
-      }
+      }, 500);
     },
     [],
   );
@@ -460,21 +433,19 @@ const AdminDashboard = () => {
     }
   }, [authStatus, refreshDashboard]);
   
-  // Fetch profile on mount
+  // Load profile data (simulated)
   useEffect(() => {
     if (authStatus === "authorized") {
-      adminAPI.getProfile()
-        .then((response) => {
-          const user = response.data.user;
-          setProfileForm((prev) => ({
-            ...prev,
-            name: user.username || prev.name,
-            email: user.email || prev.email,
-          }));
-        })
-        .catch((error) => {
-          console.error("Failed to fetch profile:", error);
-        });
+      // Simulate API call
+      setTimeout(() => {
+        const storedName = localStorage.getItem("username") || "Admin User";
+        const storedEmail = localStorage.getItem("email") || "admin@example.com";
+        setProfileForm((prev) => ({
+          ...prev,
+          name: storedName,
+          email: storedEmail,
+        }));
+      }, 300);
     }
   }, [authStatus]);
 
@@ -521,45 +492,19 @@ const AdminDashboard = () => {
       return;
     }
     setIsSavingProfile(true);
-    try {
-      const updateData: any = {
-        username: profileForm.name,
-        email: profileForm.email,
-      };
-      
-      if (profileForm.password) {
-        // Note: Backend requires currentPassword when updating password
-        // You may need to add a currentPassword field to the form
-        updateData.password = profileForm.password;
-        // updateData.currentPassword = currentPassword; // Add this field if needed
+    // Simulate API call
+    setTimeout(() => {
+      // Update local storage
+      localStorage.setItem("username", profileForm.name);
+      if (profileForm.email) {
+        localStorage.setItem("email", profileForm.email);
       }
       
-      const response = await adminAPI.updateProfile(updateData);
       toast.success("Profile information updated");
       setProfileForm((prev) => ({ ...prev, password: "" }));
-      
-      // Update form with response data
-      if (response.data.user) {
-        setProfileForm((prev) => ({
-          ...prev,
-          name: response.data.user.username || prev.name,
-          email: response.data.user.email || prev.email,
-        }));
-      }
-      
       setIsSettingsPanelOpen(false);
-    } catch (error: any) {
-      console.error("Profile update error:", error);
-      const errorMessage = error.response?.data?.message || "Failed to update profile. Please try again.";
-      toast.error(errorMessage);
-      
-      // Set field-specific errors if available
-      if (error.response?.data?.errors) {
-        setProfileErrors(error.response.data.errors);
-      }
-    } finally {
       setIsSavingProfile(false);
-    }
+    }, 500);
   };
 
   const renderLoading = () => (
@@ -708,7 +653,7 @@ const AdminDashboard = () => {
           </aside>
 
           <main className="flex-1 px-4 pb-16 pt-6 md:px-8 lg:px-12">
-            <header className="mb-10 flex flex-col gap-6 rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-md backdrop-blur dark:border-slate-900 dark:bg-slate-900/80 md:p-8">
+            <header className="relative z-[90] mb-10 flex flex-col gap-6 rounded-3xl border border-slate-200/70 bg-white/90 p-6 shadow-md backdrop-blur dark:border-slate-900 dark:bg-slate-900/80 md:p-8">
               <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex flex-1 items-start gap-4">
                   <button
@@ -792,11 +737,11 @@ const AdminDashboard = () => {
                       3
                     </span>
                   </button>
-                  <div className="relative" ref={settingsRef}>
+                  <div className="relative z-[9999]" ref={settingsRef}>
                     <button
                       type="button"
                       onClick={() => setIsSettingsOpen((prev) => !prev)}
-                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+                      className="relative z-[9999] flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
                       aria-haspopup="menu"
                       aria-expanded={isSettingsOpen}
                       aria-label="Open admin menu"
@@ -804,7 +749,12 @@ const AdminDashboard = () => {
                       <Settings className="h-5 w-5" />
                     </button>
                     {isSettingsOpen && (
-                      <div className="absolute right-0 top-12 w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900">
+                      <>
+                        <div 
+                          className="fixed inset-0 z-[9998] bg-transparent"
+                          onClick={() => setIsSettingsOpen(false)}
+                        />
+                        <div className="fixed right-4 top-20 z-[9999] w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
                         <div className="px-4 py-3">
                           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                             Admin menu
@@ -840,13 +790,14 @@ const AdminDashboard = () => {
                           </div>
                         </div>
                       </div>
+                      </>
                     )}
                   </div>
                 </div>
               </div>
             </header>
 
-            <section className="mb-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <section className="relative z-10 mb-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {stats.map((stat) => {
                 const Icon = stat.icon;
                 const TrendIcon =
@@ -864,7 +815,7 @@ const AdminDashboard = () => {
                 return (
                   <div
                     key={stat.label}
-                    className="relative overflow-hidden rounded-3xl border border-slate-200/60 bg-white/90 p-5 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
+                    className="relative z-0 overflow-hidden rounded-3xl border border-slate-200/60 bg-white/90 p-5 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
                   >
                     <div className="absolute -right-6 top-4 h-20 w-20 rounded-full bg-[#2563eb]/10 blur-xl" />
                     <div className="flex items-start justify-between">

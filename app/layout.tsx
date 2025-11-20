@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Providers } from "./Providers";
@@ -68,6 +68,9 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
   },
+};
+
+export const viewport: Viewport = {
   themeColor: "#daf0ff",
 };
 

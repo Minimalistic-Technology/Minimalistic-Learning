@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 
-const footerSections = [
+type FooterLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+const footerSections: { title: string; links: FooterLink[] }[] = [
   {
     title: "Explore",
     links: [

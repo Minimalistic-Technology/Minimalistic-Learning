@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-import { adminAPI } from "@/app/lib/api";
+// API integration removed
 import { toast } from "react-hot-toast";
 interface Quote {
   _id: string;
@@ -30,47 +30,45 @@ export default function QuotesAdminPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(true);
 
-  // Fetch quotes from API
+  // Load mock quotes
   useEffect(() => {
-    const fetchQuotes = async () => {
-      try {
-        setIsFetching(true);
-        const response = await adminAPI.getQuotes();
-        const apiQuotes = response.data.quotes || [];
-        
-        const mappedQuotes: Quote[] = apiQuotes.map((quote: any) => ({
-          _id: quote._id || quote.id,
-          quote: quote.text || quote.quote,
-          name: quote.authorName || quote.name || "Unknown",
-          title: quote.authorTitle || quote.title || "",
-          createdAt: quote.createdAt || new Date().toISOString(),
-        }));
-        
-        setQuotes(mappedQuotes);
-      } catch (error: any) {
-        console.error("Failed to fetch quotes:", error);
-        toast.error(error.response?.data?.message || "Failed to load quotes");
-      } finally {
+    const loadQuotes = () => {
+      setIsFetching(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        const mockQuotesData: Quote[] = [
+          {
+            _id: "1",
+            quote: "The only way to do great work is to love what you do.",
+            name: "Steve Jobs",
+            title: "Co-founder of Apple",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            _id: "2",
+            quote: "Innovation distinguishes between a leader and a follower.",
+            name: "Steve Jobs",
+            title: "Co-founder of Apple",
+            createdAt: new Date().toISOString(),
+          },
+        ];
+        setQuotes(mockQuotesData);
         setIsFetching(false);
-      }
+      }, 500);
     };
 
-    fetchQuotes();
+    loadQuotes();
   }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this quote?")) return;
     setDeletingId(id);
-    try {
-      await adminAPI.deleteQuote(id);
+    // Simulate API call
+    setTimeout(() => {
       setQuotes((prev) => prev.filter((q) => q._id !== id));
       toast.success("Quote deleted successfully");
-    } catch (error: any) {
-      console.error("Failed to delete quote:", error);
-      toast.error(error.response?.data?.message || "Failed to delete quote");
-    } finally {
       setDeletingId(null);
-    }
+    }, 300);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,18 +76,14 @@ export default function QuotesAdminPage() {
     setLoading(true);
     setError(null);
 
-    try {
-      const response = await adminAPI.createQuote({
-        text: quoteInput,
-        authorName: nameInput ? `${nameInput}${titleInput ? `, ${titleInput}` : ""}` : undefined,
-      });
-      
+    // Simulate API call
+    setTimeout(() => {
       const newQuote: Quote = {
-        _id: response.data.quote._id || response.data.quote.id,
-        quote: response.data.quote.text || quoteInput,
-        name: nameInput || response.data.quote.authorName || "Unknown",
+        _id: Date.now().toString(),
+        quote: quoteInput,
+        name: nameInput || "Unknown",
         title: titleInput || "",
-        createdAt: response.data.quote.createdAt || new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       };
       
       setQuotes((prev) => [newQuote, ...prev]);
@@ -97,13 +91,8 @@ export default function QuotesAdminPage() {
       setNameInput("");
       setTitleInput("");
       toast.success("Quote created successfully");
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || "Error creating quote. Try again.";
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
       setLoading(false);
-    }
+    }, 500);
   };
 
   const stats = useMemo(() => {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "next/navigation";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-import { adminAPI } from "@/app/lib/api";
+// API integration removed
 import { toast } from "react-hot-toast";
 import {
   User,
@@ -29,7 +29,7 @@ export default function UserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    name: user || "User",
+    name: user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email : "User",
     email: "",
     bio: "Passionate learner sharing insights on Minimalistic Learning.",
     joinDate: new Date().toISOString(),
@@ -46,68 +46,36 @@ export default function UserProfilePage() {
     
     setFormData((prev) => ({
       ...prev,
-      email: storedEmail || "",
-      name: user,
+      email: storedEmail || user.email || "",
+      name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email || "User",
       joinDate: storedJoinDate,
     }));
   }, [user, router]);
 
   const handleSave = async () => {
     setIsSaving(true);
-    try {
-      const updateData: any = {
-        username: formData.name,
-        email: formData.email,
-      };
-      
-      const response = await adminAPI.updateProfile(updateData);
-      
+    // Simulate API call
+    setTimeout(() => {
       // Update local storage
       localStorage.setItem("username", formData.name);
       if (formData.email) {
         localStorage.setItem("email", formData.email);
       }
-      setUser(formData.name);
+      // Update user object with new name
+      if (user) {
+        const nameParts = formData.name.split(" ");
+        setUser({
+          ...user,
+          email: formData.email || user.email,
+          firstName: nameParts[0] || "",
+          lastName: nameParts.slice(1).join(" ") || "",
+        });
+      }
       setIsEditing(false);
       toast.success("Profile updated successfully");
-      
-      // Update form with response data
-      if (response.data.user) {
-        setFormData((prev) => ({
-          ...prev,
-          name: response.data.user.username || prev.name,
-          email: response.data.user.email || prev.email,
-        }));
-      }
-    } catch (error: any) {
-      console.error("Failed to save profile:", error);
-      toast.error(error.response?.data?.message || "Failed to update profile");
-    } finally {
       setIsSaving(false);
-    }
+    }, 500);
   };
-  
-  // Fetch profile on mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await adminAPI.getProfile();
-        const user = response.data.user;
-        setFormData((prev) => ({
-          ...prev,
-          name: user.username || prev.name,
-          email: user.email || prev.email,
-          joinDate: user.createdAt || prev.joinDate,
-        }));
-      } catch (error) {
-        console.error("Failed to fetch profile:", error);
-      }
-    };
-    
-    if (user) {
-      fetchProfile();
-    }
-  }, [user]);
 
   const mockStats = {
     blogsPublished: 12,

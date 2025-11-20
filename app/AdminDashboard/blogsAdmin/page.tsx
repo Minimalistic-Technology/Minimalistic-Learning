@@ -10,7 +10,7 @@ import {
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 import LoadingSkeleton from "@/app/components/loading";
 import BlogsGrid from "@/app/components/BlogsGrid";
-import { adminAPI } from "@/app/lib/api";
+// API integration removed
 import { toast } from "react-hot-toast";
 
 interface Blog {
@@ -43,65 +43,65 @@ const BlogsAdminPage = () => {
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch blogs from API
+  // Load mock blogs
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const response = await adminAPI.getBlogs();
-        const apiBlogs = response.data.blogs || [];
-        
-        const mappedBlogs: Blog[] = apiBlogs.map((blog: any) => ({
-          _id: blog._id || blog.id,
-          title: blog.title || "Untitled Blog",
-          description: blog.content?.substring(0, 200) || blog.description || "",
-          category: blog.category || "General",
-          image: blog.image,
-          date: blog.createdAt || blog.date || new Date().toISOString(),
-          author: blog.author?.username || blog.author?.email || blog.author || "Unknown",
-          tags: blog.tags || [],
-          rating: blog.rating || 5,
-          minutes: blog.minutes || 4,
-          authorId: blog.author?._id || blog.authorId || "",
-          verified: blog.published || false,
-          paraphrased: blog.paraphrased,
-        }));
-        
-        setBlogs(mappedBlogs);
-      } catch (error: any) {
-        console.error("Failed to fetch blogs:", error);
-        toast.error(error.response?.data?.message || "Failed to load blogs");
-      } finally {
+    const loadBlogs = () => {
+      setLoading(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        const mockBlogsData: Blog[] = [
+          {
+            _id: "1",
+            title: "Understanding React Hooks",
+            description: "A deep dive into useState and useEffect hooks...",
+            category: "React",
+            date: new Date().toISOString(),
+            author: "Jane Doe",
+            authorId: "author1",
+            tags: ["React", "JavaScript"],
+            rating: 5,
+            minutes: 5,
+            verified: true,
+          },
+          {
+            _id: "2",
+            title: "Next.js 14: What's New?",
+            description: "Exploring the latest features in Next.js 14...",
+            category: "Next.js",
+            date: new Date().toISOString(),
+            author: "John Smith",
+            authorId: "author2",
+            tags: ["Next.js", "React"],
+            rating: 4,
+            minutes: 8,
+            verified: false,
+          },
+        ];
+        setBlogs(mockBlogsData);
         setLoading(false);
-      }
+      }, 500);
     };
 
-    fetchBlogs();
+    loadBlogs();
   }, []);
 
   const handleVerify = async (id: string) => {
-    try {
-      await adminAPI.updateBlog(id, { published: true });
+    // Simulate API call
+    setTimeout(() => {
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
       toast.success("Blog verified successfully");
-    } catch (error: any) {
-      console.error("Failed to verify blog:", error);
-      toast.error(error.response?.data?.message || "Failed to verify blog");
-    }
+    }, 300);
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    try {
-      await adminAPI.deleteBlog(id);
+    // Simulate API call
+    setTimeout(() => {
       setBlogs((prev) => prev.filter((b) => b._id !== id));
       toast.success("Blog deleted successfully");
-    } catch (error: any) {
-      console.error("Failed to delete blog:", error);
-      toast.error(error.response?.data?.message || "Failed to delete blog");
-    }
+    }, 300);
   };
 
   const stats = useMemo(() => {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-import { adminAPI } from "@/app/lib/api";
+// API integration removed
 import { toast } from "react-hot-toast";
 import {
   Users,
@@ -96,41 +96,19 @@ export default function UsersAdminPage() {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch users from API
+  // Load mock users
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setIsLoading(true);
-        const params: any = {};
-        if (roleFilter !== "all") params.role = roleFilter;
-        if (statusFilter !== "all") params.status = statusFilter;
-        if (searchTerm.trim()) params.search = searchTerm;
-
-        const response = await adminAPI.getUsers(params);
-        const apiUsers = response.data.users || [];
-        
-        const mappedUsers: User[] = apiUsers.map((user: any) => ({
-          _id: user._id || user.id,
-          name: user.username || user.name || "Unknown",
-          email: user.email || "",
-          role: user.role || "user",
-          status: user.status || "active",
-          joinDate: user.createdAt || user.joinDate || new Date().toISOString(),
-          lastActive: user.lastActive || user.updatedAt || new Date().toISOString(),
-          blogsCount: user.blogsCount || 0,
-        }));
-        
-        setUsers(mappedUsers);
-      } catch (error: any) {
-        console.error("Failed to fetch users:", error);
-        toast.error(error.response?.data?.message || "Failed to load users");
-      } finally {
+    const loadUsers = () => {
+      setIsLoading(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        setUsers(mockUsers);
         setIsLoading(false);
-      }
+      }, 500);
     };
 
-    fetchUsers();
-  }, [roleFilter, statusFilter, searchTerm]);
+    loadUsers();
+  }, []);
 
   const stats = useMemo(() => {
     const total = users.length;
@@ -161,29 +139,23 @@ export default function UsersAdminPage() {
   };
 
   const handleStatusChange = async (id: string, newStatus: User["status"]) => {
-    try {
-      await adminAPI.updateUserStatus(id, newStatus);
+    // Simulate API call
+    setTimeout(() => {
       setUsers((prev) =>
         prev.map((u) => (u._id === id ? { ...u, status: newStatus } : u))
       );
       toast.success(`User status updated to ${newStatus}`);
-    } catch (error: any) {
-      console.error("Failed to update user status:", error);
-      toast.error(error.response?.data?.message || "Failed to update user status");
-    }
+    }, 300);
   };
 
   const handleRoleChange = async (id: string, newRole: User["role"]) => {
-    try {
-      await adminAPI.updateUserRole(id, newRole);
+    // Simulate API call
+    setTimeout(() => {
       setUsers((prev) =>
         prev.map((u) => (u._id === id ? { ...u, role: newRole } : u))
       );
       toast.success(`User role updated to ${newRole}`);
-    } catch (error: any) {
-      console.error("Failed to update user role:", error);
-      toast.error(error.response?.data?.message || "Failed to update user role");
-    }
+    }, 300);
   };
 
   return (

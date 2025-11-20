@@ -25,7 +25,7 @@ export default function AdminUserProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    name: user || "User",
+    name: user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email : "User",
     email: "",
     bio: "Passionate learner sharing insights on Minimalistic Learning.",
     joinDate: new Date().toISOString(),
@@ -43,8 +43,8 @@ export default function AdminUserProfilePage() {
 
     setFormData((prev) => ({
       ...prev,
-      email: storedEmail ?? "",
-      name: user,
+      email: storedEmail ?? user.email ?? "",
+      name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email || "User",
       joinDate: storedJoinDate,
     }));
   }, [user, router]);
@@ -56,7 +56,16 @@ export default function AdminUserProfilePage() {
       if (formData.email) {
         localStorage.setItem("email", formData.email);
       }
-      setUser(formData.name);
+      // Update user object with new name
+      if (user) {
+        const nameParts = formData.name.split(" ");
+        setUser({
+          ...user,
+          email: formData.email || user.email,
+          firstName: nameParts[0] || "",
+          lastName: nameParts.slice(1).join(" ") || "",
+        });
+      }
       setIsEditing(false);
     } catch (error) {
       console.error("Failed to save profile:", error);
