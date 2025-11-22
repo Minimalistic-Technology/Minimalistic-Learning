@@ -12,8 +12,9 @@ const footerSections: { title: string; links: FooterLink[] }[] = [
     title: "Explore",
     links: [
       { label: "Home", href: "/" },
-      { label: "Blogs", href: "/blog" },
-      { label: "Create Blog", href: "/blog/createblogs" },
+      { label: "Courses", href: "/courses" },
+      { label: "Resources", href: "/resources" },
+      { label: "About", href: "/about" },
     ],
   },
   {
@@ -68,50 +69,43 @@ const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <footer className="bg-gradient-to-b from-[#0f172a] via-[#111827] to-[#0b1220] text-slate-100">
-      <div className="relative mx-auto max-w-6xl space-y-10 px-6 py-16">
-        <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#2563eb]/30 via-sky-500/10 to-transparent opacity-80 blur-3xl" />
-            <div className="relative space-y-5">
-              <p className="inline-flex items-center rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-200">
-                Minimalistic Learning
-              </p>
-              <h3 className="text-3xl font-semibold leading-tight text-white">
-                Calm interfaces for focused learning.
-              </h3>
-              <p className="text-sm text-slate-200">
-                Build, publish, and curate knowledge with the same design
-                language powering the Admin Dashboard.
-              </p>
-              <div className="flex flex-wrap gap-3 text-xs font-semibold">
-                <span className="rounded-full border border-white/30 px-3 py-1 text-slate-200">
-                  Ambient UI
-                </span>
-                <span className="rounded-full border border-white/30 px-3 py-1 text-slate-200">
-                  Progress-first
-                </span>
-                <span className="rounded-full border border-white/30 px-3 py-1 text-slate-200">
-                  Human curated
-                </span>
-              </div>
+    <footer className="relative bg-slate-900 dark:bg-black text-slate-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr] mb-8">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-white">
+              Minimalistic Learning
+            </h3>
+            <p className="text-slate-400 max-w-md">
+              Calm interfaces for focused learning. Build, publish, and curate knowledge with the same design language powering the Admin Dashboard.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                Ambient UI
+              </span>
+              <span className="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                Progress-first
+              </span>
+              <span className="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-300">
+                Human curated
+              </span>
             </div>
           </div>
 
-          <div className="grid gap-4 rounded-3xl border border-white/5 bg-white/5 p-6 shadow-xl backdrop-blur">
+          <div className="grid grid-cols-3 gap-6">
             {footerSections.map((section) => (
               <div key={section.title} className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-300">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                   {section.title}
                 </p>
-                <ul className="space-y-2 text-sm text-slate-200">
+                <ul className="space-y-2 text-sm">
                   {section.links.map((link) => (
                     <li key={link.label}>
                       <a
                         href={link.href}
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noreferrer" : undefined}
-                        className="inline-flex items-center gap-2 text-slate-200 transition hover:text-white"
+                        className="text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1"
                       >
                         {link.label}
                         {link.external && (
@@ -135,7 +129,7 @@ const Footer = () => {
                     <li>
                       <button
                         onClick={() => setIsOpen(true)}
-                        className="inline-flex items-center gap-2 text-slate-200 transition hover:text-white"
+                        className="text-slate-400 hover:text-white transition-colors"
                       >
                         Privacy Policy
                       </button>
@@ -147,8 +141,10 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-white/5 bg-white/5 px-6 py-4 text-sm text-slate-300 shadow-inner">
-          <p>© 2025 Minimalistic Learning • Built with clarity in mind.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-800">
+          <p className="text-sm text-slate-400">
+            © 2025 Minimalistic Learning • Built with clarity in mind.
+          </p>
           <div className="flex items-center gap-3">
             {socialLinks.map((social) => (
               <a
@@ -156,7 +152,7 @@ const Footer = () => {
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white transition hover:bg-white/20"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
               >
                 {social.icon}
                 <span className="sr-only">{social.label}</span>
@@ -166,19 +162,18 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Privacy Policy Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="relative max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-[#daf0ff] p-6 text-gray-800 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="relative max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-xl bg-white dark:bg-slate-900 p-8 text-slate-900 dark:text-slate-100 shadow-2xl border border-slate-200 dark:border-slate-700">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-5 top-5 text-2xl text-gray-600 transition hover:text-black"
+              className="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
             >
               &times;
             </button>
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold">
-                Privacy Policy – MinimalisticLearning
-              </h2>
+              <h2 className="text-2xl font-bold">Privacy Policy – MinimalisticLearning</h2>
               <p>
                 <strong>Effective Date:</strong> May 3, 2025
               </p>
@@ -194,10 +189,10 @@ const Footer = () => {
                 By using MinimalisticLearning, you agree to the terms of this
                 Privacy Policy.
               </p>
-              <hr />
+              <hr className="border-slate-200 dark:border-slate-700" />
 
               <h3 className="font-semibold">1. Information We Collect</h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>
                   <strong>Personal Information:</strong> Name, email, IP,
                   geolocation, contact details.
@@ -213,7 +208,7 @@ const Footer = () => {
               </ul>
 
               <h3 className="font-semibold">2. Use of Collected Data</h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>Operating and improving MinimalisticLearning</li>
                 <li>Communicating with users</li>
                 <li>Moderating and managing user content</li>
@@ -224,7 +219,7 @@ const Footer = () => {
               <h3 className="font-semibold">
                 3. User-Generated Content Disclaimer
               </h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>You are fully responsible for the content you upload.</li>
                 <li>We disclaim liability for offensive/illegal content.</li>
                 <li>We may remove/report violations of laws or policies.</li>
@@ -233,7 +228,7 @@ const Footer = () => {
               <h3 className="font-semibold">
                 4. Content Ownership and Usage Rights
               </h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>You retain copyright.</li>
                 <li>
                   We get a royalty-free license to use content for
@@ -242,7 +237,7 @@ const Footer = () => {
               </ul>
 
               <h3 className="font-semibold">5. Sharing and Disclosure of Data</h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>To legal authorities when required</li>
                 <li>To trusted third-party services (e.g., analytics, marketing)</li>
                 <li>During business transfers</li>
@@ -250,7 +245,7 @@ const Footer = () => {
               </ul>
 
               <h3 className="font-semibold">6. GDPR Rights (For EU Residents)</h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>
                   Access, rectify, erase, restrict, object, portability, withdraw
                   consent
@@ -259,7 +254,7 @@ const Footer = () => {
                   Contact:{" "}
                   <a
                     href="mailto:MinimalisticLearning2024@gmail.com"
-                    className="text-blue-600"
+                    className="text-primary hover:underline"
                   >
                     MinimalisticLearning2024@gmail.com
                   </a>
@@ -269,7 +264,7 @@ const Footer = () => {
               <h3 className="font-semibold">
                 7. Compliance with Indian IT Act, 2000 (IT Rules, 2024)
               </h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>Security practices for safeguarding data</li>
                 <li>Users are responsible for posted violations</li>
                 <li>We cooperate with Indian authorities when required</li>
@@ -278,37 +273,37 @@ const Footer = () => {
               <h3 className="font-semibold">
                 8. Cookies and Tracking Technologies
               </h3>
-              <ul className="ml-6 list-disc">
+              <ul className="ml-6 list-disc space-y-1 text-slate-600 dark:text-slate-400">
                 <li>Track usage and improve UX</li>
                 <li>Deliver personalized content and ads</li>
                 <li>You can disable cookies via browser settings</li>
               </ul>
 
               <h3 className="font-semibold">9. Data Retention</h3>
-              <p>
+              <p className="text-slate-600 dark:text-slate-400">
                 We retain your data only as long as necessary for the purposes
                 described or as legally required.
               </p>
 
               <h3 className="font-semibold">10. Data Security</h3>
-              <p>
+              <p className="text-slate-600 dark:text-slate-400">
                 We use technical and organizational measures to protect your
                 data, but no system is 100% secure.
               </p>
 
               <h3 className="font-semibold">11. Changes to This Policy</h3>
-              <p>
+              <p className="text-slate-600 dark:text-slate-400">
                 We may update this policy periodically. Updates will be posted
                 with a new effective date.
               </p>
 
               <h3 className="font-semibold">12. Contact Us</h3>
-              <p>
+              <p className="text-slate-600 dark:text-slate-400">
                 For any questions or data-related requests, contact us at:
                 <br />
                 <a
                   href="mailto:MinimalisticLearning2024@gmail.com"
-                  className="text-blue-600 underline"
+                  className="text-primary hover:underline"
                 >
                   MinimalisticLearning2024@gmail.com
                 </a>
@@ -322,4 +317,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

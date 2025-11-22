@@ -564,6 +564,80 @@ const AdminDashboard = () => {
       <Toaster position="top-right" toastOptions={{ className: "text-sm font-medium" }} />
       <div className="relative min-h-screen overflow-hidden bg-[#eaf2ff] dark:bg-slate-950">
         <ScrollProgressBar />
+        
+        {/* Top Right Icons - Notification and Settings */}
+        <div className="fixed right-4 top-4 z-[100] flex items-center gap-3">
+          <button
+            type="button"
+            className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white/95 text-slate-700 shadow-lg backdrop-blur transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:hover:bg-slate-800"
+            aria-label="Notifications"
+            onClick={() => {
+              // Handle notification click
+              toast("You have 3 new notifications", { icon: "🔔" });
+            }}
+          >
+            <Bell className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white shadow-md">
+              3
+            </span>
+          </button>
+          <div className="relative" ref={settingsRef}>
+            <button
+              type="button"
+              onClick={() => setIsSettingsOpen((prev) => !prev)}
+              className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white/95 text-slate-700 shadow-lg backdrop-blur transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:hover:bg-slate-800"
+              aria-haspopup="menu"
+              aria-expanded={isSettingsOpen}
+              aria-label="Settings"
+            >
+              <Settings className="h-5 w-5" />
+            </button>
+            {isSettingsOpen && (
+              <>
+                <div 
+                  className="fixed inset-0 z-[9998] bg-transparent"
+                  onClick={() => setIsSettingsOpen(false)}
+                />
+                <div className="fixed right-4 top-20 z-[9999] w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+                  <div className="px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                      Admin menu
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-100">
+                      {profileForm.name}
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
+                      {profileForm.email}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="block w-full px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+                    onClick={() => {
+                      setIsSettingsPanelOpen(true);
+                      setIsSettingsOpen(false);
+                    }}
+                  >
+                    Admin preferences
+                  </button>
+                  <Link
+                    href="/AdminDashboard/blogsAdmin"
+                    className="block px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+                    onClick={() => setIsSettingsOpen(false)}
+                  >
+                    Blog library
+                  </Link>
+                  <div className="border-t border-slate-200 px-4 py-3 dark:border-slate-800">
+                    <div className="flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-200">
+                      <span>Theme</span>
+                      <ThemeToggle />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
 
         <div className="pointer-events-none absolute inset-0 select-none">
           <div className="absolute -left-24 -top-32 h-72 w-72 rounded-full bg-[#d0e1ff] blur-3xl dark:bg-blue-900/50" />
@@ -725,74 +799,6 @@ const AdminDashboard = () => {
                     className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 dark:text-slate-100"
                     aria-label="Search site content"
                   />
-                </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
-                    aria-label="Notifications"
-                  >
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-semibold text-white">
-                      3
-                    </span>
-                  </button>
-                  <div className="relative z-[9999]" ref={settingsRef}>
-                    <button
-                      type="button"
-                      onClick={() => setIsSettingsOpen((prev) => !prev)}
-                      className="relative z-[9999] flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
-                      aria-haspopup="menu"
-                      aria-expanded={isSettingsOpen}
-                      aria-label="Open admin menu"
-                    >
-                      <Settings className="h-5 w-5" />
-                    </button>
-                    {isSettingsOpen && (
-                      <>
-                        <div 
-                          className="fixed inset-0 z-[9998] bg-transparent"
-                          onClick={() => setIsSettingsOpen(false)}
-                        />
-                        <div className="fixed right-4 top-20 z-[9999] w-60 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-                        <div className="px-4 py-3">
-                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                            Admin menu
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-100">
-                            {profileForm.name}
-                          </p>
-                          <p className="text-xs text-slate-400 dark:text-slate-500">
-                            {profileForm.email}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          className="block w-full px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-                          onClick={() => {
-                            setIsSettingsPanelOpen(true);
-                            setIsSettingsOpen(false);
-                          }}
-                        >
-                          Admin preferences
-                        </button>
-                        <Link
-                          href="/AdminDashboard/blogsAdmin"
-                          className="block px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-                          onClick={() => setIsSettingsOpen(false)}
-                        >
-                          Blog library
-                        </Link>
-                        <div className="border-t border-slate-200 px-4 py-3 dark:border-slate-800">
-                          <div className="flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-200">
-                            <span>Theme</span>
-                            <ThemeToggle />
-                          </div>
-                        </div>
-                      </div>
-                      </>
-                    )}
-                  </div>
                 </div>
               </div>
             </header>

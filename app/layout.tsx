@@ -87,7 +87,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'min-h-screen bg-[#daf0ff] dark:bg-gray-950',
+          'min-h-screen bg-white dark:bg-slate-950',
           'antialiased',
           // Prevent content shift
           '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'

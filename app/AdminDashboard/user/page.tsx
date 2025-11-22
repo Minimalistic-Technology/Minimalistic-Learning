@@ -89,7 +89,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#edf2ff] pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
       <ScrollProgressBar />
       
       <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">

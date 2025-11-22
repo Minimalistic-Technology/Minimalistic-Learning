@@ -3,7 +3,7 @@ import { motion, useScroll } from "framer-motion";
 import React from "react";
 
 export default function ScrollProgressBar() {
-  const { scrollYProgress } = useScroll(); // Returns a value between 0 and 1
+  const { scrollYProgress } = useScroll();
 
   return (
     <motion.div
@@ -12,11 +12,11 @@ export default function ScrollProgressBar() {
         top: 0,
         left: 0,
         right: 0,
-        height: "6px",
-        background: "blue",
-        transformOrigin: "0%",  // start from left
+        height: "3px",
+        background: "rgb(37, 99, 235)",
+        transformOrigin: "0%",
         zIndex: 9999,
-        scaleX: scrollYProgress, // animate the width with scroll progress
+        scaleX: scrollYProgress,
       }}
     />
   );
