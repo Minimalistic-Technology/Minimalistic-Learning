@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Providers } from "./Providers";
@@ -68,6 +68,9 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
   },
+};
+
+export const viewport: Viewport = {
   themeColor: "#daf0ff",
 };
 
@@ -84,7 +87,7 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'min-h-screen bg-[#daf0ff] dark:bg-gray-950',
+          'min-h-screen bg-white dark:bg-slate-950',
           'antialiased',
           // Prevent content shift
           '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'

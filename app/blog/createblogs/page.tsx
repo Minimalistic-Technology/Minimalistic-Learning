@@ -1,11 +1,9 @@
 "use client";
 
-import { useState,useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
-import { Camera, Calendar, User, Tag, Link } from "lucide-react";
-import axios from "axios";
-import axiosInstance from "@/utils/axiosInstance/page";
+import { Camera, Calendar, User, Tag, Link, PenSquare, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 
@@ -22,23 +20,23 @@ interface BlogFormData {
 }
 
 const CreateBlogPage = () => {
-const [formData, setFormData] = useState<BlogFormData>({
-  title: "",
-  description: "",
-  category: "",
-  image: "",
-  date: new Date().toISOString().split("T")[0],
-  author: "",
-  tags: [],
-  minutes: 1,
-  authorId: "", // Add empty initially
-});
-useEffect(() => {
-  const authorId = localStorage.getItem("id"); // this is saved at login
-  if (authorId) {
-    setFormData((prev) => ({ ...prev, authorId }));
-  }
-}, []);
+  const [formData, setFormData] = useState<BlogFormData>({
+    title: "",
+    description: "",
+    category: "",
+    image: "",
+    date: new Date().toISOString().split("T")[0],
+    author: "",
+    tags: [],
+    minutes: 1,
+    authorId: "",
+  });
+  useEffect(() => {
+    const authorId = localStorage.getItem("id");
+    if (authorId) {
+      setFormData((prev) => ({ ...prev, authorId }));
+    }
+  }, []);
 
   const [currentTag, setCurrentTag] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -100,67 +98,63 @@ useEffect(() => {
     setErrorMessage("");
 
     try {
-      // Make API call to the backend
-      const response = await axiosInstance.post(
-        "/api/ml/blog/create",
-        formData
-      );
-
-      console.log("API Response:", response.data);
-      alert("Blog created successfully!");
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      console.log("Draft blog (local only):", formData);
+      alert("Blog draft saved locally! (API disabled in this demo)");
       router.push("/blog");
     } catch (error) {
       console.error("Error creating blog:", error);
-      if (axios.isAxiosError(error)) {
-        setErrorMessage(
-          error.response?.data?.message ||
-            "Failed to create blog. Please try again."
-        );
-      } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");
-      }
+      setErrorMessage("Unable to save this draft locally. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div> <ScrollProgressBar/>
-      <div className="min-h-screen bg-[#daf0ff]">
-        {/* Hero Section */}
-        <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
-            {/* Text Content */}
-            <div className="w-full md:w-1/2 text-center md:text-left space-y-6 animate-fade-in">
-              <h1 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-gray-800 leading-tight">
-              Create Your Tech Blog
-              </h1>
-              <p className="text-gray-700 text-[clamp(1.125rem,2.5vw,1.875rem)]">
-              Share your insights with the tech community
-              </p>
+    <div>
+      <ScrollProgressBar />
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
+        <div className="mx-auto max-w-6xl space-y-8">
+          <section className="rounded-3xl border border-slate-200/80 bg-white/95 p-8 shadow-lg backdrop-blur">
+            <div className="grid gap-10 md:grid-cols-2">
+              <div className="space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#2563eb]">
+                  Creator studio
+                </p>
+                <h1 className="text-4xl font-semibold text-slate-900">
+                  Create your next Minimalistic Learning blog
+                </h1>
+                <p className="text-base text-slate-500">
+                  Draft with clarity, structure with intention, and publish with
+                  the same calm UI as the Admin Dashboard.
+                </p>
+                <div className="flex flex-wrap gap-3 text-sm text-slate-500">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
+                    <PenSquare className="h-4 w-4 text-[#2563eb]" />
+                    Guided editor
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600">
+                    <Sparkles className="h-4 w-4 text-[#2563eb]" />
+                    Markdown ready
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <motion.img
+                  src="/images/blog2.png"
+                  alt="Hero Image"
+                  className="h-60 w-60 rounded-3xl border border-slate-200 object-cover shadow-xl"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                />
+              </div>
             </div>
-
-            {/* Hero Image */}
-            <div className="w-full md:w-1/2 flex justify-center transition-all duration-300 hover:scale-105">
-              <motion.img
-                src="/images/blog2.png"
-                alt="Hero Image"
-                className="w-72 h-72 object-cover rounded-full shadow-xl ring-4 ring-white hover:scale-105"
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 0.4,
-                  scale: { type: "spring", duration: 0.6, bounce: 0.5 },
-                }}
-                viewport={{ once: true, amount: 0.6 }}
-               
-               
-              />
-            
-            </div>
-          </div>
-        </section>
-        <form onSubmit={handleSubmit} className="p-8">
+          </section>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-8 rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-lg md:p-8"
+          >
           {errorMessage && (
             <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-xl">
               {errorMessage}
@@ -181,7 +175,7 @@ useEffect(() => {
                   onChange={handleChange}
                   required
                   placeholder="Enter an attention-grabbing title"
-                  className="w-full px-4 py-3 rounded-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 />
               </div>
 
@@ -190,9 +184,9 @@ useEffect(() => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                 Blog Content
                 </label>
-                <div className="bg-[#daf0ff] border border-blue-400 rounded-xl overflow-hidden">
+                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
                   {/* Toolbar */}
-                  <div className="bg-[#daf0ff] border border-blue-400 p-2 flex flex-wrap gap-2">
+                  <div className="bg-white border border-slate-200 p-2 flex flex-wrap gap-2">
                     <button
                       type="button"
                       onClick={() => {
@@ -216,7 +210,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Bold"
                     >
                       <strong>B</strong>
@@ -242,7 +236,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Italic"
                     >
                       <em>I</em>
@@ -268,7 +262,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Heading"
                     >
                     H
@@ -292,7 +286,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Bullet List"
                     >
                     • List
@@ -329,7 +323,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Link"
                     >
                       <Link className="h-4 w-4" />
@@ -354,7 +348,7 @@ useEffect(() => {
                           }, 0);
                         }
                       }}
-                      className="px-2 py-1 text-sm bg-[#daf0ff] border border-blue-400 rounded hover:bg-gray-100"
+                      className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                       title="Code Block"
                     >
                       {"</>"}
@@ -369,7 +363,7 @@ useEffect(() => {
                     onChange={handleChange}
                     required
                     placeholder="Write your blog content here..."
-                    className="w-full bg-[#daf0ff] p-4 min-h-64 focus:outline-none focus:ring-0"
+                    className="w-full bg-white p-4 min-h-64 focus:outline-none focus:ring-0"
                     rows={10}
                   />
                 </div>
@@ -383,7 +377,7 @@ useEffect(() => {
 
               {/* Preview Section */}
               {formData.description && (
-                <div className="bg-[#daf0ff] border border-blue-400 rounded-xl p-4 mt-2 max-h-[400px] overflow-auto">
+                <div className="bg-white border border-slate-200 rounded-xl p-4 mt-2 max-h-[400px] overflow-auto">
                   <h3 className="text-sm font-medium text-gray-700 mb-2">
                   Preview
                   </h3>
@@ -426,7 +420,7 @@ useEffect(() => {
                     value={currentTag}
                     onChange={(e) => setCurrentTag(e.target.value)}
                     placeholder="Add a tag"
-                    className="flex-grow px-4 py-2 rounded-l-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="flex-grow px-4 py-2 rounded-l-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   />
                   <button
                     type="button"
@@ -466,7 +460,7 @@ useEffect(() => {
                   <Camera className="inline mr-2 h-4 w-4" />
                 Featured Image
                 </label>
-                <div className="mt-1 border-2 border-dashed border-blue-400 rounded-xl p-6 text-center">
+                <div className="mt-1 border-2 border-dashed border-slate-200 rounded-xl p-6 text-center">
                   {imagePreview ? (
                     <div className="relative">
                       <img
@@ -517,7 +511,7 @@ useEffect(() => {
                   value={formData.category}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 >
                   <option value="">Select Category</option>
                   <option value="AI">Artificial Intelligence</option>
@@ -542,7 +536,7 @@ useEffect(() => {
                   value={formData.date}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 />
               </div>
               <div>
@@ -559,7 +553,7 @@ useEffect(() => {
                       })
                     }
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   />
                 </label>
               </div>
@@ -577,7 +571,7 @@ useEffect(() => {
                   onChange={handleChange}
                   required
                   placeholder="Your name"
-                  className="w-full px-4 py-3 rounded-xl bg-[#daf0ff] border border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 />
               </div>
             </div>
@@ -627,15 +621,16 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => router.push("/blog")}
-              className="ml-4 px-6 py-3 rounded-2xl bg-gray-200 border border-blue-400 text-gray-700 hover:bg-gray-50 font-medium transition"
+              className="ml-4 px-6 py-3 rounded-2xl bg-gray-200 border border-slate-200 text-gray-700 hover:bg-gray-50 font-medium transition"
             >
             Cancel
             </button>
           </div>
         </form>
-        <Footer />
       </div>
     </div>
+    <Footer />
+  </div>
   );
 };
 

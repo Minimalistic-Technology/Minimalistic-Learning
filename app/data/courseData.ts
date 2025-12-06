@@ -1,5 +1,4 @@
 
-import course from '../components/testing/page';
 export const categories = [
   // "All Courses",
   "All Blog's",
@@ -9,7 +8,6 @@ export const categories = [
   "Health"
 ];
 
-export { course };
 export const courses = [
   { 
     _id: "101",

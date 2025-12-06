@@ -1,1115 +1,606 @@
 "use client";
-// 'use client';
 
-// import React, { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Footer from "../components/Footer";
-// import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-// import axios from "axios";
-
-// const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
-
-// const BlogPage = () => {
-//   const [blogs, setBlogs] = useState([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("All");
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     // Fetch blogs from the API
-//     axios
-//       .get("http://localhost:5000/blogs")
-//       .then((response) => {
-//         setBlogs(response.data); // Assuming the API returns an array of blogs
-//         setIsLoading(false);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching blogs:", error);
-//         setIsLoading(false);
-//       });
-//   }, []);
-
-//   const filteredBlogs = blogs.filter((blog) => {
-//     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-//     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <p className="mt-4 text-gray-600">Loading blogs...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
-//       {/* Hero Section */}
-//       <section className="w-full bg-gradient-to-b from-[#daf0ff] via-blue-300 to-blue-500 py-16">
-//         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between">
-//           {/* Text Content */}
-//           <div className="w-full md:w-1/2 text-center md:text-left">
-//             <h1 className="text-6xl md:text-5xl font-bold text-gray-800 leading-tight">
-//               Insights, Tutorials, and Tech News
-//             </h1>
-//             <p className="mt-4 text-gray-700 text-xl md:text-3xl">
-//               Stay updated with the latest in tech and learning.
-//             </p>
-//           </div>
-
-//           {/* Hero Image */}
-//           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img
-//               src="/images/blog3.png"
-//               alt="Hero Image"
-//               width={350}
-//               height={64}
-//               className="rounded-full object-cover"/>
-//           </div>
-//         </div>
-//       </section>
-
-//       <div className="mt-6">
-//         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Blog's
-//         </p>
-//         <InfiniteMovingCardsDemo />
-//       </div>
-
-//       <p className="mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//         Famous Blog's
-//       </p>
-
-//       {/* Search, Category, and Create Button Section */}
-//       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-//         <input
-//           type="text"
-//           placeholder="Search Blog's..."
-//           className="w-full md:w-1/3 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <select
-//           className="w-full md:w-1/4 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//         >
-//           {categories.map((category) => (
-//             <option key={category} value={category}>{category}</option>
-//           ))}
-//         </select>
-
-//         {/* Create New Blog Button */}
-//         <Link href="/blog/createblogs">
-//           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-//             + Create New Blog
-//           </button>
-//         </Link>
-//       </section>
-
-//       {/* Blog Cards */}
-//       <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-//         {filteredBlogs.map((blog, index) => (
-//           <div key={blog.id || index} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
-//             <img src={blog.image} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-//             <div className="p-4 flex flex-col flex-grow">
-//               <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-//               <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
-//               <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
-//               <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-//                 <span>{blog.author}</span>
-//                 <span>{blog.date}</span>
-//               </div>
-//               <Link href={`/blog/${blog.id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-//                 Read More →
-//               </Link>
-//             </div>
-//           </div>
-//         ))}
-//       </section>
-
-//       {/* Pagination */}
-//       <div className="flex justify-center pb-12">
-//         <nav className="flex gap-2">
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">1</button>
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">2</button>
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">Next →</button>
-//         </nav>
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogPage;
-// 'use client';
-
-// import React, { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Footer from "../components/Footer";
-// import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-// import axios from "axios";
-
-// // Define the Blog type
-// interface Blog {
-//   id: string;
-//   title: string;
-//   description: string;
-//   image: string;
-//   category: string;
-//   author: string;
-//   date: string;
-// }
-
-// const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
-
-// const BlogPage = () => {
-//   const [blogs, setBlogs] = useState<Blog[]>([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("All");
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:5000/blogs")
-//       .then((response) => {
-//         setBlogs(response.data);
-//         setIsLoading(false);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching blogs:", error);
-//         setIsLoading(false);
-//       });
-//   }, []);
-
-//   const filteredBlogs = blogs.filter((blog) => {
-//     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-//     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <p className="mt-4 text-gray-600">Loading blogs...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
-//       {/* Hero Section */}
-//       <section className="w-full bg-gradient-to-b from-[#daf0ff] via-blue-300 to-blue-500 py-16">
-//         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between">
-//           <div className="w-full md:w-1/2 text-center md:text-left">
-//             <h1 className="text-6xl md:text-5xl font-bold text-gray-800 leading-tight">
-//               Insights, Tutorials, and Tech News
-//             </h1>
-//             <p className="mt-4 text-gray-700 text-xl md:text-3xl">
-//               Stay updated with the latest in tech and learning.
-//             </p>
-//           </div>
-//           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img
-//               src="/images/blog3.png"
-//               alt="Hero Image"
-//               width={350}
-//               height={64}
-//               className="rounded-full object-cover"
-//             />
-//           </div>
-//         </div>
-//       </section>
-
-//       <div className="mt-6">
-//         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Blog's
-//         </p>
-//         <InfiniteMovingCardsDemo />
-//       </div>
-
-//       <p className="mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//         Famous Blog's
-//       </p>
-
-//       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-//         <input
-//           type="text"
-//           placeholder="Search Blog's..."
-//           className="w-full md:w-1/3 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <select
-//           className="w-full md:w-1/4 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//         >
-//           {categories.map((category) => (
-//             <option key={category} value={category}>{category}</option>
-//           ))}
-//         </select>
-//         <Link href="/blog/createblogs">
-//           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-//             + Create New Blog
-//           </button>
-//         </Link>
-//       </section>
-
-//       <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-//         {filteredBlogs.map((blog) => (
-//           <div key={blog.id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
-//             <img src={blog.image} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-//             <div className="p-4 flex flex-col flex-grow">
-//               <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-//               <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
-//               <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
-//               <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-//                 <span>{blog.author}</span>
-//                 <span>{blog.date}</span>
-//               </div>
-//               <Link href={`/blog/${blog.id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-//                 Read More →
-//               </Link>
-//             </div>
-//           </div>
-//         ))}
-//       </section>
-
-//       <div className="flex justify-center pb-12">
-//         <nav className="flex gap-2">
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">1</button>
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">2</button>
-//           <button className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50">Next →</button>
-//         </nav>
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogPage;
-// 'use client';
-
-// import React, { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Footer from "../components/Footer";
-// import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-// import axios from "axios";
-
-// // Define the Blog type
-// interface Blog {
-//   id: string;
-//   title: string;
-//   description: string;
-//   image: string;
-//   category: string;
-//   author: string;
-//   date: string;
-// }
-
-// const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
-
-// const BlogPage = () => {
-//   const [blogs, setBlogs] = useState<Blog[]>([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("All");
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:5000/blogs")
-//       .then((response) => {
-//         setBlogs(response.data);
-//         setIsLoading(false);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching blogs:", error);
-//         setIsLoading(false);
-//       });
-//   }, []);
-
-//   const filteredBlogs = blogs.filter((blog) => {
-//     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-//     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <p className="mt-4 text-gray-600">Loading blogs...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
-//       {/* Hero Section */}
-//       <section className="w-full bg-gradient-to-b from-[#daf0ff] via-blue-300 to-blue-500 py-16">
-//         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between">
-//           <div className="w-full md:w-1/2 text-center md:text-left">
-//             <h1 className="text-6xl md:text-5xl font-bold text-gray-800 leading-tight">
-//               Insights, Tutorials, and Tech News
-//             </h1>
-//             <p className="mt-4 text-gray-700 text-xl md:text-3xl">
-//               Stay updated with the latest in tech and learning.
-//             </p>
-//           </div>
-//           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img
-//               src="/images/blog3.png"
-//               alt="Hero Image"
-//               width={350}
-//               height={64}
-//               className="rounded-full object-cover"
-//             />
-//           </div>
-//         </div>
-//       </section>
-
-//       <div className="mt-6">
-//         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Blog's
-//         </p>
-//         <InfiniteMovingCardsDemo />
-//       </div>
-
-//       <p className="mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//         Famous Blog's
-//       </p>
-
-//       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-//         <input
-//           type="text"
-//           placeholder="Search Blog's..."
-//           className="w-full md:w-1/3 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <select
-//           className="w-full md:w-1/4 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//         >
-//           {categories.map((category) => (
-//             <option key={category} value={category}>{category}</option>
-//           ))}
-//         </select>
-//         <Link href="/blog/createblog's">
-//           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-//             + Create New Blog
-//           </button>
-//         </Link>
-//       </section>
-
-//       <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-//         {filteredBlogs.map((blog) => (
-//           <div key={blog.id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
-//             <img src={blog.image} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-//             <div className="p-4 flex flex-col flex-grow">
-//               <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-//               <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
-//               <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
-//               <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-//                 <span>{blog.author}</span>
-//                 <span>{blog.date}</span>
-//               </div>
-//               <Link href={`/blog/${blog.id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-//                 Read More →
-//               </Link>
-//             </div>
-//           </div>
-//         ))}
-//       </section>
-
-//       <div className="flex justify-center pb-12">
-//         <nav className="flex gap-2">
-//           {[
-//             { key: "page-1", label: "1" },
-//             { key: "page-2", label: "2" },
-//             { key: "page-next", label: "Next →" }
-//           ].map((button) => (
-//             <button
-//               key={button.key}
-//               className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50"
-//             >
-//               {button.label}
-//             </button>
-//           ))}
-//         </nav>
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogPage;
-// 'use client';
-
-// import React, { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Footer from "../components/Footer";
-// import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-// import axios from "axios";
-
-// // Define the Blog type
-// interface Blog {
-//   id: string;
-//   title: string;
-//   description: string;
-//   image: string;
-//   category: string;
-//   author: string;
-//   date: string;
-// }
-
-// const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
-
-// const BlogPage = () => {
-//   const [blogs, setBlogs] = useState<Blog[]>([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("All");
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:5000/blogs")
-//       .then((response) => {
-//         setBlogs(response.data);
-//         setIsLoading(false);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching blogs:", error);
-//         setIsLoading(false);
-//       });
-//   }, []);
-
-//   const filteredBlogs = blogs.filter((blog) => {
-//     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-//     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <p className="mt-4 text-gray-600">Loading blogs...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const paginationButtons = [
-//     { id: "page-1", label: "1" },
-//     { id: "page-2", label: "2" },
-//     { id: "page-next", label: "Next →" }
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
-//       {/* Hero Section */}
-//       <section className="w-full bg-gradient-to-b from-[#daf0ff] via-blue-300 to-blue-500 py-16">
-//         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between">
-//           <div className="w-full md:w-1/2 text-center md:text-left">
-//             <h1 className="text-6xl md:text-5xl font-bold text-gray-800 leading-tight">
-//               Insights, Tutorials, and Tech News
-//             </h1>
-//             <p className="mt-4 text-gray-700 text-xl md:text-3xl">
-//               Stay updated with the latest in tech and learning.
-//             </p>
-//           </div>
-//           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img
-//               src="/images/blog3.png"
-//               alt="Hero Image"
-//               width={350}
-//               height={64}
-//               className="rounded-full object-cover"
-//             />
-//           </div>
-//         </div>
-//       </section>
-
-//       <div className="mt-6">
-//         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Quotes
-//         </p>
-//         <InfiniteMovingCardsDemo />
-//       </div>
-
-//       <p className="mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//         Famous Blog's
-//       </p>
-
-//       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-//         <input
-//           type="text"
-//           placeholder="Search Blog's..."
-//           className="w-full md:w-1/3 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <select
-//           className="w-full md:w-1/4 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//         >
-//           {categories.map((category) => (
-//             <option key={category} value={category}>{category}</option>
-//           ))}
-//         </select>
-//         <Link href="/blog/createblogs">
-//           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-//             + Create New Blog
-//           </button>
-//         </Link>
-//       </section>
-
-//       <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-//         {filteredBlogs.map((blog:any) => (
-//           <div key={blog._id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
-//             <img src={blog.image} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-//             <div className="p-4 flex flex-col flex-grow">
-//               <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-//               <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
-//               <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
-//               <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-//                 <span>{blog.author}</span>
-//                 <span>{blog.date}</span>
-//               </div>
-//               <Link href={`/blog/${blog._id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-//                 Read More →
-//               </Link>
-//             </div>
-//           </div>
-//         ))}
-//       </section>
-
-//       <div className="flex justify-center pb-12">
-//         <nav className="flex gap-2">
-//           {paginationButtons.map((button) => (
-//             <button
-//               key={button.id}
-//               className="px-4 py-2 rounded-md bg-white shadow-sm text-gray-700 hover:bg-blue-50"
-//             >
-//               {button.label}
-//             </button>
-//           ))}
-//         </nav>
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogPage;
-// 'use client';
-
-// import React, { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Footer from "../components/Footer";
-// import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-// import axios from "axios";
-
-// // Define the Blog type
-// interface Blog {
-//   _id: string;
-//   title: string;
-//   description: string;
-//   image: string;
-//   category: string;
-//   author: string;
-//   date: string;
-// }
-
-// const categories = ["All", "AI", "Web Development", "Data Science", "Blockchain", "Cloud Computing", "Cybersecurity", "Mobile Development"];
-
-// const BlogPage = () => {
-//   const [blogs, setBlogs] = useState<Blog[]>([]);
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("All");
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const blogsPerPage = 6;
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:5000/blogs")
-//       .then((response) => {
-//         setBlogs(response.data);
-//         setIsLoading(false);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching blogs:", error);
-//         setIsLoading(false);
-//       });
-//   }, []);
-
-//   const filteredBlogs = blogs.filter((blog) => {
-//     const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-//     const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase());
-//     return matchesCategory && matchesSearch;
-//   });
-
-//   const paginatedBlogs = filteredBlogs.slice(
-//     (currentPage - 1) * blogsPerPage,
-//     currentPage * blogsPerPage
-//   );
-
-//   const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
-
-//   if (isLoading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-//           <p className="mt-4 text-gray-600">Loading blogs...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-[#daf0ff] text-gray-800 font-sans">
-//       {/* Hero Section */}
-//       <section className="w-full bg-gradient-to-b from-[#daf0ff] via-blue-300 to-blue-500 py-16">
-//         <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between">
-//           <div className="w-full md:w-1/2 text-center md:text-left">
-//             <h1 className="text-6xl md:text-5xl font-bold text-gray-800 leading-tight">
-//               Insights, Tutorials, and Tech News
-//             </h1>
-//             <p className="mt-4 text-gray-700 text-xl md:text-3xl">
-//               Stay updated with the latest in tech and learning.
-//             </p>
-//           </div>
-//           <div className="w-full md:w-1/2 flex justify-center mb-8 md:mb-0">
-//             <img
-//               src="/images/blog3.png"
-//               alt="Hero Image"
-//               width={350}
-//               height={64}
-//               className="rounded-full object-cover"
-//             />
-//           </div>
-//         </div>
-//       </section>
-
-//       <div className="mt-6">
-//         <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//           Latest Quotes
-//         </p>
-//         <InfiniteMovingCardsDemo />
-//       </div>
-
-//       <p className="mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-//         Famous Blogs
-//       </p>
-
-//       <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4 w-full">
-//         <input
-//           type="text"
-//           placeholder="Search Blogs..."
-//           className="w-full md:w-1/3 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={searchTerm}
-//           onChange={(e) => setSearchTerm(e.target.value)}
-//         />
-//         <select
-//           className="w-full md:w-1/4 px-4 py-2 border border-blue-400 rounded-lg focus:outline-blue-200 focus:ring-2 focus:ring-blue-500"
-//           value={selectedCategory}
-//           onChange={(e) => setSelectedCategory(e.target.value)}
-//         >
-//           {categories.map((category) => (
-//             <option key={category} value={category}>{category}</option>
-//           ))}
-//         </select>
-//         <Link href="/blog/create-blogs">
-//           <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
-//             + Create New Blog
-//           </button>
-//         </Link>
-//         </section>
-//         <section className="max-w-7xl mx-auto px-4 py-12 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-//           {paginatedBlogs.map((blog) => (
-//           <article key={blog._id} className="bg-white border border-blue-300 rounded-2xl shadow hover:shadow-md transition flex flex-col">
-//             <img src={blog.image || "/images/default-blog.jpg"} alt={blog.title} className="rounded-t-2xl object-cover h-48 w-full" />
-//             <div className="p-4 flex flex-col flex-grow">
-//               <span className="text-md font-semibold text-blue-500">{blog.category}</span>
-//               <h2 className="text-2xl font-bold mt-2">{blog.title}</h2>
-//               <p className="text-gray-600 mt-2 text-sm flex-grow">{blog.description}</p>
-//               <div className="flex justify-between items-center text-gray-400 text-xs mt-4">
-//                 <span>{blog.author}</span>
-//                 <span>{blog.date}</span>
-//               </div>
-//               <Link href={`/blog/${blog._id}`} className="mt-4 inline-block text-blue-600 text-sm font-medium hover:underline">
-//                 Read More →
-//               </Link>
-//             </div>
-//           </article>
-//         ))}
-//       </section>
-
-//       <div className="flex justify-center pb-12">
-//         <nav className="flex gap-2">
-//           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-//             <button
-//               key={page}
-//               onClick={() => setCurrentPage(page)}
-//               className={`px-4 py-2 rounded-md shadow-sm ${page === currentPage ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}`}
-//             >
-//               {page}
-//             </button>
-//           ))}
-//         </nav>
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default BlogPage;"use client";
-
-import React, { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Footer from "../components/Footer";
-import { InfiniteMovingCardsDemo } from "../components/InfiniteMovingCardsDemo";
-import { motion } from "framer-motion";
 import Image from "next/image";
-import api from "utils/api";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  ArrowUpRight, 
+  BarChart3, 
+  PenSquare, 
+  Search, 
+  Filter,
+  TrendingUp,
+  Clock,
+  Star,
+  BookOpen,
+  Sparkles,
+  ChevronDown,
+  X,
+  Grid3x3,
+  List
+} from "lucide-react";
 import ScrollProgressBar from "../components/ScrollerProgress";
-const categories = [
-  "All",
-  "AI",
-  "Web Development",
-  "Data Science",
-  "Blockchain",
-  "Cloud Computing",
-  "Cybersecurity",
-  "Mobile Development",
-];
+import Footer from "../components/Footer";
+import { blogs as staticBlogs } from "@/app/lib/blogData";
 
 interface Blog {
   _id: string;
   title: string;
   description: string;
-  image: string;
-  category: string;
-  author: string;
-  date: string;
-  verified: boolean;
-  rating: number;
+  image?: string;
+  category?: string;
+  author?: string;
+  date?: string;
+  verified?: boolean;
+  rating?: number;
 }
 
+type SourceBlog = Partial<Blog> & { id?: string };
+
+const normalizedBlogs: Blog[] = (staticBlogs as SourceBlog[]).map(
+  (blog, index) => ({
+    _id: blog.id ?? blog._id ?? `blog-${index}`,
+    title: blog.title ?? "Untitled Blog",
+    description:
+      blog.description ??
+      "Stay tuned for more insights from Minimalistic Learning.",
+    image: blog.image,
+    category: blog.category,
+    author: blog.author,
+    date: blog.date,
+    verified: blog.verified ?? true,
+    rating: blog.rating ?? 5,
+  })
+);
+
+// Get unique categories from blogs
+const availableCategories = Array.from(
+  new Set(normalizedBlogs.map((blog) => blog.category).filter(Boolean))
+);
+
+const totalCategories = availableCategories.length;
+const totalAuthors = Array.from(
+  new Set(normalizedBlogs.map((blog) => blog.author ?? "Minimalistic Learning"))
+).length;
+
+const highlightStats = [
+  {
+    label: "Published blogs",
+    value: normalizedBlogs.length.toString(),
+    meta: "+3 new this week",
+    icon: BookOpen,
+    color: "from-purple-500 to-purple-600",
+  },
+  {
+    label: "Categories curated",
+    value: totalCategories.toString(),
+    meta: "Handpicked topics",
+    icon: Sparkles,
+    color: "from-indigo-500 to-indigo-600",
+  },
+  {
+    label: "Active mentors",
+    value: totalAuthors.toString(),
+    meta: "Voices powering the hub",
+    icon: TrendingUp,
+    color: "from-pink-500 to-pink-600",
+  },
+];
+
+const categories = ["All", ...availableCategories];
+
+const sortOptions = [
+  { label: "All Blogs", value: "default", icon: Grid3x3 },
+  { label: "Most Popular", value: "most-viewed", icon: TrendingUp },
+  { label: "Most Recent", value: "most-recent", icon: Clock },
+];
+
 const BlogPage = () => {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<Blog[]>(normalizedBlogs);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const blogsPerPage = 6;
-  const [sortFilter, setSortFilter] = useState("default"); // default | mostViewed | mostRecent
+  const [sortFilter, setSortFilter] = useState<string>("default");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    api
-      .get("/api/ml/blog/")
-      .then((response) => {
-        setBlogs(response.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching blogs:", error);
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    // setIsLoading(true);
-
-    let url = "https://api.minimalistictechnology.com/api/ml/blog";
-    if (sortFilter === "mostViewed") {
-      url = "https://api.minimalistictechnology.com/api/ml/blog/most-viewed";
-    } else if (sortFilter === "mostRecent") {
-      url = "https://api.minimalistictechnology.com/api/ml/blog/most-recent";
+    if (sortFilter === "default") {
+      setBlogs(normalizedBlogs);
+      return;
     }
 
-    api
-      .get(url)
-      .then((response) => {
-        setBlogs(response.data);
-        setCurrentPage(1); // Reset to page 1 on filter change
-        //setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching blogs:", error);
-        setIsLoading(false);
+    const sorted = [...normalizedBlogs];
+    if (sortFilter === "most-recent") {
+      sorted.sort((a, b) => {
+        const aDate = a.date ? new Date(a.date).getTime() : 0;
+        const bDate = b.date ? new Date(b.date).getTime() : 0;
+        return bDate - aDate;
       });
+    } else if (sortFilter === "most-viewed") {
+      sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    }
+
+    setBlogs(sorted);
   }, [sortFilter]);
 
-  const filteredBlogs = blogs
-    .filter((blog) => blog.verified) // <--- Filter for verified blogs
-    .filter((blog) => {
-      const matchesCategory =
-        selectedCategory === "All" || blog.category === selectedCategory;
-      const matchesSearch = blog.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
+  const filteredBlogs = useMemo(() => {
+    return blogs
+      .filter((blog) => blog.verified !== false)
+      .filter((blog) => {
+        const matchesCategory =
+          selectedCategory === "All" ||
+          blog.category?.toLowerCase() === selectedCategory.toLowerCase();
+        const matchesSearch =
+          blog.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          blog.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+  }, [blogs, searchTerm, selectedCategory]);
 
-  const paginatedBlogs = filteredBlogs.slice(
-    (currentPage - 1) * blogsPerPage,
-    currentPage * blogsPerPage
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 text-slate-800 dark:text-slate-100">
+      <ScrollProgressBar />
+      
+      {/* Hero Section */}
+      <section className="relative pt-24 pb-16 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-6"
+            >
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-[#2563eb] ring-1 ring-purple-200/50 dark:ring-purple-700/50">
+                <Sparkles className="w-3 h-3" />
+                Blog Hub
+              </div>
+              <div>
+                <h1 className="text-5xl md:text-6xl font-extrabold leading-tight bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 dark:from-slate-100 dark:via-purple-100 dark:to-slate-100 bg-clip-text text-transparent">
+                  Discover Stories, <br />
+                  <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 bg-clip-text text-transparent">
+                    Insights & Inspiration
+                  </span>
+                </h1>
+                <p className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+                  Explore curated content from industry experts. Learn, grow, and share your knowledge with the Minimalistic Learning community.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {sortOptions.map((option) => {
+                  const Icon = option.icon;
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => setSortFilter(option.value)}
+                      className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                        sortFilter === option.value
+                          ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-lg shadow-purple-500/30 scale-105"
+                          : "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            {/* Editor's Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative rounded-3xl border border-purple-200/50 dark:border-purple-700/50 bg-gradient-to-br from-purple-600 via-indigo-600 to-pink-600 p-8 text-white shadow-2xl ring-2 ring-purple-500/30 overflow-hidden"
+            >
+              <div className="absolute inset-0 opacity-10">
+                <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.6),_transparent_60%)]" />
+              </div>
+              <div className="relative flex h-full flex-col justify-between space-y-6">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.4em] text-white/70 mb-3">
+                    EDITOR&apos;S NOTE
+                  </p>
+                  <h2 className="text-2xl font-bold leading-relaxed">
+                    &ldquo;Consistent storytelling amplifies every community.&rdquo;
+                  </h2>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Link
+                    href="/blog/createblogs"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-5 py-3 font-semibold text-white transition-all hover:bg-white/30 hover:scale-105"
+                  >
+                    <PenSquare className="w-4 h-4" />
+                    Publish new blog
+                  </Link>
+                  <Link
+                    href="/AdminDashboard/blogsAdmin"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-[#2563eb] transition-all hover:scale-105"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Manage library
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="max-w-7xl mx-auto px-6 mb-12">
+        <div className="grid gap-6 md:grid-cols-3">
+          {highlightStats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="relative overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-6 shadow-lg ring-1 ring-black/5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className={`absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br ${stat.color} opacity-10 blur-2xl`} />
+                <div className="relative">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mb-4`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500 mb-2">
+                    {stat.label}
+                  </p>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+                      {stat.value}
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <ArrowUpRight className="w-3 h-3" />
+                      {stat.meta}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Search and Filter Section */}
+      <section className="max-w-7xl mx-auto px-6 mb-12">
+        <div className="rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-6 shadow-lg ring-1 ring-black/5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            {/* Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search blogs by title or description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:border-transparent transition-all"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                >
+                  <X className="w-4 h-4 text-slate-400" />
+                </button>
+              )}
+            </div>
+
+            {/* Category Filter & View Toggle */}
+            <div className="flex items-center gap-3">
+              {/* Category Filter */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  <Filter className="w-4 h-4" />
+                  <span className="hidden sm:inline">Category</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showFilters && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl p-2 z-50 max-h-96 overflow-y-auto"
+                    >
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setSelectedCategory(category || "All");
+                    setShowFilters(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    selectedCategory === category
+                      ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* View Toggle */}
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === "grid"
+                      ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
+                      : "text-slate-500 dark:text-slate-400"
+                  }`}
+                >
+                  <Grid3x3 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-2 rounded-lg transition-colors ${
+                    viewMode === "list"
+                      ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
+                      : "text-slate-500 dark:text-slate-400"
+                  }`}
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Create Button */}
+              <Link
+                href="/blog/createblogs"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105"
+              >
+                <PenSquare className="w-4 h-4" />
+                <span className="hidden sm:inline">Create Blog</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Active Filters Display */}
+          {(searchTerm || selectedCategory !== "All") && (
+            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-wrap gap-2">
+              {searchTerm && (
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 text-sm font-medium">
+                  Search: &quot;{searchTerm}&quot;
+                  <button onClick={() => setSearchTerm("")}>
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {selectedCategory !== "All" && (
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 text-sm font-medium">
+                  Category: {selectedCategory}
+                  <button onClick={() => setSelectedCategory("All")}>
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Blogs Grid/List */}
+      <section className="max-w-7xl mx-auto px-6 pb-24">
+        {filteredBlogs.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-16 text-center shadow-lg"
+          >
+            <div className="max-w-md mx-auto space-y-4">
+              <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto">
+                <Search className="w-8 h-8 text-slate-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                No blogs found
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400">
+                Try adjusting your search or filter criteria to find what you're looking for.
+              </p>
+              <Link
+                href="/blog/createblogs"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 mt-4"
+              >
+                <PenSquare className="w-4 h-4" />
+                Create the first blog
+              </Link>
+            </div>
+          </motion.div>
+        ) : (
+          <div
+            className={
+              viewMode === "grid"
+                ? "grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+                : "space-y-6"
+            }
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredBlogs.map((blog, index) => (
+                <BlogCard
+                  key={blog._id}
+                  blog={blog}
+                  viewMode={viewMode}
+                  index={index}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </section>
+
+      <Footer />
+    </div>
   );
+};
 
-  const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
-
-  const cleanMarkdown = (text: string) => {
-    if (!text) return "";
-
-    return text
-      .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold markers
-      .replace(/\*(.*?)\*/g, "$1") // Remove italic markers
-      .replace(/^#+\s+(.*$)/gm, "$1") // Remove heading markers
-      .replace(/^- (.*$)/gm, "• $1") // Convert lists to simple bullets
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)") // Convert links to plain text
-      .replace(/```([\s\S]*?)```/g, "$1") // Remove code block markers
-      .replace(/`([^`]+)`/g, "$1"); // Remove inline code markers
-  };
-
-  if (isLoading) {
+// Blog Card Component
+function BlogCard({
+  blog,
+  viewMode,
+  index,
+}: {
+  blog: Blog;
+  viewMode: "grid" | "list";
+  index: number;
+}) {
+  if (viewMode === "list") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-xl font-semibold text-blue-600 animate-pulse">
-          Loading Blogs...
-        </p>
-      </div>
+      <motion.article
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+      >
+        <Link
+          href={`/blog/${blog._id}`}
+          className="group flex gap-6 rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
+        >
+          <div className="relative w-64 h-48 flex-shrink-0 overflow-hidden">
+            <Image
+              src={
+                blog.image ||
+                "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+              }
+              alt={blog.title}
+              fill
+              className="object-cover transition duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute top-4 left-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-semibold text-[#2563eb]">
+                {blog.category || "General"}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col justify-between p-6">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                {blog.verified && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/20 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <Star className="w-3 h-3 fill-current" />
+                    Verified
+                  </span>
+                )}
+                <div className="flex items-center gap-1 text-amber-400">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    {blog.rating?.toFixed(1) || "5.0"}
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3 group-hover:text-[#2563eb] transition-colors">
+                {blog.title}
+              </h2>
+              <p className="text-slate-600 dark:text-slate-400 line-clamp-2 mb-4">
+                {blog.description}
+              </p>
+            </div>
+            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-4">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  {blog.date
+                    ? new Date(blog.date).toLocaleDateString()
+                    : "Recently"}
+                </span>
+                <span>{blog.author || "Minimalistic Learning"}</span>
+              </div>
+              <span className="inline-flex items-center gap-2 font-semibold text-[#2563eb] group-hover:gap-3 transition-all">
+                Read More
+                <ArrowUpRight className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+        </Link>
+      </motion.article>
     );
   }
 
   return (
-    <div>
-      {" "}
-      <ScrollProgressBar />
-      <div className="min-h-screen  text-gray-800 font-sans">
-        {/* Hero Section */}
-        <section className="w-full bg-gradient-to-b from-[#265ef8] via-[#b4daf3] to-transparent py-20">
-          <div className="max-w-7xl mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between gap-12">
-            <div className="w-full md:w-1/2 text-center md:text-left space-y-6 animate-fade-in">
-              <h1 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-gray-800 leading-tight tracking-tight">
-                Insights, Tutorials, and Tech News
-              </h1>
-              <p className="text-gray-700 text-[clamp(1.125rem,2.5vw,1.875rem)]">
-                Stay updated with the latest in tech and learning.
-              </p>
-            </div>
-            <div className="w-full md:w-1/2 flex justify-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 0.6,
-                  scale: { type: "spring", duration: 0.6, bounce: 0.5 },
-                }}
-                viewport={{ once: true, amount: 0.6 }}
-              >
-                <Image
-                  src="/images/blog3.png"
-                  alt="Tech illustration"
-                  width={260}
-                  height={200}
-                  className="w-72 h-72 object-cover rounded-full shadow-2xl ring-4 ring-white transition-transform duration-300 hover:scale-105"
-                />
-              </motion.div>
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    >
+      <Link href={`/blog/${blog._id}`}>
+        <div className="relative h-64 w-full overflow-hidden">
+          <Image
+            src={
+              blog.image ||
+              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+            }
+            alt={blog.title}
+            fill
+            className="object-cover transition duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          <div className="absolute top-4 left-4 flex items-center gap-2">
+            <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-[#2563eb]">
+              {blog.category || "General"}
+            </span>
+            {blog.verified && (
+              <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-500/90 backdrop-blur-sm text-xs font-semibold text-white">
+                <Star className="w-3 h-3 fill-current" />
+                Verified
+              </span>
+            )}
+          </div>
+          <div className="absolute bottom-4 right-4">
+            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
+              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+              <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                {blog.rating?.toFixed(1) || "5.0"}
+              </span>
             </div>
           </div>
-        </section>
-
-        {/* Trending / Infinite Cards */}
-        <div className="mt-6">
-          <p className="text-3xl sm:text-4xl font-bold text-center pb-6 bg-black to-pink-500 bg-clip-text text-transparent">
-            Latest Quotes
+        </div>
+        <div className="flex flex-1 flex-col gap-4 p-6">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 line-clamp-2 group-hover:text-[#2563eb] transition-colors">
+            {blog.title}
+          </h2>
+          <p className="flex-1 text-sm text-slate-600 dark:text-slate-400 line-clamp-3">
+            {blog.description}
           </p>
-          <InfiniteMovingCardsDemo />
-        </div>
-
-        <p className=" mt-6 text-3xl sm:text-4xl font-bold text-center pb-6 bg-black bg-clip-text text-transparent">
-          Explore Blogs
-        </p>
-
-        {/* Search & Filters */}
-        <section className="max-w-7xl mx-auto px-4 mt-12 flex flex-col md:flex-row justify-between items-center gap-4">
-          <input
-            type="text"
-            placeholder="Search Blog's..."
-            className="w-full md:w-1/3 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-
-          <select
-            className="w-full md:w-1/4 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-          <Link href="/blog/createblogs">
-            <button className="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-md transition duration-300">
-              + Create New Blog
-            </button>
-          </Link>
-        </section>
-        <div className="flex gap-4 mt-10 flex-wrap justify-center">
-          <button
-            onClick={() => setSortFilter("default")}
-            className={`px-4 py-2 rounded-xl font-medium border ${
-              sortFilter === "default"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-blue-600"
-            }`}
-          >
-            All Blogs
-          </button>
-          <button
-            onClick={() => setSortFilter("mostViewed")}
-            className={`px-4 py-2 rounded-xl font-medium border ${
-              sortFilter === "mostViewed"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-blue-600"
-            }`}
-          >
-            Most Viewed
-          </button>
-          <button
-            onClick={() => setSortFilter("mostRecent")}
-            className={`px-4 py-2 rounded-xl font-medium border ${
-              sortFilter === "mostRecent"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-blue-600"
-            }`}
-          >
-            Most Recent
-          </button>
-        </div>
-        {/* Blog Cards */}
-        <section className="max-w-7xl mx-auto px-6 py-16 grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {paginatedBlogs.map((blog) => (
-            <div
-              key={blog._id}
-              className="bg-white border border-blue-200 rounded-3xl shadow-xl hover:shadow-2xl transition-transform duration-300 hover:scale-105 flex flex-col overflow-hidden"
-            >
-              <div className="relative h-56 w-full overflow-hidden rounded-t-3xl">
-                <motion.img
-                  src={blog.image}
-                  alt={blog.title}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    scale: { type: "spring", bounce: 0.4 },
-                  }}
-                  viewport={{ once: true, amount: 0.5 }}
-                  className="object-cover w-full h-full transition-transform duration-300 ease-in-out hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-t-3xl pointer-events-none" />
-              </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
-                  {blog.category}
-                </span>
-                <h2 className="text-xl font-bold mt-2 text-gray-900 leading-snug">
-                  {blog.title}
-                </h2>
-                <p className="text-gray-700 mt-3 text-sm flex-grow leading-relaxed whitespace-pre-line">
-                  {blog.description.length > 200
-                    ? cleanMarkdown(blog.description.slice(0, 200)) + "..."
-                    : cleanMarkdown(blog.description)}
-                </p>
-
-                <div className="flex justify-between items-center text-gray-500 text-xs mt-6 font-medium">
-                  <span>{blog.author}</span>
-                  <span>⭐ {blog.rating.toFixed(1)}</span>
-                  <span>{new Date(blog.date).toLocaleDateString()}</span>
-                </div>
-
-                <div className="mt-6 flex gap-2 justify-between">
-                  <Link
-                    href={`/blog/${blog._id}`}
-                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white text-sm font-semibold hover:bg-blue-700 transition"
-                  >
-                    Read More
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </Link>
-
-                  {/* <Link
-                  href={`/blog/paraphrase/${blog._id}`}
-                  className="inline-flex items-center gap-2 rounded-lg border border-blue-600 px-4 py-2 text-blue-600 text-sm font-semibold hover:bg-blue-600 hover:text-white transition"
-                >
-                  Paraphrased by AI
-                </Link> */}
-                </div>
-              </div>
+          <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {blog.date
+                  ? new Date(blog.date).toLocaleDateString()
+                  : "Recently"}
+              </span>
+              <span>•</span>
+              <span>{blog.author || "Minimalistic Learning"}</span>
             </div>
-          ))}
-        </section>
-
-        {/* Pagination */}
-        <div className="flex justify-center pb-12">
-          <nav className="flex gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
-                  currentPage === i + 1
-                    ? "bg-blue-600 text-white"
-                    : "bg-white border border-blue-200 text-gray-700 hover:bg-blue-50"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </nav>
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#2563eb] group-hover:gap-3 transition-all">
+              Read More
+              <ArrowUpRight className="w-4 h-4" />
+            </span>
+          </div>
         </div>
-
-        <Footer />
-      </div>
-    </div>
+      </Link>
+    </motion.article>
   );
-};
+}
 
 export default BlogPage;

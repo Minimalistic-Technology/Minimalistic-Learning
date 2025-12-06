@@ -1,11 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import api from "utils/api";
-import axios from "axios";
-import axiosInstance from "@/utils/axiosInstance/page";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  BookOpenCheck,
+  CheckCircle2,
+  CircleDashed,
+  Filter,
+  RefreshCcw,
+} from "lucide-react";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 import LoadingSkeleton from "@/app/components/loading";
 import BlogsGrid from "@/app/components/BlogsGrid";
+// API integration removed
+import { toast } from "react-hot-toast";
+
 interface Blog {
   _id: string;
   title: string;
@@ -22,127 +29,235 @@ interface Blog {
   paraphrased?: string;
 }
 
-type FilterType =
-  | "all"
-  | "verified"
-  | "notVerified"
-  | "paraphrased"
-  | "notParaphrased";
+type FilterType = "all" | "verified" | "notVerified";
+
+const filterOptions: { label: string; value: FilterType }[] = [
+  { label: "All", value: "all" },
+  { label: "Verified", value: "verified" },
+  { label: "Pending", value: "notVerified" },
+];
 
 const BlogsAdminPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [paraphraseTexts, setParaphraseTexts] = useState<
-  //   Record<string, string>
-  // >({});
   const [filter, setFilter] = useState<FilterType>("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // Load mock blogs
   useEffect(() => {
-     axios
-      .get("https://api.minimalisticlearning.com/api/ml/blog/")
-      .then((res) => {
-        const sortedBlogs = res.data.sort(
-          (a: Blog, b: Blog) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-        setBlogs(sortedBlogs);
-      })
-      .catch((error) => {
-        console.error("Error fetching blogs:", error);
-      })
-      .finally(() => setLoading(false));
+    const loadBlogs = () => {
+      setLoading(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        const mockBlogsData: Blog[] = [
+          {
+            _id: "1",
+            title: "Understanding React Hooks",
+            description: "A deep dive into useState and useEffect hooks...",
+            category: "React",
+            date: new Date().toISOString(),
+            author: "Jane Doe",
+            authorId: "author1",
+            tags: ["React", "JavaScript"],
+            rating: 5,
+            minutes: 5,
+            verified: true,
+          },
+          {
+            _id: "2",
+            title: "Next.js 14: What's New?",
+            description: "Exploring the latest features in Next.js 14...",
+            category: "Next.js",
+            date: new Date().toISOString(),
+            author: "John Smith",
+            authorId: "author2",
+            tags: ["Next.js", "React"],
+            rating: 4,
+            minutes: 8,
+            verified: false,
+          },
+        ];
+        setBlogs(mockBlogsData);
+        setLoading(false);
+      }, 500);
+    };
+
+    loadBlogs();
   }, []);
 
-  const handleVerify = (id: string) => {
-    axiosInstance.put(`/api/ml/blog/update/${id}`, { verified: true }).then(() => {
+  const handleVerify = async (id: string) => {
+    // Simulate API call
+    setTimeout(() => {
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
-    });
+      toast.success("Blog verified successfully");
+    }, 300);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    axiosInstance.delete(`/api/ml/blog/delete/${id}`).then(() => {
+    // Simulate API call
+    setTimeout(() => {
       setBlogs((prev) => prev.filter((b) => b._id !== id));
-    });
+      toast.success("Blog deleted successfully");
+    }, 300);
   };
-  
-  // const handleParaphrase = (id: string) => {
-  //   const text = paraphraseTexts[id];
-  //   if (!text || text.trim() === "") {
-  //     alert("Please enter paraphrase text.");
-  //     return;
-  //   }
-  //   const paraphrased = `AI version: ${text}`;
-  //   axiosInstance.put(`http://localhost:5000/blogs/${id}`, { paraphrased }).then(() => {
-  //     setBlogs((prev) =>
-  //       prev.map((b) => (b._id === id ? { ...b, paraphrased } : b))
-  //     );
-  //     setParaphraseTexts((prev) => ({ ...prev, [id]: "" }));
-  //   });
-  // };
 
-  // const handleTextareaChange = (id: string, value: string) => {
-  //   setParaphraseTexts((prev) => ({ ...prev, [id]: value }));
-  // };
+  const stats = useMemo(() => {
+    const verifiedCount = blogs.filter((b) => b.verified).length;
+    const pendingCount = blogs.length - verifiedCount;
+    return {
+      total: blogs.length,
+      verified: verifiedCount,
+      pending: pendingCount,
+    };
+  }, [blogs]);
 
-  // Filtering logic based on filter state
-  const filteredBlogs = blogs.filter((blog) => {
-    switch (filter) {
-    case "verified":
-      return blog.verified === true;
-    case "notVerified":
-      return !blog.verified;
-    case "paraphrased":
-      return !!blog.paraphrased;
-    case "notParaphrased":
-      return !blog.paraphrased;
-    default:
-      return true; // all
-    }
-  });
+  const filteredBlogs = useMemo(() => {
+    return blogs
+      .filter((blog) => {
+        if (!searchTerm.trim()) return true;
+        const haystack = `${blog.title} ${blog.description} ${blog.author} ${
+          blog.category
+        }`.toLowerCase();
+        return haystack.includes(searchTerm.toLowerCase());
+      })
+      .filter((blog) => {
+        switch (filter) {
+          case "verified":
+            return blog.verified === true;
+          case "notVerified":
+            return !blog.verified;
+          default:
+            return true;
+        }
+      });
+  }, [blogs, filter, searchTerm]);
 
-  if (loading)
-    return <LoadingSkeleton />;
-
+  if (loading) return <LoadingSkeleton />;
   return (
-    <div>
-      {" "}
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
       <ScrollProgressBar />
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Filter Tabs */}
-        <div className="flex gap-4 mb-6 flex-wrap">
-          {[
-            { label: "All", value: "all" },
-            { label: "Verified", value: "verified" },
-            { label: "Not Verified", value: "notVerified" },
-            // { label: "Paraphrased", value: "paraphrased" },
-            // { label: "Not Paraphrased", value: "notParaphrased" },
-          ].map(({ label, value }) => (
-            <button
-              key={value}
-              onClick={() => setFilter(value as FilterType)}
-              className={`px-4 py-2 rounded-full font-semibold text-sm transition ${
-                filter === value
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
 
-        {/* Blogs Grid */}
-        <div >
-          <BlogsGrid
-            blogs={filteredBlogs}
-            onVerify={handleVerify}
-            onDelete={handleDelete}
-          />
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pt-10">
+        <section className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 px-8 py-10 shadow-2xl backdrop-blur">
+          <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-b from-[#2563eb]/20 to-sky-200/30 blur-3xl" />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="space-y-3">
+              <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                <BookOpenCheck className="h-4 w-4 text-[#2563eb]" />
+                Blog Review Hub
+              </p>
+              <h1 className="text-3xl font-semibold text-slate-900 lg:text-4xl">
+                Moderate & publish stories with clarity.
+              </h1>
+              <p className="max-w-2xl text-sm text-slate-500">
+                Filter, verify, and curate submissions from the community.
+                Actions sync with the Admin aesthetic so everything feels part
+                of the same system.
+              </p>
+            </div>
 
-        </div>
+            <div className="grid w-full gap-4 sm:grid-cols-3 lg:w-auto">
+              {[
+                {
+                  label: "Total Submissions",
+                  value: stats.total,
+                  accent: "from-slate-900 to-slate-700",
+                  icon: Filter,
+                },
+                {
+                  label: "Verified",
+                  value: stats.verified,
+                  accent: "from-emerald-500 to-emerald-600",
+                  icon: CheckCircle2,
+                },
+                {
+                  label: "Pending",
+                  value: stats.pending,
+                  accent: "from-amber-500 to-amber-600",
+                  icon: CircleDashed,
+                },
+              ].map(({ label, value, accent, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="rounded-2xl border border-white/50 bg-white/80 p-4 shadow-lg backdrop-blur"
+                >
+                  <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-400">
+                    {label}
+                    <Icon className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <p
+                    className={`bg-gradient-to-r ${accent} bg-clip-text text-3xl font-bold text-transparent`}
+                  >
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-white/60 bg-white/95 p-6 shadow-2xl backdrop-blur">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-3 text-sm font-semibold text-slate-600">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[#2563eb]/10 text-[#2563eb]">
+                <Filter className="h-4 w-4" />
+              </span>
+              Curate submissions by status
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-500 shadow-sm">
+                <input
+                  type="text"
+                  placeholder="Search title or author..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-transparent text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.map(({ label, value }) => (
+                  <button
+                    key={value}
+                    onClick={() => setFilter(value)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      filter === value
+                        ? "bg-[#2563eb] text-white shadow-lg shadow-blue-200"
+                        : "border border-slate-200 bg-white text-slate-600 hover:text-[#2563eb]"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilter("all");
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-500 hover:text-[#2563eb]"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-dashed border-slate-200/70 bg-slate-50/60 p-4">
+            <BlogsGrid
+              blogs={filteredBlogs}
+              onVerify={handleVerify}
+              onDelete={handleDelete}
+            />
+            {filteredBlogs.length === 0 && (
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-white/90 p-10 text-center text-slate-500 shadow-inner">
+                No entries match your filters. Try broadening the scope.
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
