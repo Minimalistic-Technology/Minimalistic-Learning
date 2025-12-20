@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
 // Backend API base URL - adjust this to match your backend server
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
@@ -17,11 +17,11 @@ apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Try to get token from localStorage (if stored there)
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-    
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
@@ -41,8 +41,8 @@ apiClient.interceptors.response.use(
 
       try {
         // Try to refresh token
-        const refreshToken = typeof window !== 'undefined' 
-          ? localStorage.getItem('refresh_token') 
+        const refreshToken = typeof window !== 'undefined'
+          ? localStorage.getItem('refresh_token')
           : null;
 
         if (refreshToken) {

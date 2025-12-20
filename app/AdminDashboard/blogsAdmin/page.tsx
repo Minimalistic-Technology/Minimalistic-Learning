@@ -10,8 +10,9 @@ import {
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 import LoadingSkeleton from "@/app/components/loading";
 import BlogsGrid from "@/app/components/BlogsGrid";
-// API integration removed
 import { toast } from "react-hot-toast";
+
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 interface Blog {
   _id: string;
@@ -43,65 +44,112 @@ const BlogsAdminPage = () => {
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Load mock blogs
+  // Load blogs from API
   useEffect(() => {
-    const loadBlogs = () => {
+    const loadBlogs = async () => {
       setLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        const mockBlogsData: Blog[] = [
-          {
-            _id: "1",
-            title: "Understanding React Hooks",
-            description: "A deep dive into useState and useEffect hooks...",
-            category: "React",
-            date: new Date().toISOString(),
-            author: "Jane Doe",
-            authorId: "author1",
-            tags: ["React", "JavaScript"],
-            rating: 5,
-            minutes: 5,
-            verified: true,
-          },
-          {
-            _id: "2",
-            title: "Next.js 14: What's New?",
-            description: "Exploring the latest features in Next.js 14...",
-            category: "Next.js",
-            date: new Date().toISOString(),
-            author: "John Smith",
-            authorId: "author2",
-            tags: ["Next.js", "React"],
-            rating: 4,
-            minutes: 8,
-            verified: false,
-          },
-        ];
-        setBlogs(mockBlogsData);
+      try {
+        const res = await fetch(`${API_BASE_URL}/posts`);
+        const data = await res.json().catch(() => ({}));
+        const postsArray = Array.isArray(data?.posts)
+          ? data.posts
+          : Array.isArray(data)
+          ? data
+          : [];
+
+        const normalized: Blog[] = postsArray.map((post: any, index: number) => ({
+          _id: post._id ?? post.id ?? `post-${index}`,
+          title: post.title ?? "Untitled Blog",
+          description:
+            post.description ??
+            post.content ??
+            "Stay tuned for more insights from Minimalistic Learning.",
+          category: post.category ?? post.topic ?? "General",
+          image: post.image ?? post.coverImage,
+          date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
+          author:
+            post.author?.name ??
+            post.author ??
+            post.authorName ??
+            "Minimalistic Learning",
+          tags: post.tags ?? (post.category ? [post.category] : []),
+          rating: post.rating ?? post.views ?? 5,
+          minutes: post.minutes ?? 5,
+          authorId: post.authorId ?? post.author?._id ?? "",
+          verified: post.verified ?? post.published ?? false,
+          paraphrased: post.paraphrased,
+        }));
+
+        setBlogs(normalized);
+      } catch (error) {
+        console.error("Error loading blogs:", error);
+        toast.error("Failed to load blogs");
+      } finally {
         setLoading(false);
-      }, 500);
+      }
     };
 
     loadBlogs();
   }, []);
 
   const handleVerify = async (id: string) => {
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      if (!accessToken) {
+        toast.error("Authentication required. Please login.");
+        return;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ verified: true }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to verify blog (${res.status})`);
+      }
+
       setBlogs((prev) =>
         prev.map((b) => (b._id === id ? { ...b, verified: true } : b))
       );
       toast.success("Blog verified successfully");
-    }, 300);
+    } catch (error) {
+      console.error("Error verifying blog:", error);
+      toast.error("Failed to verify blog");
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this blog?")) return;
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      if (!accessToken) {
+        toast.error("Authentication required. Please login.");
+        return;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to delete blog (${res.status})`);
+      }
+
       setBlogs((prev) => prev.filter((b) => b._id !== id));
       toast.success("Blog deleted successfully");
-    }, 300);
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      toast.error("Failed to delete blog");
+    }
   };
 
   const stats = useMemo(() => {

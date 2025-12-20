@@ -225,7 +225,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
@@ -241,10 +241,11 @@ import {
   Linkedin,
   Star,
 } from "lucide-react";
-import { blogs as staticBlogs } from "@/app/lib/blogData";
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 interface BlogType {
   _id: string;
+  slug?: string;
   title: string;
   description: string;
   content?: string;
@@ -255,42 +256,268 @@ interface BlogType {
   tags?: string[];
 }
 
-const normalizedBlogs: BlogType[] = staticBlogs.map((blog, index) => ({
-  _id: blog.id ?? `blog-${index}`,
-  title: blog.title,
-  description:
-    blog.description ??
-    "Stay tuned for more insights from Minimalistic Learning.",
-  content: blog.content,
-  author: blog.author ?? "Minimalistic Learning",
-  date: blog.date ?? new Date().toISOString(),
-  image: blog.image,
-  category: blog.category ?? "General",
-  tags: [blog.category ?? "General"],
-}));
+interface CommentType {
+  _id: string;
+  content: string;
+  author?: string;
+  createdAt?: string;
+}
 
 export default function BlogDetailPage() {
   const params = useParams();
   const blogId = params?.id as string;
-  const blog = normalizedBlogs.find((item) => item._id === blogId) ?? null;
-  const relatedBlogs = useMemo(() => {
-    if (!blog) return [];
-    return normalizedBlogs
-      .filter(
-        (item) =>
-          item.category === blog.category && item._id !== blog._id
-      )
-      .slice(0, 2);
-  }, [blog]);
-
+  const [blog, setBlog] = useState<BlogType | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<BlogType[]>([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [commentForm, setCommentForm] = useState({ author: "", content: "" });
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      if (!blogId) return;
+      setIsLoading(true);
+      setError(null);
+      try {
+        // Try fetching by the provided identifier (could be slug or ID)
+        let res = await fetch(`${API_BASE_URL}/posts/${blogId}`);
+        
+        // If 404, try fetching all posts and find by ID or slug
+        if (!res.ok && res.status === 404) {
+          try {
+            const allPostsRes = await fetch(`${API_BASE_URL}/posts`);
+            if (allPostsRes.ok) {
+              const allData = await allPostsRes.json().catch(() => ({}));
+              const postsArray = Array.isArray(allData?.posts)
+                ? allData.posts
+                : Array.isArray(allData)
+                ? allData
+                : [];
+              
+              // Find the blog by _id, id, or slug
+              const foundPost = postsArray.find(
+                (p: any) => p._id === blogId || p.id === blogId || p.slug === blogId
+              );
+              
+              if (foundPost) {
+                const data = { post: foundPost };
+                const post = data?.post ?? foundPost ?? {};
+                // Process the found post (continue with normalization below)
+                const normalized: BlogType = {
+                  _id: post._id ?? post.id ?? blogId,
+                  slug: post.slug ?? post._id ?? post.id,
+                  title: post.title ?? "Untitled Blog",
+                  description:
+                    post.description ??
+                    post.content ??
+                    "Stay tuned for more insights from Minimalistic Learning.",
+                  content: post.content ?? post.description,
+                  author:
+                    post.author?.name ??
+                    post.author ??
+                    post.authorName ??
+                    "Minimalistic Learning",
+                  date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
+                  image: post.image ?? post.coverImage,
+                  category: post.category ?? post.topic ?? "General",
+                  tags: post.tags ?? (post.category ? [post.category] : []),
+                };
+                setBlog(normalized);
+                
+                if (post._id) {
+                  await fetchComments(post._id);
+                }
+                setIsLoading(false);
+                return;
+              }
+            }
+          } catch (fallbackErr) {
+            console.error("Fallback fetch failed:", fallbackErr);
+          }
+          throw new Error(`Blog not found (404)`);
+        }
+        
+        if (!res.ok) {
+          throw new Error(`Failed to load blog (${res.status})`);
+        }
+        const data = await res.json().catch(() => ({}));
+        const post = data?.post ?? data ?? {};
+        const normalized: BlogType = {
+          _id: post._id ?? post.id ?? blogId,
+          slug: post.slug ?? post._id ?? post.id,
+          title: post.title ?? "Untitled Blog",
+          description:
+            post.description ??
+            post.content ??
+            "Stay tuned for more insights from Minimalistic Learning.",
+          content: post.content ?? post.description,
+          author:
+            post.author?.name ??
+            post.author ??
+            post.authorName ??
+            "Minimalistic Learning",
+          date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
+          image: post.image ?? post.coverImage,
+          category: post.category ?? post.topic ?? "General",
+          tags: post.tags ?? (post.category ? [post.category] : []),
+        };
+        setBlog(normalized);
+
+        if (Array.isArray(post.relatedPosts)) {
+          const mapped = post.relatedPosts.map((item: any, index: number) => ({
+            _id: item._id ?? item.id ?? `related-${index}`,
+            slug: item.slug ?? item._id ?? item.id,
+            title: item.title ?? "Untitled Blog",
+            description:
+              item.description ??
+              item.content ??
+              "Stay tuned for more insights from Minimalistic Learning.",
+            author:
+              item.author?.name ??
+              item.author ??
+              item.authorName ??
+              "Minimalistic Learning",
+            date: item.createdAt ?? item.updatedAt ?? new Date().toISOString(),
+            image: item.image ?? item.coverImage,
+            category: item.category ?? item.topic ?? "General",
+            tags: item.tags ?? (item.category ? [item.category] : []),
+          }));
+          setRelatedBlogs(mapped);
+        } else {
+          setRelatedBlogs([]);
+        }
+
+        if (post._id) {
+          await fetchComments(post._id);
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Unable to load this blog right now.");
+        setBlog(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchComments = async (id: string) => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/posts/${id}/comments`);
+        const data = await res.json().catch(() => ({}));
+        const commentsArray = Array.isArray(data?.comments)
+          ? data.comments
+          : Array.isArray(data)
+          ? data
+          : [];
+        const normalizedComments: CommentType[] = commentsArray.map(
+          (item: any, index: number) => ({
+            _id: item._id ?? item.id ?? `comment-${index}`,
+            content: item.content ?? item.text ?? "",
+            author: item.author ?? item.name ?? "Anonymous",
+            createdAt: item.createdAt,
+          })
+        );
+        setComments(normalizedComments);
+      } catch (err) {
+        console.error("Failed to load comments", err);
+      }
+    };
+
+    fetchBlog();
+  }, [blogId]);
 
   const handleRating = (value: number) => {
     setRating(value);
     console.log("Rating recorded locally:", value);
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!blog?._id || !commentForm.content.trim()) return;
+    setCommentSubmitting(true);
+    try {
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      const headers: HeadersInit = { "Content-Type": "application/json" };
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/posts/${blog._id}/comments`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          author: commentForm.author || "Anonymous",
+          content: commentForm.content,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to post comment (${res.status})`);
+      }
+      setCommentForm({ author: "", content: "" });
+      const data = await res.json().catch(() => ({}));
+      const newComment = data?.comment ?? data;
+      if (newComment?._id) {
+        setComments((prev) => [
+          {
+            _id: newComment._id,
+            content: newComment.content ?? newComment.text ?? "",
+            author: newComment.author ?? newComment.name ?? "Anonymous",
+            createdAt: newComment.createdAt,
+          },
+          ...prev,
+        ]);
+      } else {
+        // Refresh list if structure unknown
+        await fetch(`${API_BASE_URL}/posts/${blog._id}/comments`)
+          .then((r) => r.json())
+          .then((d) => {
+            const commentsArray = Array.isArray(d?.comments)
+              ? d.comments
+              : Array.isArray(d)
+              ? d
+              : [];
+            setComments(
+              commentsArray.map((item: any, index: number) => ({
+                _id: item._id ?? item.id ?? `comment-${index}`,
+                content: item.content ?? item.text ?? "",
+                author: item.author ?? item.name ?? "Anonymous",
+                createdAt: item.createdAt,
+              }))
+            );
+          })
+          .catch(() => {});
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCommentSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!commentId) return;
+    try {
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      const headers: HeadersInit = {};
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+        method: "DELETE",
+        headers,
+      });
+      if (res.ok) {
+        setComments((prev) => prev.filter((c) => c._id !== commentId));
+      } else if (res.status === 401 || res.status === 403) {
+        alert("Authentication required to delete comments. Please login.");
+      }
+    } catch (err) {
+      console.error("Failed to delete comment", err);
+    }
   };
 
   const cleanMarkdown = (text: string) => {
@@ -313,6 +540,18 @@ export default function BlogDetailPage() {
   const readingTime = calculateReadingTime(
     blog?.content ?? blog?.description ?? ""
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20">
+        <ScrollProgressBar />
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 text-slate-600 shadow">
+          <div className="h-5 w-5 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+          Loading blog...
+        </div>
+      </div>
+    );
+  }
 
   if (!blog) {
     return (
@@ -345,7 +584,7 @@ export default function BlogDetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
       <ScrollProgressBar />
-      <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <div className="mx-auto max-w-6xl px-4 pt-20 sm:pt-24 pb-10 space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
           <Link
             href="/blog"
@@ -521,6 +760,86 @@ export default function BlogDetailPage() {
               </div>
             </div>
           </aside>
+        </div>
+
+        <div className="rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-sm">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                  Comments
+                </p>
+                <p className="text-sm text-slate-500">
+                  Join the conversation
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+              <div className="space-y-3">
+                {comments.length === 0 && (
+                  <p className="text-sm text-slate-500">
+                    No comments yet. Be the first to share your thoughts.
+                  </p>
+                )}
+                {comments.map((comment) => (
+                  <div
+                    key={comment._id}
+                    className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm flex justify-between gap-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800">
+                        {comment.author ?? "Anonymous"}
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        {comment.createdAt
+                          ? new Date(comment.createdAt).toLocaleString()
+                          : ""}
+                      </p>
+                      <p className="mt-2 text-sm text-slate-700">
+                        {comment.content}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteComment(comment._id)}
+                      className="text-xs font-semibold text-red-500 hover:text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-sm font-semibold text-slate-800">Add comment</p>
+                <div className="mt-3 space-y-3">
+                  <input
+                    type="text"
+                    value={commentForm.author}
+                    onChange={(e) =>
+                      setCommentForm((prev) => ({ ...prev, author: e.target.value }))
+                    }
+                    placeholder="Your name"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                  <textarea
+                    value={commentForm.content}
+                    onChange={(e) =>
+                      setCommentForm((prev) => ({ ...prev, content: e.target.value }))
+                    }
+                    placeholder="Share your thoughts..."
+                    rows={4}
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                  <button
+                    onClick={handleCommentSubmit}
+                    disabled={commentSubmitting}
+                    className="w-full rounded-lg bg-[#2563eb] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-600 disabled:opacity-60"
+                  >
+                    {commentSubmitting ? "Posting..." : "Post comment"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {relatedBlogs.length > 0 && (

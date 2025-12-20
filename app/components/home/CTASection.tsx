@@ -10,7 +10,7 @@ export default function CTASection() {
     <section className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/20 via-indigo-500/20 to-pink-500/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/20 via-sky-500/20 to-cyan-500/20 rounded-full blur-3xl" />
       </div>
 
       <motion.div
@@ -18,7 +18,7 @@ export default function CTASection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-3xl border border-purple-200/50 dark:border-purple-700/50 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-8 py-20 md:py-24 text-center text-white shadow-2xl ring-2 ring-purple-500/30 dark:ring-purple-700/30 sm:px-12"
+        className="relative overflow-hidden rounded-3xl border border-blue-200/50 dark:border-blue-700/50 bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-8 py-20 md:py-24 text-center text-white shadow-2xl ring-2 ring-blue-500/30 dark:ring-blue-700/30 sm:px-12"
       >
         {/* Animated Background Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
@@ -64,7 +64,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mx-auto mt-4 mb-10 max-w-2xl text-lg md:text-xl text-purple-100 leading-relaxed"
+            className="mx-auto mt-4 mb-10 max-w-2xl text-lg md:text-xl text-blue-100 leading-relaxed"
           >
             Join thousands of learners today. Explore our blog library and start creating your own content to share knowledge with the community.
           </motion.p>
@@ -98,7 +98,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-purple-100"
+            className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-blue-100"
           >
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4" />
