@@ -9,6 +9,9 @@ import {
   validateContactNumber,
   validateName,
 } from "@/app/lib/validation";
+import { ThemeToggle } from "@/app/components/ThemeToggle";
+
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -78,33 +81,64 @@ export default function SignupPage() {
 
     setIsLoading(true);
 
-    // Simulate API call delay
-    setTimeout(() => {
-      toast.success("Signup successful! Please login to continue.");
+    try {
+      const response = await fetch(`${API_BASE_URL}/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          contactNumber: formData.contactNumber,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const message =
+          typeof data?.message === "string"
+            ? data.message
+            : "Signup failed. Please try again.";
+        toast.error(message);
+        return;
+      }
+
+      toast.success("Signup successful! Redirecting to login...");
+      router.push("/auth/login");
+    } catch (error) {
+      toast.error("Unable to reach the server. Please try again.");
+    } finally {
       setIsLoading(false);
-      setTimeout(() => {
-        router.push("/auth/login");
-      }, 500);
-    }, 1500);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 px-4 py-8 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-lg p-2 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+          <ThemeToggle />
+        </div>
+      </div>
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-indigo-400/15 rounded-full blur-3xl animate-pulse delay-500" />
+        <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 w-40 h-40 sm:w-56 sm:h-56 md:w-80 md:h-80 bg-sky-400/15 rounded-full blur-3xl animate-pulse delay-500" />
       </div>
-      <div className="w-full max-w-2xl relative z-10">
+      <div className="w-full max-w-2xl relative z-10 max-h-[calc(100vh-4rem)] overflow-y-auto">
         {/* Card Container */}
-        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-200/50 ring-2 ring-purple-500/20 overflow-hidden dark:bg-slate-900/95 dark:border-purple-700/50">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl border border-blue-200/50 ring-2 ring-blue-500/20 overflow-hidden dark:bg-slate-900/95 dark:border-blue-700/50 my-4">
           {/* Header Section with Gradient */}
-          <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-8 py-12 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-6 sm:px-8 sm:py-8 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50" />
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/30 backdrop-blur-sm rounded-full mb-4 relative z-10 ring-2 ring-white/50">
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/30 backdrop-blur-sm rounded-full mb-2 sm:mb-3 relative z-10 ring-2 ring-white/50">
               <svg
-                className="w-8 h-8 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -117,7 +151,7 @@ export default function SignupPage() {
                 />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1">
               Create Your Account
             </h2>
             <p className="text-blue-100 text-sm">
@@ -126,14 +160,14 @@ export default function SignupPage() {
           </div>
 
           {/* Form Section */}
-          <div className="px-8 py-8">
-            <form className="space-y-5" onSubmit={handleSubmit}>
+          <div className="px-6 py-6 sm:px-8 sm:py-8">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               {/* Name Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="firstName"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
                   >
                     First Name
                   </label>
@@ -161,16 +195,16 @@ export default function SignupPage() {
                       required
                       value={formData.firstName}
                       onChange={handleChange}
-                      className={`block w-full pl-10 pr-4 py-3 border rounded-lg transition-all duration-200 ${
+                      className={`block w-full pl-10 pr-4 py-2.5 border rounded-lg transition-all duration-200 ${
                         errors.firstName
                           ? "border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500"
-                          : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                          : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                       } focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-400`}
                       placeholder="John"
                     />
                   </div>
                   {errors.firstName && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center">
+                    <p className="mt-1.5 text-sm text-red-600 flex items-center">
                       <svg
                         className="w-4 h-4 mr-1"
                         fill="currentColor"
@@ -190,7 +224,7 @@ export default function SignupPage() {
                 <div>
                   <label
                     htmlFor="lastName"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
                   >
                     Last Name
                   </label>
@@ -218,16 +252,16 @@ export default function SignupPage() {
                       required
                       value={formData.lastName}
                       onChange={handleChange}
-                      className={`block w-full pl-10 pr-4 py-3 border rounded-lg transition-all duration-200 ${
+                      className={`block w-full pl-10 pr-4 py-2.5 border rounded-lg transition-all duration-200 ${
                         errors.lastName
                           ? "border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500"
-                          : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                          : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                       } focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-400`}
                       placeholder="Doe"
                     />
                   </div>
                   {errors.lastName && (
-                    <p className="mt-2 text-sm text-red-600 flex items-center">
+                    <p className="mt-1.5 text-sm text-red-600 flex items-center">
                       <svg
                         className="w-4 h-4 mr-1"
                         fill="currentColor"
@@ -249,7 +283,7 @@ export default function SignupPage() {
               <div>
                 <label
                   htmlFor="contactNumber"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
                 >
                   Contact Number
                 </label>
@@ -277,16 +311,16 @@ export default function SignupPage() {
                     required
                     value={formData.contactNumber}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-4 py-3 border rounded-lg transition-all duration-200 ${
+                    className={`block w-full pl-10 pr-4 py-2.5 border rounded-lg transition-all duration-200 ${
                       errors.contactNumber
                         ? "border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500"
-                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                     } focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-400`}
                     placeholder="+1 234 567 8900"
                   />
                 </div>
                 {errors.contactNumber && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <p className="mt-1.5 text-sm text-red-600 flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="currentColor"
@@ -307,7 +341,7 @@ export default function SignupPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
                 >
                   Email Address
                 </label>
@@ -335,16 +369,16 @@ export default function SignupPage() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-4 py-3 border rounded-lg transition-all duration-200 ${
+                    className={`block w-full pl-10 pr-4 py-2.5 border rounded-lg transition-all duration-200 ${
                       errors.email
                         ? "border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500"
-                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                     } focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-400`}
                     placeholder="you@example.com"
                   />
                 </div>
                 {errors.email && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <p className="mt-1.5 text-sm text-red-600 flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="currentColor"
@@ -365,7 +399,7 @@ export default function SignupPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-gray-700 mb-2"
+                  className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5"
                 >
                   Password
                 </label>
@@ -393,17 +427,17 @@ export default function SignupPage() {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-12 py-3 border rounded-lg transition-all duration-200 ${
+                    className={`block w-full pl-10 pr-12 py-2.5 border rounded-lg transition-all duration-200 ${
                       errors.password
                         ? "border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500"
-                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                        : "border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                     } focus:outline-none focus:ring-2 text-gray-900 placeholder-gray-400`}
                     placeholder="Create a strong password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                   >
                     {showPassword ? (
                       <svg
@@ -443,7 +477,7 @@ export default function SignupPage() {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <p className="mt-1.5 text-sm text-red-600 flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="currentColor"
@@ -458,9 +492,9 @@ export default function SignupPage() {
                     {errors.password}
                   </p>
                 )}
-                <p className="mt-2 text-xs text-gray-500 flex items-start">
+                <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 flex items-start">
                   <svg
-                    className="w-4 h-4 mr-1 mt-0.5 text-gray-400"
+                    className="w-3.5 h-3.5 mr-1 mt-0.5 text-gray-400"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -470,8 +504,7 @@ export default function SignupPage() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  Password must be at least 8 characters with 1 uppercase, 1
-                  number, and 1 special character
+                  Min 8 characters, 1 uppercase, 1 number, 1 special character
                 </p>
               </div>
 
@@ -479,7 +512,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-purple-500/50 text-base font-bold text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:shadow-xl hover:shadow-purple-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-6"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/50 text-base font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:shadow-xl hover:shadow-blue-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-2"
               >
                 {isLoading ? (
                   <>
@@ -512,8 +545,8 @@ export default function SignupPage() {
             </form>
 
             {/* Sign In Link */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-5 text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Already have an account?{" "}
                 <Link
                   href="/auth/login"

@@ -86,7 +86,7 @@ export default function AdminUserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 pb-16">
       <ScrollProgressBar />
 
       <div className="mx-auto max-w-6xl px-5 pt-10 space-y-8">
@@ -96,7 +96,7 @@ export default function AdminUserProfilePage() {
             <div className="flex items-center gap-6">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#2563eb] to-sky-400 opacity-30 blur-xl" />
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-indigo-500 text-3xl font-bold text-white shadow-lg">
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-sky-500 text-3xl font-bold text-white shadow-lg">
                   {formData.name.charAt(0).toUpperCase()}
                 </div>
               </div>
@@ -159,19 +159,19 @@ export default function AdminUserProfilePage() {
               label: "Total Views",
               value: mockStats.totalViews.toLocaleString(),
               icon: TrendingUp,
-              accent: "from-emerald-500 to-emerald-600",
+              accent: "from-blue-500 to-cyan-600",
             },
             {
               label: "Likes Received",
               value: mockStats.likesReceived,
               icon: TrendingUp,
-              accent: "from-rose-500 to-rose-600",
+              accent: "from-sky-500 to-blue-600",
             },
             {
               label: "Comments",
               value: mockStats.comments,
               icon: BookOpen,
-              accent: "from-amber-500 to-amber-600",
+              accent: "from-cyan-500 to-sky-600",
             },
           ].map(({ label, value, icon: Icon, accent }) => (
             <div

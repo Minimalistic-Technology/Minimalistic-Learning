@@ -70,10 +70,11 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 text-slate-800 dark:text-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       <ScrollProgressBar />
       
-      <HeroSection blogCount={normalizedBlogs.length} />
+      <div className="pt-16 sm:pt-20">
+        <HeroSection blogCount={normalizedBlogs.length} />
       
       <StatsSection 
         blogCount={normalizedBlogs.length}
@@ -87,6 +88,7 @@ export default function LandingPage() {
       <PopularBlogsSection blogs={popularBlogs} />
       
       <CTASection />
+      </div>
 
       <Footer />
     </div>

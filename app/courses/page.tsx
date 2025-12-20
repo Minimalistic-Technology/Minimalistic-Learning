@@ -29,7 +29,7 @@ const courses = [
     rating: 4.9,
     level: "Intermediate",
     category: "Data Science",
-    color: "from-purple-500 to-pink-500",
+    color: "from-blue-500 to-sky-500",
     image: "/images/blog1.png",
   },
   {
@@ -41,7 +41,7 @@ const courses = [
     rating: 4.7,
     level: "Beginner",
     category: "Design",
-    color: "from-pink-500 to-rose-500",
+    color: "from-sky-500 to-cyan-500",
     image: "/images/blog2.png",
   },
   {
@@ -53,7 +53,7 @@ const courses = [
     rating: 4.6,
     level: "Advanced",
     category: "Mobile Development",
-    color: "from-emerald-500 to-teal-500",
+    color: "from-blue-500 to-cyan-500",
     image: "/images/blog3.png",
   },
   {
@@ -65,7 +65,7 @@ const courses = [
     rating: 4.8,
     level: "Intermediate",
     category: "Cloud",
-    color: "from-orange-500 to-amber-500",
+    color: "from-sky-500 to-blue-500",
     image: "/images/blog.png",
   },
   {
@@ -77,7 +77,7 @@ const courses = [
     rating: 4.9,
     level: "Intermediate",
     category: "Security",
-    color: "from-red-500 to-rose-500",
+    color: "from-cyan-500 to-blue-500",
     image: "/images/blog1.png",
   },
 ];
@@ -110,25 +110,25 @@ export default function CoursesPage() {
         />
       </div>
 
-      <div ref={containerRef} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div ref={containerRef} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-10 md:mb-12"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-3 sm:mb-4"
           >
             <motion.div
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             >
-              <BookOpen className="h-4 w-4" />
+              <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </motion.div>
             <span>Our Courses</span>
           </motion.div>
@@ -136,7 +136,7 @@ export default function CoursesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4"
           >
             Explore Learning <span className="text-primary">Opportunities</span>
           </motion.h1>
@@ -144,7 +144,7 @@ export default function CoursesPage() {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto"
+            className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto px-4"
           >
             Choose from our curated collection of courses designed to help you achieve your goals
           </motion.p>
@@ -155,7 +155,7 @@ export default function CoursesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-2 mb-12"
+          className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 px-4"
         >
           {categories.map((category, index) => (
             <motion.button
@@ -190,7 +190,7 @@ export default function CoursesPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
             {filteredCourses.map((course, index) => (
               <motion.div

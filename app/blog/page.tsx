@@ -22,10 +22,12 @@ import {
 } from "lucide-react";
 import ScrollProgressBar from "../components/ScrollerProgress";
 import Footer from "../components/Footer";
-import { blogs as staticBlogs } from "@/app/lib/blogData";
+
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
 interface Blog {
   _id: string;
+  slug?: string;
   title: string;
   description: string;
   image?: string;
@@ -34,61 +36,9 @@ interface Blog {
   date?: string;
   verified?: boolean;
   rating?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
-
-type SourceBlog = Partial<Blog> & { id?: string };
-
-const normalizedBlogs: Blog[] = (staticBlogs as SourceBlog[]).map(
-  (blog, index) => ({
-    _id: blog.id ?? blog._id ?? `blog-${index}`,
-    title: blog.title ?? "Untitled Blog",
-    description:
-      blog.description ??
-      "Stay tuned for more insights from Minimalistic Learning.",
-    image: blog.image,
-    category: blog.category,
-    author: blog.author,
-    date: blog.date,
-    verified: blog.verified ?? true,
-    rating: blog.rating ?? 5,
-  })
-);
-
-// Get unique categories from blogs
-const availableCategories = Array.from(
-  new Set(normalizedBlogs.map((blog) => blog.category).filter(Boolean))
-);
-
-const totalCategories = availableCategories.length;
-const totalAuthors = Array.from(
-  new Set(normalizedBlogs.map((blog) => blog.author ?? "Minimalistic Learning"))
-).length;
-
-const highlightStats = [
-  {
-    label: "Published blogs",
-    value: normalizedBlogs.length.toString(),
-    meta: "+3 new this week",
-    icon: BookOpen,
-    color: "from-purple-500 to-purple-600",
-  },
-  {
-    label: "Categories curated",
-    value: totalCategories.toString(),
-    meta: "Handpicked topics",
-    icon: Sparkles,
-    color: "from-indigo-500 to-indigo-600",
-  },
-  {
-    label: "Active mentors",
-    value: totalAuthors.toString(),
-    meta: "Voices powering the hub",
-    icon: TrendingUp,
-    color: "from-pink-500 to-pink-600",
-  },
-];
-
-const categories = ["All", ...availableCategories];
 
 const sortOptions = [
   { label: "All Blogs", value: "default", icon: Grid3x3 },
@@ -97,36 +47,73 @@ const sortOptions = [
 ];
 
 const BlogPage = () => {
-  const [blogs, setBlogs] = useState<Blog[]>(normalizedBlogs);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortFilter, setSortFilter] = useState<string>("default");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Local fallback from static data to avoid empty state if API fails
 
   useEffect(() => {
-    if (sortFilter === "default") {
-      setBlogs(normalizedBlogs);
-      return;
-    }
+    const fetchBlogs = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`${API_BASE_URL}/posts`);
+        const data = await res.json()
+        console.log(data)
+        const postsArray = Array.isArray(data?.items)
+          ? data.items
+          : Array.isArray(data)
+          ? data
+          : [];
 
-    const sorted = [...normalizedBlogs];
-    if (sortFilter === "most-recent") {
-      sorted.sort((a, b) => {
-        const aDate = a.date ? new Date(a.date).getTime() : 0;
-        const bDate = b.date ? new Date(b.date).getTime() : 0;
-        return bDate - aDate;
-      });
-    } else if (sortFilter === "most-viewed") {
-      sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    }
+        const normalized = postsArray.map((post: any, index: number) => ({
+          _id: post._id ?? post.id ?? `post-${index}`,
+          slug: post.slug ?? post._id ?? post.id,
+          title: post.title ?? "Untitled Blog",
+          description:
+            post.description ??
+            post.content ??
+            "Stay tuned for more insights from Minimalistic Learning.",
+          image: post.image ?? post.coverImage,
+          category: post.category ?? post.topic ?? "General",
+          author:
+            post.author?.name ??
+            post.author ??
+            post.authorName ??
+            "Minimalistic Learning",
+          date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
+          verified: post.verified ?? post.published ?? true,
+          rating: post.rating ?? post.views ?? 5,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        }));
+        console.log(normalized)
+        if (normalized.length) {
+          setBlogs(normalized);
+        }
+      } catch (err) {
+        setError("Unable to load blogs from the server.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    setBlogs(sorted);
-  }, [sortFilter]);
+    fetchBlogs();
+  }, []);
+
+  console.log(blogs, error)
 
   const filteredBlogs = useMemo(() => {
-    return blogs
-      .filter((blog) => blog.verified !== false)
+    const filtered = blogs
+      // Show verified blogs OR blogs where verified is undefined/null (newly created)
+      .filter((blog) => blog.verified !== false || blog.verified === undefined || blog.verified === null)
       .filter((blog) => {
         const matchesCategory =
           selectedCategory === "All" ||
@@ -136,57 +123,112 @@ const BlogPage = () => {
           blog.description?.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
       });
-  }, [blogs, searchTerm, selectedCategory]);
+
+    const sorted = [...filtered];
+    if (sortFilter === "most-recent") {
+      sorted.sort((a, b) => {
+        const aDate = a.date ? new Date(a.date).getTime() : 0;
+        const bDate = b.date ? new Date(b.date).getTime() : 0;
+        return bDate - aDate;
+      });
+    } else if (sortFilter === "most-viewed") {
+      sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    }
+    return sorted;
+  }, [blogs, searchTerm, selectedCategory, sortFilter]);
+
+  const categories = useMemo(
+    () => {
+      const unique = Array.from(
+        new Set(blogs.map((blog) => blog.category).filter(Boolean))
+      ) as string[];
+      return ["All", ...unique];
+    },
+    [blogs]
+  );
+
+  const totalCategories = categories.length ? categories.length - 1 : 0;
+  const totalAuthors = useMemo(
+    () =>
+      Array.from(
+        new Set(blogs.map((blog) => blog.author ?? "Minimalistic Learning"))
+      ).length,
+    [blogs]
+  );
+
+  const highlightStats = [
+    {
+      label: "Published blogs",
+      value: blogs.length.toString(),
+      meta: "+3 new this week",
+      icon: BookOpen,
+      color: "from-blue-500 to-blue-600",
+    },
+    {
+      label: "Categories curated",
+      value: totalCategories.toString(),
+      meta: "Handpicked topics",
+      icon: Sparkles,
+      color: "from-sky-500 to-sky-600",
+    },
+    {
+      label: "Active mentors",
+      value: totalAuthors.toString(),
+      meta: "Voices powering the hub",
+      icon: TrendingUp,
+      color: "from-cyan-500 to-cyan-600",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 text-slate-800 dark:text-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       <ScrollProgressBar />
       
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 overflow-hidden">
+      <section className="relative pt-4 sm:pt-6 pb-12 sm:pb-16 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 sm:gap-8 md:gap-10 md:grid-cols-[1.2fr_0.8fr] items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
             >
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-[#2563eb] ring-1 ring-purple-200/50 dark:ring-purple-700/50">
-                <Sparkles className="w-3 h-3" />
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#2563eb] ring-1 ring-blue-200/50 dark:ring-blue-700/50">
+                <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 Blog Hub
               </div>
               <div>
-                <h1 className="text-5xl md:text-6xl font-extrabold leading-tight bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 dark:from-slate-100 dark:via-purple-100 dark:to-slate-100 bg-clip-text text-transparent">
-                  Discover Stories, <br />
-                  <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-slate-100 dark:via-blue-100 dark:to-slate-100 bg-clip-text text-transparent">
+                  Discover Stories, <br className="hidden sm:block" />
+                  <span className="bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 bg-clip-text text-transparent">
                     Insights & Inspiration
                   </span>
                 </h1>
-                <p className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
                   Explore curated content from industry experts. Learn, grow, and share your knowledge with the Minimalistic Learning community.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {sortOptions.map((option) => {
                   const Icon = option.icon;
                   return (
                     <button
                       key={option.value}
                       onClick={() => setSortFilter(option.value)}
-                      className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 ${
+                      className={`inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ${
                         sortFilter === option.value
-                          ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white shadow-lg shadow-purple-500/30 scale-105"
+                          ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30 scale-105"
                           : "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50"
                       }`}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                       {option.label}
                     </button>
                   );
@@ -199,33 +241,33 @@ const BlogPage = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative rounded-3xl border border-purple-200/50 dark:border-purple-700/50 bg-gradient-to-br from-purple-600 via-indigo-600 to-pink-600 p-8 text-white shadow-2xl ring-2 ring-purple-500/30 overflow-hidden"
+              className="relative rounded-2xl sm:rounded-3xl border border-blue-200/50 dark:border-blue-700/50 bg-gradient-to-br from-blue-600 via-sky-600 to-cyan-600 p-6 sm:p-8 text-white shadow-2xl ring-2 ring-blue-500/30 overflow-hidden"
             >
               <div className="absolute inset-0 opacity-10">
                 <div className="h-full w-full bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.6),_transparent_60%)]" />
               </div>
-              <div className="relative flex h-full flex-col justify-between space-y-6">
+              <div className="relative flex h-full flex-col justify-between space-y-4 sm:space-y-6">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/70 mb-3">
+                  <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-white/70 mb-2 sm:mb-3">
                     EDITOR&apos;S NOTE
                   </p>
-                  <h2 className="text-2xl font-bold leading-relaxed">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold leading-relaxed">
                     &ldquo;Consistent storytelling amplifies every community.&rdquo;
                   </h2>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2 sm:gap-3">
                   <Link
                     href="/blog/createblogs"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/20 backdrop-blur-sm px-5 py-3 font-semibold text-white transition-all hover:bg-white/30 hover:scale-105"
+                    className="inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-white/30 hover:scale-105"
                   >
-                    <PenSquare className="w-4 h-4" />
+                    <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Publish new blog
                   </Link>
                   <Link
                     href="/AdminDashboard/blogsAdmin"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-[#2563eb] transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-[#2563eb] transition-all hover:scale-105"
                   >
-                    <BarChart3 className="w-4 h-4" />
+                    <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     Manage library
                   </Link>
                 </div>
@@ -236,8 +278,8 @@ const BlogPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="max-w-7xl mx-auto px-6 mb-12">
-        <div className="grid gap-6 md:grid-cols-3">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {highlightStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -246,22 +288,22 @@ const BlogPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-6 shadow-lg ring-1 ring-black/5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-4 sm:p-6 shadow-lg ring-1 ring-black/5 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className={`absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br ${stat.color} opacity-10 blur-2xl`} />
+                <div className={`absolute -right-4 -top-4 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-gradient-to-br ${stat.color} opacity-10 blur-2xl`} />
                 <div className="relative">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mb-4`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className={`inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${stat.color} mb-3 sm:mb-4`}>
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500 mb-2">
+                  <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-slate-400 dark:text-slate-500 mb-1.5 sm:mb-2">
                     {stat.label}
                   </p>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3">
+                    <span className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">
                       {stat.value}
                     </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                      <ArrowUpRight className="w-3 h-3" />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-900/20 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-blue-600 dark:text-blue-400 w-fit">
+                      <ArrowUpRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       {stat.meta}
                     </span>
                   </div>
@@ -273,8 +315,13 @@ const BlogPage = () => {
       </section>
 
       {/* Search and Filter Section */}
-      <section className="max-w-7xl mx-auto px-6 mb-12">
-        <div className="rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-6 shadow-lg ring-1 ring-black/5">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
+        <div className="rounded-2xl sm:rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-4 sm:p-6 shadow-lg ring-1 ring-black/5">
+          {error && (
+            <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              {error}
+            </div>
+          )}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             {/* Search Bar */}
             <div className="relative flex-1 max-w-md">
@@ -365,10 +412,11 @@ const BlogPage = () => {
               {/* Create Button */}
               <Link
                 href="/blog/createblogs"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105"
+                className="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
               >
-                <PenSquare className="w-4 h-4" />
+                <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">Create Blog</span>
+                <span className="sm:hidden">Create</span>
               </Link>
             </div>
           </div>
@@ -399,7 +447,12 @@ const BlogPage = () => {
 
       {/* Blogs Grid/List */}
       <section className="max-w-7xl mx-auto px-6 pb-24">
-        {filteredBlogs.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+            <span className="ml-3 text-sm text-slate-500">Loading blogs...</span>
+          </div>
+        ) : filteredBlogs.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -428,7 +481,7 @@ const BlogPage = () => {
           <div
             className={
               viewMode === "grid"
-                ? "grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+                ? "grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 : "space-y-6"
             }
           >
@@ -470,7 +523,7 @@ function BlogCard({
         transition={{ duration: 0.3, delay: index * 0.05 }}
       >
         <Link
-          href={`/blog/${blog._id}`}
+          href={`/blog/${blog.slug ?? blog._id}`}
           className="group flex gap-6 rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden"
         >
           <div className="relative w-64 h-48 flex-shrink-0 overflow-hidden">
@@ -542,9 +595,9 @@ function BlogCard({
       transition={{ duration: 0.3, delay: index * 0.05 }}
       className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
     >
-      <Link href={`/blog/${blog._id}`}>
+      <Link href={`/blog/${blog.slug ?? blog._id}`}>
         <div className="relative h-64 w-full overflow-hidden">
-          <Image
+          {/* <Image
             src={
               blog.image ||
               "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
@@ -552,7 +605,7 @@ function BlogCard({
             alt={blog.title}
             fill
             className="object-cover transition duration-500 group-hover:scale-110"
-          />
+          /> */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="absolute top-4 left-4 flex items-center gap-2">
             <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-[#2563eb]">

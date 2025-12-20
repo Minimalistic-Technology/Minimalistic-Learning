@@ -11,7 +11,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ blogCount }: HeroSectionProps) {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-24">
+    <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -25,7 +25,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-blue-400/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -38,7 +38,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-cyan-400/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -50,12 +50,12 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute top-1/2 left-1/2 w-80 h-80 bg-indigo-400/15 rounded-full blur-3xl"
+          className="absolute top-1/2 left-1/2 w-40 h-40 sm:w-56 sm:h-56 md:w-80 md:h-80 bg-sky-400/15 rounded-full blur-3xl"
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:py-32">
-        <div className="grid gap-12 md:grid-cols-2 md:items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-32">
+        <div className="grid gap-8 sm:gap-10 md:gap-12 md:grid-cols-2 md:items-center">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -68,11 +68,12 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4 py-2 text-sm font-semibold text-[#2563eb] ring-1 ring-purple-200/50 dark:ring-purple-700/50 shadow-lg"
+              className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-[#2563eb] ring-1 ring-blue-200/50 dark:ring-blue-700/50 shadow-lg"
             >
-              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-              <span>Minimalistic Learning Platform</span>
-              <Sparkles className="w-4 h-4" />
+              <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+              <span className="hidden sm:inline">Minimalistic Learning Platform</span>
+              <span className="sm:hidden">Learning Platform</span>
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
             </motion.div>
 
             {/* Headline */}
@@ -80,12 +81,12 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight leading-tight"
             >
               <span className="block text-slate-900 dark:text-slate-100">
                 Master new skills
               </span>
-              <span className="block mt-2 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 bg-clip-text text-transparent">
                 at your own pace.
               </span>
             </motion.h1>
@@ -95,7 +96,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="max-w-lg text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-400"
+              className="max-w-lg text-base sm:text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-400"
             >
               Join thousands of learners. Access high-quality content, blogs, and resources curated by industry experts.
             </motion.p>
@@ -105,20 +106,20 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col gap-4 sm:flex-row"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
               <Link 
                 href="/blog"
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-purple-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/60 hover:scale-105"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-105"
               >
                 Explore Blog
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/blog/createblogs"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-8 py-4 text-base font-semibold text-slate-700 dark:text-slate-300 transition-all hover:bg-white dark:hover:bg-slate-800 hover:scale-105 hover:border-[#2563eb]/50"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300 transition-all hover:bg-white dark:hover:bg-slate-800 hover:scale-105 hover:border-[#2563eb]/50"
               >
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                 Create Blog
               </Link>
             </motion.div>
@@ -128,14 +129,14 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="pt-6 space-y-3"
+              className="pt-4 sm:pt-6 space-y-2 sm:space-y-3"
             >
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Trusted by learners worldwide</p>
-              <div className="flex flex-wrap gap-3">
+              <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Trusted by learners worldwide</p>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {[
                   { icon: Users, label: "Industry Experts", color: "from-blue-500 to-cyan-500" },
-                  { icon: Award, label: "Verified Content", color: "from-purple-500 to-pink-500" },
-                  { icon: TrendingUp, label: "Regular Updates", color: "from-indigo-500 to-purple-500" },
+                  { icon: Award, label: "Verified Content", color: "from-blue-500 to-sky-500" },
+                  { icon: TrendingUp, label: "Regular Updates", color: "from-sky-500 to-cyan-500" },
                 ].map((badge, index) => {
                   const Icon = badge.icon;
                   return (
@@ -144,10 +145,10 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r ${badge.color} bg-opacity-10 backdrop-blur-sm border border-white/20 dark:border-slate-700/50`}
+                      className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r ${badge.color} bg-opacity-10 backdrop-blur-sm border border-white/20 dark:border-slate-700/50`}
                     >
-                      <Icon className="w-4 h-4 text-[#2563eb]" />
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{badge.label}</span>
+                      <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#2563eb]" />
+                      <span className="text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300">{badge.label}</span>
                     </motion.div>
                   );
                 })}
@@ -162,13 +163,13 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="relative hidden md:block"
           >
-            <div className="absolute -right-4 -top-4 h-72 w-72 rounded-full bg-purple-400/20 blur-3xl"></div>
+            <div className="absolute -right-2 -top-2 md:-right-4 md:-top-4 h-48 w-48 md:h-72 md:w-72 rounded-full bg-blue-400/20 blur-3xl"></div>
             
             {/* Main Card */}
-            <div className="relative rounded-3xl border border-purple-200/50 dark:border-purple-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl ring-2 ring-purple-500/20 dark:ring-purple-700/20 overflow-hidden group hover:scale-105 transition-transform duration-500">
+            <div className="relative rounded-2xl md:rounded-3xl border border-blue-200/50 dark:border-blue-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl ring-2 ring-blue-500/20 dark:ring-blue-700/20 overflow-hidden group hover:scale-105 transition-transform duration-500">
               {/* Gradient Background */}
               <div className="aspect-square relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-100 via-indigo-100 to-pink-100 dark:from-purple-900/30 dark:via-indigo-900/30 dark:to-pink-900/30" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-sky-100 to-cyan-100 dark:from-blue-900/30 dark:via-sky-900/30 dark:to-cyan-900/30" />
                 
                 {/* Animated Orbs */}
                 <motion.div
@@ -178,7 +179,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                     rotate: [0, 10, 0]
                   }}
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-10 right-10 w-24 h-24 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-400/30 blur-2xl"
+                  className="absolute top-10 right-10 w-24 h-24 rounded-full bg-gradient-to-br from-blue-400/30 to-cyan-400/30 blur-2xl"
                 />
                 <motion.div
                   animate={{ 
@@ -187,25 +188,25 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                     rotate: [0, -10, 0]
                   }}
                   transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-400/30 to-purple-400/30 blur-2xl"
+                  className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-gradient-to-br from-sky-400/30 to-blue-400/30 blur-2xl"
                 />
 
                 {/* Content */}
-                <div className="relative z-10 h-full flex flex-col items-center justify-center p-8 text-center">
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 md:p-8 text-center">
                   <motion.div
                     animate={{ 
                       scale: [1, 1.1, 1],
                       rotate: [0, 5, -5, 0]
                     }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 mb-6 shadow-xl"
+                    className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 mb-4 md:mb-6 shadow-xl"
                   >
-                    <BookOpen className="w-12 h-12 text-white" />
+                    <BookOpen className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white" />
                   </motion.div>
-                  <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                  <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1 md:mb-2">
                     Learning Made Simple
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg">
+                  <p className="text-sm md:text-base lg:text-lg text-slate-600 dark:text-slate-400">
                     Explore curated content
                   </p>
                 </div>
@@ -217,16 +218,16 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                   y: [0, -10, 0],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-8 left-8 right-8 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-5 shadow-xl ring-1 ring-black/5"
+                className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 rounded-xl md:rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-3 md:p-4 lg:p-5 shadow-xl ring-1 ring-black/5"
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-600 dark:text-green-400">
-                    <CheckCircle size={24} />
+                <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
+                  <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 text-blue-600 dark:text-blue-400">
+                    <CheckCircle size={20} className="md:w-6 md:h-6" />
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-slate-900 dark:text-slate-100">{blogCount}+ Blogs</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    <p className="text-base md:text-lg font-bold text-slate-900 dark:text-slate-100">{blogCount}+ Blogs</p>
+                    <p className="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                      <Star className="w-2.5 h-2.5 md:w-3 md:h-3 fill-blue-400 text-blue-400" />
                       Published & verified
                     </p>
                   </div>

@@ -45,7 +45,7 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
               className="object-cover transition duration-500 ease-in-out group-hover:scale-110"
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-purple-100 via-indigo-100 to-pink-100 dark:from-purple-900/20 dark:via-indigo-900/20 dark:to-pink-900/20 flex items-center justify-center">
+            <div className="h-full w-full bg-gradient-to-br from-blue-100 via-sky-100 to-cyan-100 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-cyan-900/20 flex items-center justify-center">
               <Play size={48} className="opacity-20 text-slate-400 dark:text-slate-600" />
             </div>
           )}
@@ -61,7 +61,7 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
           {/* Rating */}
           <div className="absolute top-4 right-4">
             <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-lg">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+              <Star className="w-4 h-4 fill-blue-400 text-blue-400" />
               <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
                 {blog.rating?.toFixed(1) || "5.0"}
               </span>
@@ -110,8 +110,8 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
     <section className="relative bg-gradient-to-b from-slate-50/50 to-white dark:from-slate-900/50 dark:to-slate-950 py-24 md:py-32 overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-pink-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
@@ -137,7 +137,7 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
           </div>
           <Link 
             href="/blog" 
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
           >
             View all blogs
             <ArrowRight className="w-4 h-4" />
@@ -171,7 +171,7 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
                 </p>
                 <Link
                   href="/blog/createblogs"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 mt-4"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 mt-4"
                 >
                   Create Blog
                 </Link>

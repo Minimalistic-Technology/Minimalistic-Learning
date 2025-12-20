@@ -22,7 +22,7 @@ function FeatureCard({ icon, title, description, index }: FeatureCardProps) {
       className="group relative rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-8 shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:shadow-2xl overflow-hidden"
     >
       {/* Gradient Overlay on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-indigo-500/0 to-pink-500/0 group-hover:from-purple-500/5 group-hover:via-indigo-500/5 group-hover:to-pink-500/5 transition-all duration-300 rounded-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-sky-500/0 to-cyan-500/0 group-hover:from-blue-500/5 group-hover:via-sky-500/5 group-hover:to-cyan-500/5 transition-all duration-300 rounded-3xl" />
       
       {/* Icon */}
       <motion.div
@@ -44,7 +44,7 @@ function FeatureCard({ icon, title, description, index }: FeatureCardProps) {
       </div>
 
       {/* Decorative Corner */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </motion.div>
   );
 }
@@ -57,27 +57,27 @@ export default function FeaturesSection() {
       description: "Learn from industry professionals who share real-world insights and practical knowledge.",
     },
     {
-      icon: <TrendingUp className="text-purple-600 w-8 h-8" />,
+      icon: <TrendingUp className="text-blue-600 w-8 h-8" />,
       title: "Interactive Content",
       description: "Engage with high-quality blogs, tutorials, and resources designed for effective learning.",
     },
     {
-      icon: <Award className="text-pink-600 w-8 h-8" />,
+      icon: <Award className="text-sky-600 w-8 h-8" />,
       title: "Verified Quality",
       description: "All content is curated and verified to ensure accuracy and relevance for learners.",
     },
     {
-      icon: <Sparkles className="text-indigo-600 w-8 h-8" />,
+      icon: <Sparkles className="text-cyan-600 w-8 h-8" />,
       title: "Curated Collections",
       description: "Handpicked content organized by topics to help you find exactly what you need.",
     },
     {
-      icon: <Zap className="text-amber-600 w-8 h-8" />,
+      icon: <Zap className="text-sky-600 w-8 h-8" />,
       title: "Fast Learning",
       description: "Optimized content delivery and intuitive interface for the best learning experience.",
     },
     {
-      icon: <Shield className="text-emerald-600 w-8 h-8" />,
+      icon: <Shield className="text-cyan-600 w-8 h-8" />,
       title: "Secure Platform",
       description: "Your data and progress are protected with enterprise-grade security measures.",
     },
@@ -87,8 +87,8 @@ export default function FeaturesSection() {
     <section className="relative mx-auto max-w-7xl px-6 py-24 md:py-32 overflow-hidden">
       {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-sky-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -110,7 +110,7 @@ export default function FeaturesSection() {
             Features
           </motion.div>
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-4">
-            Why choose <span className="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 bg-clip-text text-transparent">Minimalistic Learning?</span>
+            Why choose <span className="bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 bg-clip-text text-transparent">Minimalistic Learning?</span>
           </h2>
           <p className="mt-4 text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             We focus on providing the best learning experience possible with modern tools and curated content.

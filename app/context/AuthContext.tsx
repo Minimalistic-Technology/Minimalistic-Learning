@@ -38,19 +38,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is authenticated by checking for tokens
+  const loadUserFromStorage = () => {
     const accessToken = getAccessToken();
     const refreshToken = getRefreshToken();
 
     if (accessToken || refreshToken) {
-      // If tokens exist, try to get user info from token or make API call
-      // For now, we'll just set isAuthenticated based on token presence
-      // You can decode the JWT token to get user info if needed
-      setIsLoading(false);
+      // Load user data from localStorage
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
+      const userEmail = typeof window !== 'undefined' ? localStorage.getItem('email') : null;
+      const firstName = typeof window !== 'undefined' ? localStorage.getItem('firstName') : null;
+      const lastName = typeof window !== 'undefined' ? localStorage.getItem('lastName') : null;
+
+      if (userId || userEmail) {
+        setUser({
+          id: userId || '',
+          email: userEmail || '',
+          firstName: firstName || undefined,
+          lastName: lastName || undefined,
+        });
+      }
     } else {
-      setIsLoading(false);
+      setUser(null);
     }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    loadUserFromStorage();
+
+    // Listen for storage changes (e.g., when login happens in another tab)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'access_token' || e.key === 'refresh_token' || e.key === 'id' || e.key === 'email') {
+        loadUserFromStorage();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const isAuthenticated = !!user || !!(typeof window !== 'undefined' && getAccessToken());

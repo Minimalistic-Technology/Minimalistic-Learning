@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { validatePassword } from "@/app/lib/validation";
+import { ThemeToggle } from "@/app/components/ThemeToggle";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -79,15 +80,21 @@ function ResetPasswordContent() {
   // If no token or email in URL, show error message
   if (!token || !email) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/40 to-cyan-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Theme Toggle */}
+        <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
+          <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-lg p-2 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+            <ThemeToggle />
+          </div>
+        </div>
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#2563eb]/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
         <div className="relative z-10 w-full max-w-md">
           <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200/50 ring-1 ring-black/5 overflow-hidden dark:bg-slate-900/95 dark:border-slate-700/50">
-            <div className="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-10 text-center">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-8 py-10 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
                 <svg
                   className="w-8 h-8 text-white"
@@ -118,7 +125,7 @@ function ResetPasswordContent() {
               <div className="space-y-3">
                 <Link
                   href="/auth/forgot-password"
-                  className="inline-flex items-center justify-center w-full py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-purple-500/50 text-base font-bold text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:shadow-xl hover:shadow-purple-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="inline-flex items-center justify-center w-full py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/50 text-base font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:shadow-xl hover:shadow-blue-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Request New Reset Link
                 </Link>
@@ -137,10 +144,16 @@ function ResetPasswordContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50 px-4 py-12 sm:px-6 lg:px-8 relative">
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-lg p-2 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+          <ThemeToggle />
+        </div>
+      </div>
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-[#2563eb] via-indigo-600 to-purple-600 px-8 py-12 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-r from-[#2563eb] via-sky-600 to-cyan-600 px-8 py-12 text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50" />
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
               <svg
@@ -459,7 +472,7 @@ function ResetPasswordContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-purple-500/50 text-base font-bold text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:shadow-xl hover:shadow-purple-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-6"
+                className="w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/50 text-base font-bold text-white bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:shadow-xl hover:shadow-blue-500/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-6"
               >
                 {isLoading ? (
                   <>
@@ -511,7 +524,13 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50 relative">
+          {/* Theme Toggle */}
+          <div className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50">
+            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-lg p-2 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+              <ThemeToggle />
+            </div>
+          </div>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
       }
