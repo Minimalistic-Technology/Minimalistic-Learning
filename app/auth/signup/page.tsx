@@ -11,7 +11,7 @@ import {
 } from "@/app/lib/validation";
 import { ThemeToggle } from "@/app/components/ThemeToggle";
 
-const API_BASE_URL = "http://localhost:5000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || " ";
 
 export default function SignupPage() {
   const router = useRouter();
