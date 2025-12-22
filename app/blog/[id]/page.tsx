@@ -285,12 +285,12 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         // Try fetching by the provided identifier (could be slug or ID)
-        let res = await fetch(`${API_BASE_URL}/posts/${blogId}`);
+        let res = await fetch(`${API_BASE_URL}/api/v1/posts/${blogId}`);
         
         // If 404, try fetching all posts and find by ID or slug
         if (!res.ok && res.status === 404) {
           try {
-            const allPostsRes = await fetch(`${API_BASE_URL}/posts`);
+            const allPostsRes = await fetch(`${API_BASE_URL}/api/v1/posts`);
             if (allPostsRes.ok) {
               const allData = await allPostsRes.json().catch(() => ({}));
               const postsArray = Array.isArray(allData?.posts)
@@ -406,7 +406,7 @@ export default function BlogDetailPage() {
 
     const fetchComments = async (id: string) => {
       try {
-        const res = await fetch(`${API_BASE_URL}/posts/${id}/comments`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/posts/${id}/comments`);
         const data = await res.json().catch(() => ({}));
         const commentsArray = Array.isArray(data?.comments)
           ? data.comments
@@ -445,7 +445,7 @@ export default function BlogDetailPage() {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const res = await fetch(`${API_BASE_URL}/posts/${blog._id}/comments`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/posts/${blog._id}/comments`, {
         method: "POST",
         headers,
         body: JSON.stringify({
@@ -471,7 +471,7 @@ export default function BlogDetailPage() {
         ]);
       } else {
         // Refresh list if structure unknown
-        await fetch(`${API_BASE_URL}/posts/${blog._id}/comments`)
+        await fetch(`${API_BASE_URL}/api/v1/posts/${blog._id}/comments`)
           .then((r) => r.json())
           .then((d) => {
             const commentsArray = Array.isArray(d?.comments)
@@ -506,7 +506,7 @@ export default function BlogDetailPage() {
         headers["Authorization"] = `Bearer ${accessToken}`;
       }
 
-      const res = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/comments/${commentId}`, {
         method: "DELETE",
         headers,
       });

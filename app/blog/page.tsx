@@ -63,7 +63,7 @@ const BlogPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BASE_URL}/posts`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/posts`);
         const data = await res.json()
         console.log(data)
         const postsArray = Array.isArray(data?.items)
