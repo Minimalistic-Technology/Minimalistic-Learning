@@ -286,7 +286,7 @@ export default function BlogDetailPage() {
       try {
         // Try fetching by the provided identifier (could be slug or ID)
         let res = await fetch(`${API_BASE_URL}/api/v1/posts/${blogId}`);
-        
+
         // If 404, try fetching all posts and find by ID or slug
         if (!res.ok && res.status === 404) {
           try {
@@ -296,14 +296,14 @@ export default function BlogDetailPage() {
               const postsArray = Array.isArray(allData?.posts)
                 ? allData.posts
                 : Array.isArray(allData)
-                ? allData
-                : [];
-              
+                  ? allData
+                  : [];
+
               // Find the blog by _id, id, or slug
               const foundPost = postsArray.find(
                 (p: any) => p._id === blogId || p.id === blogId || p.slug === blogId
               );
-              
+
               if (foundPost) {
                 const data = { post: foundPost };
                 const post = data?.post ?? foundPost ?? {};
@@ -328,7 +328,7 @@ export default function BlogDetailPage() {
                   tags: post.tags ?? (post.category ? [post.category] : []),
                 };
                 setBlog(normalized);
-                
+
                 if (post._id) {
                   await fetchComments(post._id);
                 }
@@ -341,7 +341,7 @@ export default function BlogDetailPage() {
           }
           throw new Error(`Blog not found (404)`);
         }
-        
+
         if (!res.ok) {
           throw new Error(`Failed to load blog (${res.status})`);
         }
@@ -411,8 +411,8 @@ export default function BlogDetailPage() {
         const commentsArray = Array.isArray(data?.comments)
           ? data.comments
           : Array.isArray(data)
-          ? data
-          : [];
+            ? data
+            : [];
         const normalizedComments: CommentType[] = commentsArray.map(
           (item: any, index: number) => ({
             _id: item._id ?? item.id ?? `comment-${index}`,
@@ -477,8 +477,8 @@ export default function BlogDetailPage() {
             const commentsArray = Array.isArray(d?.comments)
               ? d.comments
               : Array.isArray(d)
-              ? d
-              : [];
+                ? d
+                : [];
             setComments(
               commentsArray.map((item: any, index: number) => ({
                 _id: item._id ?? item.id ?? `comment-${index}`,
@@ -488,7 +488,7 @@ export default function BlogDetailPage() {
               }))
             );
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     } catch (err) {
       console.error(err);
@@ -633,31 +633,27 @@ export default function BlogDetailPage() {
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setSaved((prev) => !prev)}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    saved
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${saved
                       ? "bg-[#2563eb]/10 text-[#2563eb]"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
+                    }`}
                 >
                   <Bookmark
-                    className={`h-4 w-4 ${
-                      saved ? "fill-[#2563eb] text-[#2563eb]" : ""
-                    }`}
+                    className={`h-4 w-4 ${saved ? "fill-[#2563eb] text-[#2563eb]" : ""
+                      }`}
                   />
                   {saved ? "Saved" : "Save for later"}
                 </button>
                 <button
                   onClick={() => setLiked((prev) => !prev)}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    liked
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${liked
                       ? "bg-emerald-50 text-emerald-600"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
+                    }`}
                 >
                   <ThumbsUp
-                    className={`h-4 w-4 ${
-                      liked ? "fill-emerald-500 text-emerald-500" : ""
-                    }`}
+                    className={`h-4 w-4 ${liked ? "fill-emerald-500 text-emerald-500" : ""
+                      }`}
                   />
                   {liked ? "Appreciated" : "Appreciate"}
                 </button>
@@ -711,11 +707,10 @@ export default function BlogDetailPage() {
                     className="transition"
                   >
                     <Star
-                      className={`h-6 w-6 ${
-                        value <= (hoverRating || rating)
+                      className={`h-6 w-6 ${value <= (hoverRating || rating)
                           ? "fill-amber-400 text-amber-400"
                           : "text-slate-200"
-                      }`}
+                        }`}
                     />
                   </button>
                 ))}

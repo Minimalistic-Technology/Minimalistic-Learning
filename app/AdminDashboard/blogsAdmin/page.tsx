@@ -12,7 +12,7 @@ import LoadingSkeleton from "@/app/components/loading";
 import BlogsGrid from "@/app/components/BlogsGrid";
 import { toast } from "react-hot-toast";
 
-const API_BASE_URL = "http://localhost:5000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 interface Blog {
   _id: string;
@@ -49,7 +49,7 @@ const BlogsAdminPage = () => {
     const loadBlogs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/posts`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/posts`);
         const data = await res.json().catch(() => ({}));
         const postsArray = Array.isArray(data?.posts)
           ? data.posts
@@ -100,7 +100,7 @@ const BlogsAdminPage = () => {
         return;
       }
 
-      const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/posts/${id}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const BlogsAdminPage = () => {
         return;
       }
 
-      const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/v1/posts/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${accessToken}`

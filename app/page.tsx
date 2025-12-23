@@ -61,7 +61,7 @@ export default function LandingPage() {
         // Sort by rating first, then by date
         const ratingDiff = (b.rating ?? 5) - (a.rating ?? 5);
         if (ratingDiff !== 0) return ratingDiff;
-        
+
         const aDate = a.date ? new Date(a.date).getTime() : 0;
         const bDate = b.date ? new Date(b.date).getTime() : 0;
         return bDate - aDate;
@@ -72,22 +72,22 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       <ScrollProgressBar />
-      
+
       <div className="pt-16 sm:pt-20">
         <HeroSection blogCount={normalizedBlogs.length} />
-      
-      <StatsSection 
-        blogCount={normalizedBlogs.length}
-        categoryCount={totalCategories}
-        authorCount={totalAuthors}
-        averageRating={averageRating}
-      />
-      
-      <FeaturesSection />
-      
-      <PopularBlogsSection blogs={popularBlogs} />
-      
-      <CTASection />
+
+        <StatsSection
+          blogCount={normalizedBlogs.length}
+          categoryCount={totalCategories}
+          authorCount={totalAuthors}
+          averageRating={averageRating}
+        />
+
+        <FeaturesSection />
+
+        <PopularBlogsSection blogs={popularBlogs} />
+
+        <CTASection />
       </div>
 
       <Footer />

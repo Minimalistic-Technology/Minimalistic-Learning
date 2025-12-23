@@ -2,14 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face { 
-  font-family: 'GeistSans'; 
-  src: url('./fonts/GeistVF.woff') format('woff'); 
-} 
-@font-face { 
-  font-family: 'GeistMono'; 
-  src: url('./fonts/GeistMonoVF.woff') format('woff'); 
-} 
+@font-face {
+  font-family: 'GeistSans';
+  src: url('./fonts/GeistVF.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'GeistMono';
+  src: url('./fonts/GeistMonoVF.woff') format('woff');
+}
 
 :root {
   /* Minimalistic Color Palette - Blue Gradient Only */
@@ -22,7 +23,7 @@
   --warning: #3b82f6;
   --error: #1e40af;
   --info: #60a5fa;
-  
+
   /* Neutral Colors - Minimalistic */
   --background: #ffffff;
   --background-subtle: #fafafa;
@@ -31,7 +32,7 @@
   --text-primary: #0f172a;
   --text-secondary: #64748b;
   --text-tertiary: #94a3b8;
-  
+
   /* Border & Shadow - Subtle */
   --border: #e2e8f0;
   --border-light: #f1f5f9;
@@ -40,7 +41,7 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.12);
-  
+
   /* Minimal Gradients - Blue Only */
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #3b82f6 100%);
   --gradient-subtle: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
@@ -192,6 +193,7 @@ input[type=number] {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -203,6 +205,7 @@ input[type=number] {
     opacity: 0;
     transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -214,6 +217,7 @@ input[type=number] {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -225,6 +229,7 @@ input[type=number] {
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -236,6 +241,7 @@ input[type=number] {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -243,9 +249,12 @@ input[type=number] {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
   }
+
   50% {
     box-shadow: 0 0 40px rgba(37, 99, 235, 0.6);
   }
@@ -255,6 +264,7 @@ input[type=number] {
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
@@ -286,12 +296,10 @@ input[type=number] {
 
 /* Loading Skeleton */
 .skeleton-modern {
-  background: linear-gradient(
-    90deg,
-    var(--border-light) 0%,
-    var(--border) 50%,
-    var(--border-light) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--border-light) 0%,
+      var(--border) 50%,
+      var(--border-light) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 0.75rem;
@@ -336,6 +344,7 @@ input[type=number] {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

@@ -11,7 +11,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ blogCount }: HeroSectionProps) {
   return (
-    <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden pt-20 sm:pt-24">
+    <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden pt-8 sm:pt-12">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -108,7 +108,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
-              <Link 
+              <Link
                 href="/blog"
                 className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg shadow-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/60 hover:scale-105"
               >
@@ -123,7 +123,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                 Create Blog
               </Link>
             </motion.div>
-            
+
             {/* Trust Badges */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -164,16 +164,16 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
             className="relative hidden md:block"
           >
             <div className="absolute -right-2 -top-2 md:-right-4 md:-top-4 h-48 w-48 md:h-72 md:w-72 rounded-full bg-blue-400/20 blur-3xl"></div>
-            
+
             {/* Main Card */}
             <div className="relative rounded-2xl md:rounded-3xl border border-blue-200/50 dark:border-blue-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl ring-2 ring-blue-500/20 dark:ring-blue-700/20 overflow-hidden group hover:scale-105 transition-transform duration-500">
               {/* Gradient Background */}
               <div className="aspect-square relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-sky-100 to-cyan-100 dark:from-blue-900/30 dark:via-sky-900/30 dark:to-cyan-900/30" />
-                
+
                 {/* Animated Orbs */}
                 <motion.div
-                  animate={{ 
+                  animate={{
                     x: [0, 20, 0],
                     y: [0, 20, 0],
                     rotate: [0, 10, 0]
@@ -182,7 +182,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                   className="absolute top-10 right-10 w-24 h-24 rounded-full bg-gradient-to-br from-blue-400/30 to-cyan-400/30 blur-2xl"
                 />
                 <motion.div
-                  animate={{ 
+                  animate={{
                     x: [0, -20, 0],
                     y: [0, -20, 0],
                     rotate: [0, -10, 0]
@@ -194,7 +194,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                 {/* Content */}
                 <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 md:p-8 text-center">
                   <motion.div
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.1, 1],
                       rotate: [0, 5, -5, 0]
                     }}
@@ -211,10 +211,10 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                   </p>
                 </div>
               </div>
-              
+
               {/* Floating Stats Card */}
               <motion.div
-                animate={{ 
+                animate={{
                   y: [0, -10, 0],
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
