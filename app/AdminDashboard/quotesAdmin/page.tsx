@@ -108,7 +108,7 @@ export default function QuotesAdminPage() {
 
   return (
     <div className="min-h-screen bg-[#f5f4ff] pb-16">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
 
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pt-10">
         <section className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/95 px-8 py-10 shadow-2xl">

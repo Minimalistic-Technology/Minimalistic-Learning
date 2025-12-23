@@ -544,7 +544,7 @@ export default function BlogDetailPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20">
-        <ScrollProgressBar />
+        {/* <ScrollProgressBar /> */}
         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 text-slate-600 shadow">
           <div className="h-5 w-5 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
           Loading blog...
@@ -556,7 +556,7 @@ export default function BlogDetailPage() {
   if (!blog) {
     return (
       <div>
-        <ScrollProgressBar />
+        {/* <ScrollProgressBar /> */}
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4">
           <div className="max-w-md rounded-3xl border border-slate-200 bg-white/95 px-8 py-10 text-center shadow-lg">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-rose-500">
@@ -583,7 +583,7 @@ export default function BlogDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
       <div className="mx-auto max-w-6xl px-4 pt-20 sm:pt-24 pb-10 space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
           <Link

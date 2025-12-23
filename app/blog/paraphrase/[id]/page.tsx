@@ -86,7 +86,7 @@ export default function ParaphrasedBlogPage() {
   if (!blog) {
     return (
       <div>
-        <ScrollProgressBar />
+        {/* <ScrollProgressBar /> */}
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4">
           <div className="max-w-md rounded-3xl border border-slate-200 bg-white/95 px-8 py-10 text-center shadow-lg">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-rose-500">
@@ -115,7 +115,7 @@ export default function ParaphrasedBlogPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
       <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-500">
           <Link

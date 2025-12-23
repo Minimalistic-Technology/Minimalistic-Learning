@@ -186,7 +186,7 @@ const BlogsAdminPage = () => {
   if (loading) return <LoadingSkeleton />;
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 pb-16">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
 
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 pt-10">
         <section className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 px-8 py-10 shadow-2xl backdrop-blur">

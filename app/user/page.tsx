@@ -87,7 +87,7 @@ export default function AdminUserProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 pb-16">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
 
       <div className="mx-auto max-w-6xl px-5 pt-10 space-y-8">
         <section className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/95 px-8 py-10 shadow-2xl backdrop-blur">
