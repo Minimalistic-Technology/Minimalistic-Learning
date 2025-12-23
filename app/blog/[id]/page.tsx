@@ -279,6 +279,8 @@ export default function BlogDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const isValidObjectId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
+
     const fetchBlog = async () => {
       if (!blogId) return;
       setIsLoading(true);
@@ -329,7 +331,7 @@ export default function BlogDetailPage() {
                 };
                 setBlog(normalized);
 
-                if (post._id) {
+                if (post._id && isValidObjectId(post._id)) {
                   await fetchComments(post._id);
                 }
                 setIsLoading(false);
@@ -392,7 +394,7 @@ export default function BlogDetailPage() {
           setRelatedBlogs([]);
         }
 
-        if (post._id) {
+        if (post._id && isValidObjectId(post._id)) {
           await fetchComments(post._id);
         }
       } catch (err) {
@@ -634,8 +636,8 @@ export default function BlogDetailPage() {
                 <button
                   onClick={() => setSaved((prev) => !prev)}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${saved
-                      ? "bg-[#2563eb]/10 text-[#2563eb]"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-[#2563eb]/10 text-[#2563eb]"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                 >
                   <Bookmark
@@ -647,8 +649,8 @@ export default function BlogDetailPage() {
                 <button
                   onClick={() => setLiked((prev) => !prev)}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${liked
-                      ? "bg-emerald-50 text-emerald-600"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-emerald-50 text-emerald-600"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                 >
                   <ThumbsUp
@@ -708,8 +710,8 @@ export default function BlogDetailPage() {
                   >
                     <Star
                       className={`h-6 w-6 ${value <= (hoverRating || rating)
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-slate-200"
+                        ? "fill-amber-400 text-amber-400"
+                        : "text-slate-200"
                         }`}
                     />
                   </button>
