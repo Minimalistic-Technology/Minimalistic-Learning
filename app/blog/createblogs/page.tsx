@@ -98,7 +98,7 @@ const CreateBlogPage = () => {
         verified: true // Default verified status
       };
 
-      await apiClient.post('/api/v1/posts', payload);
+      await apiClient.post('/api/v1/posts/create', payload);
 
       toast.success("Blog published successfully!");
       setTimeout(() => {
