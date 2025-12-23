@@ -73,7 +73,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       {/* <ScrollProgressBar /> */}
 
-      <div className="pt-8 sm:pt-12">
+      <div className="pt-6 sm:pt-8">
       <HeroSection blogCount={normalizedBlogs.length} />
 
         <StatsSection

@@ -11,7 +11,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ blogCount }: HeroSectionProps) {
   return (
-    <section className="relative flex items-center justify-center overflow-hidden pt-8 sm:pt-12">
+    <section className="relative flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
