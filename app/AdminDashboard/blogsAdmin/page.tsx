@@ -12,7 +12,7 @@ import LoadingSkeleton from "@/app/components/loading";
 import BlogsGrid from "@/app/components/BlogsGrid";
 import { toast } from "react-hot-toast";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 interface Blog {
   _id: string;
