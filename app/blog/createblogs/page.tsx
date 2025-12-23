@@ -118,7 +118,7 @@ const CreateBlogPage = () => {
 
   return (
     <div>
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-8">
           <section className="rounded-3xl border border-slate-200/80 bg-white/95 p-8 shadow-lg backdrop-blur">
