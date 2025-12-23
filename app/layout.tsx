@@ -93,7 +93,7 @@ export default function RootLayout({
           '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'
         )}
       >
-        <NextTopLoader showSpinner={false} />
+        {/* <NextTopLoader showSpinner={false} /> */}
         <AuthProvider>
           <Providers>
             <Navbar />
