@@ -285,7 +285,7 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         // Try fetching by the provided identifier (could be slug or ID)
-        let res = await fetch(`${API_BASE_URL}/api/v1/posts/${blogId}`);
+        let res = await fetch(`/api/v1/posts/${blogId}`);
 
         // If 404, try fetching all posts and find by ID or slug
         if (!res.ok && res.status === 404) {
