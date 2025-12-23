@@ -182,7 +182,7 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
-      <ScrollProgressBar />
+      {/* <ScrollProgressBar /> */}
       
       {/* Hero Section */}
       <section className="relative pt-4 sm:pt-6 pb-12 sm:pb-16 overflow-hidden">

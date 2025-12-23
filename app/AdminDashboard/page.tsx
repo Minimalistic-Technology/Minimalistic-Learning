@@ -556,7 +556,7 @@ const AdminDashboard = () => {
     <>
       <Toaster position="top-right" toastOptions={{ className: "text-sm font-medium" }} />
       <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:bg-gradient-to-br dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20">
-        <ScrollProgressBar />
+        {/* <ScrollProgressBar /> */}
         
         {/* Top Right Icons */}
         <div className="fixed right-4 top-4 z-[100] flex items-center gap-3">
