@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import ScrollProgressBar from './components/ScrollerProgress';
 import Footer from './components/Footer';
 import HeroSection from './components/home/HeroSection';
@@ -8,7 +8,8 @@ import StatsSection from './components/home/StatsSection';
 import FeaturesSection from './components/home/FeaturesSection';
 import PopularBlogsSection from './components/home/PopularBlogsSection';
 import CTASection from './components/home/CTASection';
-import { blogs as staticBlogs } from '@/app/lib/blogData';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 interface Blog {
   _id: string;
@@ -22,40 +23,59 @@ interface Blog {
   rating?: number;
 }
 
-type SourceBlog = Partial<Blog> & { id?: string };
-
-// Normalize blog data (same as blog page)
-const normalizedBlogs: Blog[] = (staticBlogs as SourceBlog[]).map(
-  (blog, index) => ({
-    _id: blog.id ?? blog._id ?? `blog-${index}`,
-    title: blog.title ?? "Untitled Blog",
-    description:
-      blog.description ??
-      "Stay tuned for more insights from Minimalistic Learning.",
-    image: blog.image,
-    category: blog.category,
-    author: blog.author,
-    date: blog.date,
-    verified: blog.verified ?? true,
-    rating: blog.rating ?? 5,
-  })
-);
-
-// Calculate stats from blog data
-const totalCategories = Array.from(
-  new Set(normalizedBlogs.map((blog) => blog.category ?? "General"))
-).length;
-const totalAuthors = Array.from(
-  new Set(normalizedBlogs.map((blog) => blog.author ?? "Minimalistic Learning"))
-).length;
-const averageRating = normalizedBlogs.length > 0
-  ? (normalizedBlogs.reduce((sum, blog) => sum + (blog.rating ?? 5), 0) / normalizedBlogs.length).toFixed(1)
-  : "4.9";
-
 export default function LandingPage() {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/posts`);
+        const data = await res.json();
+
+        const postsArray = Array.isArray(data?.items)
+          ? data.items
+          : Array.isArray(data)
+            ? data
+            : [];
+
+        const normalized: Blog[] = postsArray.map((post: any, index: number) => ({
+          _id: post._id ?? post.id ?? `post-${index}`,
+          title: post.title ?? "Untitled Blog",
+          description: post.description ?? post.content ?? "Stay tuned for more insights from Minimalistic Learning.",
+          image: post.image ?? post.coverImage,
+          category: post.category ?? post.topic ?? "General",
+          author: post.author?.name ?? post.author ?? "Minimalistic Learning",
+          date: post.createdAt ?? post.updatedAt,
+          verified: post.verified ?? true,
+          rating: post.rating ?? 5,
+        }));
+
+        setBlogs(normalized);
+      } catch (error) {
+        console.error("Error fetching blogs for home page:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Calculate stats from blog data
+  const totalCategories = Array.from(
+    new Set(blogs.map((blog) => blog.category ?? "General"))
+  ).length;
+  const totalAuthors = Array.from(
+    new Set(blogs.map((blog) => blog.author ?? "Minimalistic Learning"))
+  ).length;
+  const averageRating = blogs.length > 0
+    ? (blogs.reduce((sum, blog) => sum + (blog.rating ?? 5), 0) / blogs.length).toFixed(1)
+    : "4.9";
+
   // Get top 3 blogs (most recent or highest rated)
   const popularBlogs = useMemo(() => {
-    return normalizedBlogs
+    return blogs
       .filter(blog => blog.verified !== false)
       .sort((a, b) => {
         // Sort by rating first, then by date
@@ -67,17 +87,17 @@ export default function LandingPage() {
         return bDate - aDate;
       })
       .slice(0, 3);
-  }, []);
+  }, [blogs]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       {/* <ScrollProgressBar /> */}
 
       <div className="pt-6 sm:pt-8">
-      <HeroSection blogCount={normalizedBlogs.length} />
+        <HeroSection blogCount={blogs.length} />
 
         <StatsSection
-          blogCount={normalizedBlogs.length}
+          blogCount={blogs.length}
           categoryCount={totalCategories}
           authorCount={totalAuthors}
           averageRating={averageRating}

@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ArrowUpRight, 
-  BarChart3, 
-  PenSquare, 
-  Search, 
+import {
+  ArrowUpRight,
+  BarChart3,
+  PenSquare,
+  Search,
   Filter,
   TrendingUp,
   Clock,
@@ -23,7 +23,7 @@ import {
 import ScrollProgressBar from "../components/ScrollerProgress";
 import Footer from "../components/Footer";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || " ";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 interface Blog {
   _id: string;
@@ -69,8 +69,8 @@ const BlogPage = () => {
         const postsArray = Array.isArray(data?.items)
           ? data.items
           : Array.isArray(data)
-          ? data
-          : [];
+            ? data
+            : [];
 
         const normalized = postsArray.map((post: any, index: number) => ({
           _id: post._id ?? post.id ?? `post-${index}`,
@@ -183,7 +183,7 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
       {/* <ScrollProgressBar /> */}
-      
+
       {/* Hero Section */}
       <section className="relative pt-4 sm:pt-6 pb-12 sm:pb-16 overflow-hidden">
         {/* Animated Background */}
@@ -222,11 +222,10 @@ const BlogPage = () => {
                     <button
                       key={option.value}
                       onClick={() => setSortFilter(option.value)}
-                      className={`inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                        sortFilter === option.value
-                          ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30 scale-105"
-                          : "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50"
-                      }`}
+                      className={`inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all duration-300 ${sortFilter === option.value
+                        ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30 scale-105"
+                        : "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50"
+                        }`}
                     >
                       <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                       {option.label}
@@ -364,22 +363,21 @@ const BlogPage = () => {
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl p-2 z-50 max-h-96 overflow-y-auto"
                     >
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setSelectedCategory(category || "All");
-                    setShowFilters(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white"
-                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setSelectedCategory(category || "All");
+                            setShowFilters(false);
+                          }}
+                          className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${selectedCategory === category
+                            ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white"
+                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                            }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -389,21 +387,19 @@ const BlogPage = () => {
               <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                 <button
                   onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "grid"
-                      ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
-                      : "text-slate-500 dark:text-slate-400"
-                  }`}
+                  className={`p-2 rounded-lg transition-colors ${viewMode === "grid"
+                    ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
+                    : "text-slate-500 dark:text-slate-400"
+                    }`}
                 >
                   <Grid3x3 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setViewMode("list")}
-                  className={`p-2 rounded-lg transition-colors ${
-                    viewMode === "list"
-                      ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
-                      : "text-slate-500 dark:text-slate-400"
-                  }`}
+                  className={`p-2 rounded-lg transition-colors ${viewMode === "list"
+                    ? "bg-white dark:bg-slate-700 text-[#2563eb] shadow-sm"
+                    : "text-slate-500 dark:text-slate-400"
+                    }`}
                 >
                   <List className="w-4 h-4" />
                 </button>

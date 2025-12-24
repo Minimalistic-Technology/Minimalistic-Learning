@@ -241,7 +241,7 @@ import {
   Linkedin,
   Star,
 } from "lucide-react";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || " ";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 interface BlogType {
   _id: string;
@@ -287,12 +287,12 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         // Try fetching by the provided identifier (could be slug or ID)
-        let res = await fetch(`/api/v1/posts/${blogId}`);
+        let res = await fetch(`${API_BASE_URL}/posts/${blogId}`);
 
         // If 404, try fetching all posts and find by ID or slug
         if (!res.ok && res.status === 404) {
           try {
-            const allPostsRes = await fetch(`${API_BASE_URL}/api/v1/posts`);
+            const allPostsRes = await fetch(`${API_BASE_URL}/posts`);
             if (allPostsRes.ok) {
               const allData = await allPostsRes.json().catch(() => ({}));
               const postsArray = Array.isArray(allData?.posts)

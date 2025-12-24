@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
@@ -15,7 +15,6 @@ import {
   Facebook,
   Linkedin,
 } from "lucide-react";
-import { blogs as staticBlogs } from "@/app/lib/blogData";
 
 interface ParaphrasedBlog {
   _id: string;
@@ -28,21 +27,7 @@ interface ParaphrasedBlog {
   paraphrased: string;
 }
 
-const normalizedBlogs: ParaphrasedBlog[] = staticBlogs.map((blog, index) => ({
-  _id: blog.id ?? `blog-${index}`,
-  title: blog.title,
-  description:
-    blog.description ??
-    "This article is currently being drafted for the Minimalistic Learning community.",
-  author: blog.author ?? "Minimalistic Learning",
-  date: blog.date ?? new Date().toISOString(),
-  image: blog.image,
-  category: blog.category ?? "General",
-  paraphrased: `In summary: ${
-    blog.description?.slice(0, 220) ??
-    "More curated insights are on the way for this post."
-  }`,
-}));
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 function formatContent(content: string): string {
   return content
@@ -72,16 +57,63 @@ function calculateReadingTime(content: string): number {
 export default function ParaphrasedBlogPage() {
   const params = useParams();
   const blogId = params?.id as string;
-  const blog =
-    normalizedBlogs.find((entry) => entry._id === blogId) ?? null;
+  const [blog, setBlog] = useState<ParaphrasedBlog | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const relatedBlogs = useMemo(() => {
-    if (!blog) return [];
-    return normalizedBlogs.filter((entry) => entry._id !== blog._id).slice(0, 2);
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/posts/${blogId}`);
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        const post = data.post;
+
+        if (post) {
+          setBlog({
+            _id: post._id,
+            title: post.title,
+            description: post.description,
+            author: post.author?.name ?? post.author ?? "Minimalistic Learning",
+            date: post.date ?? post.createdAt,
+            image: post.image,
+            category: post.category ?? "General",
+            paraphrased: `In summary: ${(post.description || post.content)?.slice(0, 220) ??
+              "More curated insights are on the way for this post."
+              }`
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching blog for paraphrase:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (blogId) {
+      fetchBlog();
+    }
+  }, [blogId]);
+
+  const relatedBlogs = useMemo((): ParaphrasedBlog[] => {
+    // Dynamic fetching of related blogs could be implemented here
+    // For now we'll return empty or implement a separate fetch if neededs
+    return [];
   }, [blog]);
 
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50">
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-6 py-4 text-slate-600 shadow">
+          <div className="h-5 w-5 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+          Loading insight...
+        </div>
+      </div>
+    );
+  }
 
   if (!blog) {
     return (
@@ -165,31 +197,27 @@ export default function ParaphrasedBlogPage() {
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setSaved((prev) => !prev)}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    saved
-                      ? "bg-[#2563eb]/10 text-[#2563eb]"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${saved
+                    ? "bg-[#2563eb]/10 text-[#2563eb]"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
                 >
                   <Bookmark
-                    className={`h-4 w-4 ${
-                      saved ? "fill-[#2563eb] text-[#2563eb]" : ""
-                    }`}
+                    className={`h-4 w-4 ${saved ? "fill-[#2563eb] text-[#2563eb]" : ""
+                      }`}
                   />
                   {saved ? "Saved" : "Save for later"}
                 </button>
                 <button
                   onClick={() => setLiked((prev) => !prev)}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    liked
-                      ? "bg-emerald-50 text-emerald-600"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${liked
+                    ? "bg-emerald-50 text-emerald-600"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
                 >
                   <ThumbsUp
-                    className={`h-4 w-4 ${
-                      liked ? "fill-emerald-500 text-emerald-500" : ""
-                    }`}
+                    className={`h-4 w-4 ${liked ? "fill-emerald-500 text-emerald-500" : ""
+                      }`}
                   />
                   {liked ? "Appreciated" : "Appreciate"}
                 </button>
