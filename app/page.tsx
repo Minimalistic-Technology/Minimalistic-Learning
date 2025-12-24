@@ -30,7 +30,7 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/posts`);
+        const res = await fetch(`${API_BASE_URL}/api/v1/posts`);
         const data = await res.json();
 
         const postsArray = Array.isArray(data?.items)

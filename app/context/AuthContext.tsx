@@ -1,6 +1,7 @@
 // context/AuthContext.tsx
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 interface User {
   id: string;
@@ -38,6 +39,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { data: session } = useSession();
+
   const loadUserFromStorage = () => {
     const accessToken = getAccessToken();
     const refreshToken = getRefreshToken();
@@ -62,6 +65,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (session?.user) {
+      const s = session as any;
+      if (typeof window !== 'undefined') {
+        if (s.user.id) localStorage.setItem("id", s.user.id);
+        if (s.user.email) localStorage.setItem("email", s.user.email);
+        if (s.user.name && !localStorage.getItem("firstName")) {
+          const names = s.user.name.split(' ');
+          localStorage.setItem("firstName", names[0] || "");
+          localStorage.setItem("lastName", names.slice(1).join(' ') || "");
+        }
+        if (s.user.jwtToken) localStorage.setItem("access_token", s.user.jwtToken);
+      }
+      loadUserFromStorage();
+    }
+  }, [session]);
 
   useEffect(() => {
     loadUserFromStorage();

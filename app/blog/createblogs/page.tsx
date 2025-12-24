@@ -39,9 +39,15 @@ const CreateBlogPage = () => {
 
   useEffect(() => {
     const authorId = localStorage.getItem("id");
-    if (authorId) {
-      setFormData((prev) => ({ ...prev, authorId }));
-    }
+    const firstName = localStorage.getItem("firstName") || "";
+    const lastName = localStorage.getItem("lastName") || "";
+    const fullName = [firstName, lastName].filter(Boolean).join(" ");
+
+    setFormData((prev) => ({
+      ...prev,
+      authorId: authorId || "",
+      author: prev.author || fullName || "Minimalistic Learning"
+    }));
   }, []);
 
   const [currentTag, setCurrentTag] = useState<string>("");
@@ -93,24 +99,33 @@ const CreateBlogPage = () => {
 
     try {
       const payload = {
-        ...formData,
-        content: formData.description, // Mapping description to content as per API expectation
-        verified: true // Default verified status
+        title: formData.title,
+        content: formData.description,
+        category: formData.category,
+        image: formData.image,
+        author: formData.author,
+        tags: formData.tags,
+        authorId: formData.authorId,
+        published: true, // Specific flag for visibility
+        verified: true,
+        minutes: formData.minutes,
+        date: formData.date
       };
 
-      await apiClient.post('/api/v1/createPost', payload);
+      console.log("Publishing blog with payload:", { ...payload, image: "base64-omitted" });
+
+      const response = await apiClient.post('/api/v1/createPost', payload);
+      console.log("Server response:", response.data);
 
       toast.success("Blog published successfully!");
       setTimeout(() => {
         router.push("/blog");
-      }, 500);
+      }, 800);
     } catch (error: any) {
       console.error("Error creating blog:", error);
-      if (error.response && error.response.data && error.response.data.message) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage("Failed to publish blog. Please try again.");
-      }
+      const errorMessage = error.response?.data?.message || error.message || "Failed to publish blog. Please try again.";
+      setErrorMessage(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
