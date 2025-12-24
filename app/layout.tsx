@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     title: "Minimalistic Learning",
     description:
       "Minimalistic Learning is a modern education platform built for clarity, focus, and effective digital learning.",
-    creator: "@TechMinimalists", 
+    creator: "@TechMinimalists",
   },
   icons: {
     icon: "/favicon.ico",
@@ -94,13 +94,13 @@ export default function RootLayout({
         )}
       >
         {/* <NextTopLoader showSpinner={false} /> */}
-        <AuthProvider>
-          <Providers>
+        <Providers>
+          <AuthProvider>
             <Navbar />
             <OfflineNotification />
             <main>{children}</main>
-          </Providers>
-        </AuthProvider>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
