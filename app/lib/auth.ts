@@ -97,13 +97,13 @@
 // };
 import CredentialsProvider from 'next-auth/providers/credentials';
 //import { JWTPayload, SignJWT, importJWK } from 'jose';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import GoogleProvider from 'next-auth/providers/google';
 import { NextAuthOptions } from 'next-auth';
 import { Session } from 'next-auth';
 //import { JWT } from 'next-auth/jwt';
-import connectDB from './connectDB';
-import User from '../models/user';
+// import connectDB from './connectDB';
+// import User from '../models/user';
 
 export interface ExtendedSession extends Session {
   user: {
@@ -144,23 +144,32 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: any) {
         if (!credentials) return null;
 
-        await connectDB();
+        try {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/login`, {
+            method: 'POST',
+            body: JSON.stringify({
+              email: credentials.username,
+              password: credentials.password,
+            }),
+            headers: { 'Content-Type': 'application/json' },
+          });
 
-        const userDb = await User.findOne({ email: credentials.username });
+          const data = await res.json();
 
-        if (
-          userDb &&
-          userDb.password &&
-          (await bcrypt.compare(credentials.password, userDb.password))
-        ) {
-          return {
-            id: userDb._id.toString(),
-            name: userDb.name,
-            email: userDb.email,
-          };
+          if (res.ok && data.user) {
+            return {
+              id: data.user.id || data.user._id,
+              name: data.user.name || `${data.user.firstName} ${data.user.lastName}`,
+              email: data.user.email,
+              role: data.user.role,
+              jwtToken: data.access_token,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
         }
-
-        return null;
       },
     }),
   ],
@@ -172,6 +181,8 @@ export const authOptions: NextAuthOptions = {
           id: token.id as string,
           name: token.name as string,
           email: token.email as string,
+          role: token.role as string,
+          jwtToken: token.jwtToken as string,
         };
       }
       return customSession;
@@ -181,6 +192,8 @@ export const authOptions: NextAuthOptions = {
         token.id = (user as any).id;
         token.name = user.name;
         token.email = user.email;
+        token.role = (user as any).role;
+        token.jwtToken = (user as any).jwtToken;
       }
       return token;
     },
