@@ -8,6 +8,7 @@ import { ArrowRight, BookOpen, Star, Play, Clock, TrendingUp } from 'lucide-reac
 
 interface Blog {
   _id: string;
+  slug?: string;
   title: string;
   description: string;
   image?: string;
@@ -31,8 +32,8 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ y: -8 }}
     >
-      <Link 
-        href={`/blog/${blog._id}`}
+      <Link
+        href={`/blog/${blog.slug ?? blog._id}`}
         className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:shadow-2xl"
       >
         {/* Blog Image */}
@@ -50,7 +51,7 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          
+
           {/* Category Badge */}
           <div className="absolute top-4 left-4">
             <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-[#2563eb] shadow-lg">
@@ -68,7 +69,7 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
             </div>
           </div>
         </div>
-        
+
         {/* Content */}
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div>
@@ -135,8 +136,8 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
               Explore our most-read content from expert contributors
             </p>
           </div>
-          <Link 
-            href="/blog" 
+          <Link
+            href="/blog"
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
           >
             View all blogs
@@ -147,7 +148,7 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
         {/* Blogs Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog, index) => (
-            <BlogCard 
+            <BlogCard
               key={blog._id}
               blog={blog}
               index={index}

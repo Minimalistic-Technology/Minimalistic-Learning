@@ -287,19 +287,21 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         // Try fetching by the provided identifier (could be slug or ID)
-        let res = await fetch(`${API_BASE_URL}/posts/${blogId}`);
+        let res = await fetch(`${API_BASE_URL}/api/v1/posts/${blogId}`);
 
         // If 404, try fetching all posts and find by ID or slug
         if (!res.ok && res.status === 404) {
           try {
-            const allPostsRes = await fetch(`${API_BASE_URL}/posts`);
+            const allPostsRes = await fetch(`${API_BASE_URL}/api/v1/posts`);
             if (allPostsRes.ok) {
               const allData = await allPostsRes.json().catch(() => ({}));
-              const postsArray = Array.isArray(allData?.posts)
-                ? allData.posts
-                : Array.isArray(allData)
-                  ? allData
-                  : [];
+              const postsArray = Array.isArray(allData?.items)
+                ? allData.items
+                : Array.isArray(allData?.posts)
+                  ? allData.posts
+                  : Array.isArray(allData)
+                    ? allData
+                    : [];
 
               // Find the blog by _id, id, or slug
               const foundPost = postsArray.find(
@@ -888,7 +890,7 @@ export default function BlogDetailPage() {
                       {relatedBlog.date}
                     </p>
                     <Link
-                      href={`/blog/${relatedBlog._id}`}
+                      href={`/blog/${relatedBlog.slug ?? relatedBlog._id}`}
                       className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#2563eb]"
                     >
                       Read article

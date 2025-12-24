@@ -41,6 +41,7 @@ export default function LandingPage() {
 
         const normalized: Blog[] = postsArray.map((post: any, index: number) => ({
           _id: post._id ?? post.id ?? `post-${index}`,
+          slug: post.slug ?? post._id ?? post.id,
           title: post.title ?? "Untitled Blog",
           description: post.description ?? post.content ?? "Stay tuned for more insights from Minimalistic Learning.",
           image: post.image ?? post.coverImage,
