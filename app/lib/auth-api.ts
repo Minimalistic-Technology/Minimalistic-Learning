@@ -39,7 +39,7 @@ export interface AuthResponse {
  * Sign up a new user
  */
 export const signup = async (data: SignupData): Promise<AuthResponse> => {
-  const response = await apiClient.post<AuthResponse>('/auth/signup', data);
+  const response = await apiClient.post<AuthResponse>('/api/v1/signup', data);
   return response.data;
 };
 
@@ -47,7 +47,7 @@ export const signup = async (data: SignupData): Promise<AuthResponse> => {
  * Login user
  */
 export const login = async (data: LoginData): Promise<AuthResponse> => {
-  const response = await apiClient.post<AuthResponse>('/auth/login', data);
+  const response = await apiClient.post<AuthResponse>('/api/v1/login', data);
   return response.data;
 };
 
@@ -55,7 +55,7 @@ export const login = async (data: LoginData): Promise<AuthResponse> => {
  * Request password reset
  */
 export const requestPasswordReset = async (data: PasswordResetData): Promise<{ message: string }> => {
-  const response = await apiClient.post<{ message: string }>('/auth/forgot-password', data);
+  const response = await apiClient.post<{ message: string }>('/api/v1/forgot-password', data);
   return response.data;
 };
 
@@ -63,7 +63,7 @@ export const requestPasswordReset = async (data: PasswordResetData): Promise<{ m
  * Confirm password reset
  */
 export const confirmPasswordReset = async (data: PasswordResetConfirmData): Promise<{ message: string }> => {
-  const response = await apiClient.post<{ message: string }>('/auth/reset-password', data);
+  const response = await apiClient.post<{ message: string }>('/api/v1/reset-password', data);
   return response.data;
 };
 
@@ -71,15 +71,15 @@ export const confirmPasswordReset = async (data: PasswordResetConfirmData): Prom
  * Refresh access token
  */
 export const refreshToken = async (): Promise<AuthResponse> => {
-  const refreshToken = typeof window !== 'undefined' 
-    ? localStorage.getItem('refresh_token') 
+  const refreshToken = typeof window !== 'undefined'
+    ? localStorage.getItem('refresh_token')
     : null;
 
   if (!refreshToken) {
     throw new Error('No refresh token available');
   }
 
-  const response = await apiClient.post<AuthResponse>('/auth/refresh-token', {
+  const response = await apiClient.post<AuthResponse>('/api/v1/refresh-token', {
     refresh_token: refreshToken,
   });
   return response.data;
@@ -90,7 +90,7 @@ export const refreshToken = async (): Promise<AuthResponse> => {
  */
 export const logout = async (): Promise<void> => {
   try {
-    await apiClient.post('/auth/logout');
+    await apiClient.post('/api/v1/logout');
   } catch (error) {
     // Even if API call fails, clear local storage
     console.error('Logout error:', error);

@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
               name: data.user.name || `${data.user.firstName} ${data.user.lastName}`,
               email: data.user.email,
               role: data.user.role,
-              jwtToken: data.access_token,
+              jwtToken: data.access_token || data.tokens?.accessToken,
             };
           }
           return null;
