@@ -8,21 +8,24 @@ import { useAuth } from "../context/AuthContext";
 
 
 import {
+  Trash2,
+  Edit2,
   ArrowUpRight,
-  BarChart3,
-  PenSquare,
-  Search,
-  Filter,
   TrendingUp,
   Clock,
   Star,
+  ChevronDown,
+  Grid3x3,
+  List,
+  Search,
+  Filter,
+  PenSquare,
+  X,
   BookOpen,
   Sparkles,
-  ChevronDown,
-  X,
-  Grid3x3,
-  List
+  BarChart3
 } from "lucide-react";
+import toast from "react-hot-toast";
 import ScrollProgressBar from "../components/ScrollerProgress";
 import Footer from "../components/Footer";
 
@@ -37,6 +40,7 @@ interface Blog {
   category?: string;
   author?: string;
   date?: string;
+  authorId?: string;
   verified?: boolean;
   rating?: number;
   createdAt?: string;
@@ -58,7 +62,7 @@ const BlogPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
 
 
@@ -93,6 +97,7 @@ const BlogPage = () => {
             post.author ??
             post.authorName ??
             "Minimalistic Learning",
+          authorId: post.authorId ?? post.author?._id ?? post.author?.id,
           date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
           verified: post.verified ?? post.published ?? true,
           rating: post.rating ?? post.views ?? 5,
@@ -113,6 +118,31 @@ const BlogPage = () => {
 
     fetchBlogs();
   }, []);
+
+  const handleDeleteBlog = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this blog?")) return;
+    try {
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+      const headers: HeadersInit = {};
+      if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
+
+      const res = await fetch(`${API_BASE_URL}/api/v1/posts/${id}`, {
+        method: "DELETE",
+        headers,
+      });
+
+      if (res.ok) {
+        toast.success("Blog deleted successfully");
+        setBlogs(prev => prev.filter(b => b._id !== id));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.message || "Delete failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("An error occurred while deleting.");
+    }
+  };
 
   console.log(blogs, error)
 
@@ -507,6 +537,9 @@ const BlogPage = () => {
                   blog={blog}
                   viewMode={viewMode}
                   index={index}
+                  currentUser={user}
+                  isAuthenticated={isAuthenticated}
+                  onDelete={handleDeleteBlog}
                 />
               ))}
             </AnimatePresence>
@@ -524,11 +557,18 @@ function BlogCard({
   blog,
   viewMode,
   index,
+  currentUser,
+  isAuthenticated,
+  onDelete,
 }: {
   blog: Blog;
   viewMode: "grid" | "list";
   index: number;
+  currentUser: any;
+  isAuthenticated: boolean;
+  onDelete: (id: string) => void;
 }) {
+  const isAuthor = isAuthenticated && currentUser?.id === blog.authorId;
   if (viewMode === "list") {
     return (
       <motion.article
@@ -545,10 +585,10 @@ function BlogCard({
             <img
               src={
                 blog.image ||
-                "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+                "/placeholder-blog.jpg"
               }
               alt={blog.title}
-              className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+              className={`h-full w-full object-cover transition duration-500 group-hover:scale-110 ${!blog.image ? 'opacity-50 grayscale' : ''}`}
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -581,6 +621,30 @@ function BlogCard({
                 {blog.description}
               </p>
             </div>
+
+            {/* Edit/Delete Buttons for Author (List view) */}
+            {isAuthor && (
+              <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <Link
+                  href={`/blog/edit/${blog._id}`}
+                  className="p-2 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Edit2 className="w-4 h-4" />
+                </Link>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onDelete(blog._id);
+                  }}
+                  className="p-2 rounded-full bg-rose-600 text-white shadow-lg hover:bg-rose-700 transition"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
             <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
@@ -615,10 +679,10 @@ function BlogCard({
           <img
             src={
               blog.image ||
-              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+              "/placeholder-blog.jpg"
             }
             alt={blog.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+            className={`h-full w-full object-cover transition duration-500 group-hover:scale-110 ${!blog.image ? 'opacity-50 grayscale' : ''}`}
           />
 
 
@@ -643,6 +707,30 @@ function BlogCard({
             </div>
           </div>
         </div>
+
+        {/* Edit/Delete Buttons for Author (Grid view) */}
+        {isAuthor && (
+          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <Link
+              href={`/blog/edit/${blog._id}`}
+              className="p-2 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Edit2 className="w-4 h-4" />
+            </Link>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onDelete(blog._id);
+              }}
+              className="p-2 rounded-full bg-rose-600 text-white shadow-lg hover:bg-rose-700 transition"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         <div className="flex flex-1 flex-col gap-4 p-6">
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 line-clamp-2 group-hover:text-[#2563eb] transition-colors">
             {blog.title}
