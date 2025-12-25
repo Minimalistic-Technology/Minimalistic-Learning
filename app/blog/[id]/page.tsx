@@ -225,7 +225,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
@@ -597,6 +597,23 @@ export default function BlogDetailPage() {
     blog?.content ?? blog?.description ?? ""
   );
 
+  const isAuthor = useMemo(() => {
+    if (!isAuthenticated || !currentUser || !blog) return false;
+
+    const clientUserId = currentUser.id;
+    const postAuthorId = blog.authorId;
+    const postAuthorLegacyId = (blog as any).author?._id;
+    const postAuthorName = blog.author;
+
+    // Debug help
+    console.debug(`Author Check [${blog.title}]: User ID: ${clientUserId}, Blog AuthorId: ${postAuthorId}`);
+
+    if (clientUserId && (clientUserId === postAuthorId || clientUserId === postAuthorLegacyId)) return true;
+    if (!postAuthorId && !postAuthorLegacyId && currentUser.firstName && postAuthorName && currentUser.firstName === postAuthorName) return true;
+
+    return false;
+  }, [currentUser, isAuthenticated, blog]);
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20">
@@ -659,9 +676,8 @@ export default function BlogDetailPage() {
               </button>
             ))}
           </div>
-          {isAuthenticated && currentUser?.id === blog.authorId && (
+          {isAuthor && (
             <div className="flex items-center gap-3">
-
               <button
                 onClick={() => router.push(`/blog/edit/${blog._id}`)}
                 className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 font-semibold text-blue-600 shadow-sm transition hover:bg-blue-100"
@@ -977,7 +993,7 @@ export default function BlogDetailPage() {
         )}
       </div>
       <Footer />
-    </div>
+    </div >
   );
 }
 
