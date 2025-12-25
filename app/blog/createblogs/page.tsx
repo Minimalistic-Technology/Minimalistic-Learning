@@ -52,11 +52,13 @@ const CreateBlogPage = () => {
 
   useEffect(() => {
     if (user) {
+      const name = (user as any).name || (user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Minimalistic Learning");
       setFormData((prev) => ({
         ...prev,
         authorId: user.id || "",
-        author: (user as any).name || (user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Minimalistic Learning")
+        author: name
       }));
+      console.log("Blog creator set to:", { name, id: user.id });
     }
   }, [user]);
 

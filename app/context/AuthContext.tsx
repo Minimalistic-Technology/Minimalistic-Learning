@@ -8,6 +8,7 @@ interface User {
   email: string;
   firstName?: string;
   lastName?: string;
+  role?: string;
 }
 
 interface AuthContextType {
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const userEmail = typeof window !== 'undefined' ? localStorage.getItem('email') : null;
       const firstName = typeof window !== 'undefined' ? localStorage.getItem('firstName') : null;
       const lastName = typeof window !== 'undefined' ? localStorage.getItem('lastName') : null;
+      const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null;
 
       if (userId || userEmail) {
         setUser({
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           email: userEmail || '',
           firstName: firstName || undefined,
           lastName: lastName || undefined,
+          role: role || undefined,
         });
       }
     } else {
@@ -78,6 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           localStorage.setItem("lastName", names.slice(1).join(' ') || "");
         }
         if (s.user.jwtToken) localStorage.setItem("access_token", s.user.jwtToken);
+        if (s.user.role) localStorage.setItem("role", s.user.role);
       }
       loadUserFromStorage();
     }

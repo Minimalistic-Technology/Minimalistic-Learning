@@ -568,7 +568,34 @@ function BlogCard({
   isAuthenticated: boolean;
   onDelete: (id: string) => void;
 }) {
-  const isAuthor = isAuthenticated && currentUser?.id === blog.authorId;
+  const isAuthor = useMemo(() => {
+    if (!isAuthenticated || !currentUser || !blog) return false;
+
+    // Admins can manage all blogs
+    if (currentUser.role === 'admin' || (currentUser as any).isAdmin) return true;
+
+    const clientUserId = currentUser.id;
+    const postAuthorId = blog.authorId;
+
+    // Explicit ID check
+    if (clientUserId && clientUserId === postAuthorId) return true;
+
+    // Fallback: Check if name matches
+    const postAuthorName = blog.author || "";
+    const clientName = (currentUser as any).name ||
+      (currentUser.firstName ? `${currentUser.firstName} ${currentUser.lastName || ""}`.trim() : "");
+
+    const clientNameLower = clientName.toLowerCase();
+    const postAuthorLower = postAuthorName.toLowerCase();
+
+    // Direct name match
+    if (clientName && postAuthorName && clientNameLower === postAuthorLower) return true;
+
+    // Special fallback for the site owner managing default-authored blogs
+    if (clientNameLower.includes("manan") && postAuthorLower === "minimalistic learning") return true;
+
+    return false;
+  }, [currentUser, isAuthenticated, blog]);
   if (viewMode === "list") {
     return (
       <motion.article
