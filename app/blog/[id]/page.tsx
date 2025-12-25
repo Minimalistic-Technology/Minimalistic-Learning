@@ -226,13 +226,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
-import { useSession } from "next-auth/react";
-import { ExtendedSession } from "@/app/lib/auth";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/AuthContext";
+import { useParams, useRouter } from "next/navigation";
+
 import toast from "react-hot-toast";
 import {
   ArrowLeft,
@@ -247,6 +246,7 @@ import {
   Trash2,
   Edit2
 } from "lucide-react";
+
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
@@ -286,9 +286,10 @@ export default function BlogDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const { user: currentUser, isAuthenticated } = useAuth();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+
 
 
   useEffect(() => {
@@ -547,8 +548,7 @@ export default function BlogDetailPage() {
 
     setIsDeleting(true);
     try {
-      const customSession = session as ExtendedSession;
-      const accessToken = customSession?.user?.jwtToken || (typeof window !== 'undefined' ? localStorage.getItem('access_token') : null);
+      const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
       const headers: HeadersInit = {};
       if (accessToken) {
@@ -659,8 +659,9 @@ export default function BlogDetailPage() {
               </button>
             ))}
           </div>
-          {(session as ExtendedSession)?.user?.id === blog.authorId && (
+          {isAuthenticated && currentUser?.id === blog.authorId && (
             <div className="flex items-center gap-3">
+
               <button
                 onClick={() => router.push(`/blog/edit/${blog._id}`)}
                 className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 font-semibold text-blue-600 shadow-sm transition hover:bg-blue-100"

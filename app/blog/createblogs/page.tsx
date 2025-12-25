@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
 import { Camera, Calendar, User, Tag, Link, PenSquare, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
-import { ExtendedSession } from "@/app/lib/auth";
+import { useAuth } from "@/app/context/AuthContext";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
+
 
 
 
@@ -28,7 +28,8 @@ interface BlogFormData {
 
 const CreateBlogPage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+
 
 
   const [formData, setFormData] = useState<BlogFormData>({
@@ -44,21 +45,21 @@ const CreateBlogPage = () => {
   });
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/logIn");
+    if (!authLoading && !isAuthenticated) {
+      router.push("/auth/login");
     }
-  }, [status, router]);
+  }, [isAuthenticated, authLoading, router]);
 
   useEffect(() => {
-    const customSession = session as ExtendedSession;
-    if (customSession?.user) {
+    if (user) {
       setFormData((prev) => ({
         ...prev,
-        authorId: customSession.user.id || "",
-        author: customSession.user.name || "Minimalistic Learning"
+        authorId: user.id || "",
+        author: (user as any).name || (user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Minimalistic Learning")
       }));
     }
-  }, [session]);
+  }, [user]);
+
 
 
 
@@ -143,7 +144,7 @@ const CreateBlogPage = () => {
     }
   };
 
-  if (status === "loading") {
+  if (authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
@@ -152,6 +153,7 @@ const CreateBlogPage = () => {
   }
 
   return (
+
 
     <div>
       {/* <ScrollProgressBar /> */}
