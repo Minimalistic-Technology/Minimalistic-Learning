@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
+
 import {
   ArrowUpRight,
   BarChart3,
@@ -55,6 +57,8 @@ const BlogPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+
 
   // Local fallback from static data to avoid empty state if API fails
 
@@ -255,13 +259,16 @@ const BlogPage = () => {
                   </h2>
                 </div>
                 <div className="flex flex-col gap-2 sm:gap-3">
-                  <Link
-                    href="/blog/createblogs"
-                    className="inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-white/30 hover:scale-105"
-                  >
-                    <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    Publish new blog
-                  </Link>
+                  {session && (
+                    <Link
+                      href="/blog/createblogs"
+                      className="inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-all hover:bg-white/30 hover:scale-105"
+                    >
+                      <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      Publish new blog
+                    </Link>
+                  )}
+
                   <Link
                     href="/AdminDashboard/blogsAdmin"
                     className="inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-white px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-semibold text-[#2563eb] transition-all hover:scale-105"
@@ -406,14 +413,17 @@ const BlogPage = () => {
               </div>
 
               {/* Create Button */}
-              <Link
-                href="/blog/createblogs"
-                className="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
-              >
-                <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Create Blog</span>
-                <span className="sm:hidden">Create</span>
-              </Link>
+              {session && (
+                <Link
+                  href="/blog/createblogs"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105"
+                >
+                  <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Create Blog</span>
+                  <span className="sm:hidden">Create</span>
+                </Link>
+              )}
+
             </div>
           </div>
 
@@ -464,13 +474,16 @@ const BlogPage = () => {
               <p className="text-slate-500 dark:text-slate-400">
                 Try adjusting your search or filter criteria to find what you're looking for.
               </p>
-              <Link
-                href="/blog/createblogs"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 mt-4"
-              >
-                <PenSquare className="w-4 h-4" />
-                Create the first blog
-              </Link>
+              {session && (
+                <Link
+                  href="/blog/createblogs"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-purple-500/30 mt-4"
+                >
+                  <PenSquare className="w-4 h-4" />
+                  Create the first blog
+                </Link>
+              )}
+
             </div>
           </motion.div>
         ) : (
@@ -593,7 +606,7 @@ function BlogCard({
     >
       <Link href={`/blog/${blog.slug ?? blog._id}`}>
         <div className="relative h-64 w-full overflow-hidden">
-          {/* <Image
+          <Image
             src={
               blog.image ||
               "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
@@ -601,7 +614,8 @@ function BlogCard({
             alt={blog.title}
             fill
             className="object-cover transition duration-500 group-hover:scale-110"
-          /> */}
+          />
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           <div className="absolute top-4 left-4 flex items-center gap-2">
             <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-[#2563eb]">

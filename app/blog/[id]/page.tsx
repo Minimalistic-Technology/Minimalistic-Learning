@@ -230,6 +230,10 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/app/components/Footer";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
+import { useSession } from "next-auth/react";
+import { ExtendedSession } from "@/app/lib/auth";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import {
   ArrowLeft,
   Calendar,
@@ -240,7 +244,10 @@ import {
   Facebook,
   Linkedin,
   Star,
+  Trash2,
+  Edit2
 } from "lucide-react";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 interface BlogType {
@@ -250,11 +257,13 @@ interface BlogType {
   description: string;
   content?: string;
   author: string;
+  authorId?: string;
   date: string;
   image?: string;
   category?: string;
   tags?: string[];
 }
+
 
 interface CommentType {
   _id: string;
@@ -277,6 +286,10 @@ export default function BlogDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
 
   useEffect(() => {
     const isValidObjectId = (id: string) => /^[0-9a-fA-F]{24}$/.test(id);
@@ -326,10 +339,12 @@ export default function BlogDetailPage() {
                     post.author ??
                     post.authorName ??
                     "Minimalistic Learning",
+                  authorId: post.authorId ?? post.author?._id ?? post.author?.id,
                   date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
                   image: post.image ?? post.coverImage,
                   category: post.category ?? post.topic ?? "General",
                   tags: post.tags ?? (post.category ? [post.category] : []),
+
                 };
                 setBlog(normalized);
 
@@ -365,10 +380,12 @@ export default function BlogDetailPage() {
             post.author ??
             post.authorName ??
             "Minimalistic Learning",
+          authorId: post.authorId ?? post.author?._id ?? post.author?.id,
           date: post.createdAt ?? post.updatedAt ?? new Date().toISOString(),
           image: post.image ?? post.coverImage,
           category: post.category ?? post.topic ?? "General",
           tags: post.tags ?? (post.category ? [post.category] : []),
+
         };
         setBlog(normalized);
 
@@ -524,7 +541,42 @@ export default function BlogDetailPage() {
     }
   };
 
+  const handleDeleteBlog = async () => {
+    if (!blog?._id) return;
+    if (!confirm("Are you sure you want to delete this blog? This action cannot be undone.")) return;
+
+    setIsDeleting(true);
+    try {
+      const customSession = session as ExtendedSession;
+      const accessToken = customSession?.user?.jwtToken || (typeof window !== 'undefined' ? localStorage.getItem('access_token') : null);
+
+      const headers: HeadersInit = {};
+      if (accessToken) {
+        headers["Authorization"] = `Bearer ${accessToken}`;
+      }
+
+      const res = await fetch(`${API_BASE_URL}/api/v1/posts/${blog._id}`, {
+        method: "DELETE",
+        headers,
+      });
+
+      if (res.ok) {
+        toast.success("Blog deleted successfully");
+        router.push("/blog");
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete blog");
+      }
+    } catch (err: any) {
+      console.error("Delete blog failed:", err);
+      toast.error(err.message || "Failed to delete blog. You might not have permission.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const cleanMarkdown = (text: string) => {
+
     return text
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
@@ -607,7 +659,27 @@ export default function BlogDetailPage() {
               </button>
             ))}
           </div>
+          {(session as ExtendedSession)?.user?.id === blog.authorId && (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.push(`/blog/edit/${blog._id}`)}
+                className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 font-semibold text-blue-600 shadow-sm transition hover:bg-blue-100"
+              >
+                <Edit2 className="h-4 w-4" />
+                Edit
+              </button>
+              <button
+                onClick={handleDeleteBlog}
+                disabled={isDeleting}
+                className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 font-semibold text-rose-600 shadow-sm transition hover:bg-rose-100 disabled:opacity-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          )}
         </div>
+
 
         <div className="rounded-3xl border border-slate-200/80 bg-white/95 p-8 shadow-lg backdrop-blur">
           <div className="grid gap-8 lg:grid-cols-[1.3fr_0.9fr]">
@@ -907,6 +979,7 @@ export default function BlogDetailPage() {
     </div>
   );
 }
+
 
 function calculateReadingTime(content: string): number {
   const wordCount = content?.split(/\s+/)?.length ?? 0;

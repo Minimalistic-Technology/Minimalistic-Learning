@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
 import { Camera, Calendar, User, Tag, Link, PenSquare, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import { ExtendedSession } from "@/app/lib/auth";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
+
+
 
 import apiClient from "@/app/lib/api";
 import toast from "react-hot-toast";
@@ -24,6 +28,8 @@ interface BlogFormData {
 
 const CreateBlogPage = () => {
   const router = useRouter();
+  const { data: session, status } = useSession();
+
 
   const [formData, setFormData] = useState<BlogFormData>({
     title: "",
@@ -38,17 +44,23 @@ const CreateBlogPage = () => {
   });
 
   useEffect(() => {
-    const authorId = localStorage.getItem("id");
-    const firstName = localStorage.getItem("firstName") || "";
-    const lastName = localStorage.getItem("lastName") || "";
-    const fullName = [firstName, lastName].filter(Boolean).join(" ");
+    if (status === "unauthenticated") {
+      router.push("/logIn");
+    }
+  }, [status, router]);
 
-    setFormData((prev) => ({
-      ...prev,
-      authorId: authorId || "",
-      author: prev.author || fullName || "Minimalistic Learning"
-    }));
-  }, []);
+  useEffect(() => {
+    const customSession = session as ExtendedSession;
+    if (customSession?.user) {
+      setFormData((prev) => ({
+        ...prev,
+        authorId: customSession.user.id || "",
+        author: customSession.user.name || "Minimalistic Learning"
+      }));
+    }
+  }, [session]);
+
+
 
   const [currentTag, setCurrentTag] = useState<string>("");
   const [imagePreview, setImagePreview] = useState<string>("");
@@ -131,7 +143,16 @@ const CreateBlogPage = () => {
     }
   };
 
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
+      </div>
+    );
+  }
+
   return (
+
     <div>
       {/* <ScrollProgressBar /> */}
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
