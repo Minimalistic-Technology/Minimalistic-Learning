@@ -134,7 +134,7 @@ const CreateBlogPage = () => {
       }
 
       // Changed from /api/v1/createPost to /api/v1/posts to match listing/admin endpoints
-      const response = await apiClient.post('/api/v1/posts', payload);
+      const response = await apiClient.post('/api/v1/createPost', payload);
       console.log("Server response:", response.data);
 
       toast.success("Blog published successfully!");
