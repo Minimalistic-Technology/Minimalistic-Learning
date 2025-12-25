@@ -113,21 +113,28 @@ const CreateBlogPage = () => {
     try {
       const payload = {
         title: formData.title,
-        content: formData.description,
+        content: formData.description, // Backend usually expects 'content' or 'description'
+        description: formData.description, // Sending both for compatibility
         category: formData.category,
         image: formData.image,
         author: formData.author,
         tags: formData.tags,
         authorId: formData.authorId,
-        published: true, // Specific flag for visibility
+        published: true,
         verified: true,
         minutes: formData.minutes,
         date: formData.date
       };
 
-      console.log("Publishing blog with payload:", { ...payload, image: "base64-omitted" });
+      console.log("Publishing blog with payload:", { ...payload, image: payload.image ? `${payload.image.substring(0, 50)}... (length: ${payload.image.length})` : "none" });
 
-      const response = await apiClient.post('/api/v1/createPost', payload);
+      // Check if image is too large (e.g., > 2MB after base64 encoding is ~2.7MB)
+      if (formData.image && formData.image.length > 2 * 1024 * 1024) {
+        throw new Error("The image is too large. Please upload an image smaller than 1.5MB.");
+      }
+
+      // Changed from /api/v1/createPost to /api/v1/posts to match listing/admin endpoints
+      const response = await apiClient.post('/api/v1/posts', payload);
       console.log("Server response:", response.data);
 
       toast.success("Blog published successfully!");

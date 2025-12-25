@@ -3,8 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, BookOpen, Star, Play, Clock, TrendingUp } from 'lucide-react';
+import { ArrowRight, BookOpen, Star, Clock, TrendingUp } from 'lucide-react';
 
 interface Blog {
   _id: string;
@@ -38,18 +37,14 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
       >
         {/* Blog Image */}
         <div className="relative h-56 w-full overflow-hidden">
-          {blog.image ? (
-            <Image
-              src={blog.image}
-              alt={blog.title}
-              fill
-              className="object-cover transition duration-500 ease-in-out group-hover:scale-110"
-            />
-          ) : (
-            <div className="h-full w-full bg-gradient-to-br from-blue-100 via-sky-100 to-cyan-100 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-cyan-900/20 flex items-center justify-center">
-              <Play size={48} className="opacity-20 text-slate-400 dark:text-slate-600" />
-            </div>
-          )}
+          <img
+            src={
+              blog.image ||
+              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+            }
+            alt={blog.title}
+            className="h-full w-full object-cover transition duration-500 ease-in-out group-hover:scale-110"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
           {/* Category Badge */}
