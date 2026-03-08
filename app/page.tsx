@@ -72,23 +72,25 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 text-slate-800 dark:text-slate-100">
       <ScrollProgressBar />
+
+      Comming Soon: A new home for Minimalistic Learning! We're working hard to bring you an even better experience. Stay tuned for updates and get ready to explore a world of knowledge with us. Thank you for being part of our journey!
       
-      <HeroSection blogCount={normalizedBlogs.length} />
+      {/* <HeroSection blogCount={normalizedBlogs.length} /> */}
       
-      <StatsSection 
+      {/* <StatsSection 
         blogCount={normalizedBlogs.length}
         categoryCount={totalCategories}
         authorCount={totalAuthors}
         averageRating={averageRating}
-      />
+      /> */}
       
-      <FeaturesSection />
+      {/* <FeaturesSection />
       
       <PopularBlogsSection blogs={popularBlogs} />
       
       <CTASection />
 
-      <Footer />
+      <Footer /> */}
     </div>
   );
 }
