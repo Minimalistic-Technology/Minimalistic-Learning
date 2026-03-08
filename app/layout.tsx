@@ -96,8 +96,8 @@ export default function RootLayout({
         <NextTopLoader showSpinner={false} />
         <AuthProvider>
           <Providers>
-            <Navbar />
-            <OfflineNotification />
+            {/* <Navbar />
+            <OfflineNotification /> */}
             <main>{children}</main>
           </Providers>
         </AuthProvider>
