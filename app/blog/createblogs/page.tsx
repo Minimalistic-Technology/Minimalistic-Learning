@@ -3,26 +3,18 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Footer from "@/app/components/Footer";
-import { Camera, Calendar, User, Tag, Link, PenSquare, Sparkles } from "lucide-react";
+import { Camera, Tag, Link, PenSquare, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/app/context/AuthContext";
-import ScrollProgressBar from "@/app/components/ScrollerProgress";
-
-
-
-
 import apiClient from "@/app/lib/api";
 import toast from "react-hot-toast";
 
 interface BlogFormData {
   title: string;
-  description: string;
+  content: string;
   category: string;
   image: string;
-  date: string;
-  author: string;
   tags: string[];
-  minutes: number;
   authorId: string;
 }
 
@@ -30,19 +22,19 @@ const CreateBlogPage = () => {
   const router = useRouter();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
 
-
-
   const [formData, setFormData] = useState<BlogFormData>({
     title: "",
-    description: "",
+    content: "",
     category: "",
     image: "",
-    date: new Date().toISOString().split("T")[0],
-    author: "",
     tags: [],
-    minutes: 1,
     authorId: "",
   });
+
+  const [currentTag, setCurrentTag] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -52,59 +44,66 @@ const CreateBlogPage = () => {
 
   useEffect(() => {
     if (user) {
-      const name = (user as any).name || (user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Minimalistic Learning");
-      setFormData((prev) => ({
-        ...prev,
-        authorId: user.id || "",
-        author: name
-      }));
-      console.log("Blog creator set to:", { name, id: user.id });
+      setFormData((prev) => ({ ...prev, authorId: user.id || "" }));
     }
   }, [user]);
 
-
-
-
-  const [currentTag, setCurrentTag] = useState<string>("");
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleTagAdd = (e: FormEvent) => {
-    e.preventDefault();
+  const handleTagAdd = () => {
     if (currentTag.trim() && !formData.tags.includes(currentTag.trim())) {
-      setFormData({ ...formData, tags: [...formData.tags, currentTag.trim()] });
+      setFormData((prev) => ({
+        ...prev,
+        tags: [...prev.tags, currentTag.trim()],
+      }));
       setCurrentTag("");
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter((tag) => tag !== tagToRemove),
-    });
+    setFormData((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files[0]) {
       const file = files[0];
-      const fileUrl = URL.createObjectURL(file);
-      setImagePreview(fileUrl);
+      setImagePreview(URL.createObjectURL(file));
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setFormData({ ...formData, image: base64String });
+        setFormData((prev) => ({ ...prev, image: reader.result as string }));
       };
     }
+  };
+
+  const insertMarkdown = (
+    wrap: (sel: string) => {
+      text: string;
+      cursorStart: number;
+      cursorEnd: number;
+    },
+  ) => {
+    const textarea = document.getElementById(
+      "blog-content",
+    ) as HTMLTextAreaElement;
+    if (!textarea) return;
+    const { selectionStart: start, selectionEnd: end, value } = textarea;
+    const selection = value.substring(start, end);
+    const { text, cursorStart, cursorEnd } = wrap(selection);
+    setFormData((prev) => ({ ...prev, content: text }));
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(cursorStart, cursorEnd);
+    }, 0);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -112,42 +111,44 @@ const CreateBlogPage = () => {
     setIsLoading(true);
     setErrorMessage("");
 
+    if (formData.image && formData.image.length > 2 * 1024 * 1024) {
+      const msg =
+        "The image is too large. Please upload an image smaller than 1.5MB.";
+      setErrorMessage(msg);
+      toast.error(msg);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const payload = {
         title: formData.title,
-        content: formData.description, // Backend usually expects 'content' or 'description'
-        description: formData.description, // Sending both for compatibility
+        content: formData.content,
         category: formData.category,
-        image: formData.image,
-        author: formData.author,
+        coverImage: {
+          url: formData.image,
+          alt: formData.title,
+        },
         tags: formData.tags,
         authorId: formData.authorId,
         published: true,
-        verified: true,
-        minutes: formData.minutes,
-        date: formData.date
       };
 
-      console.log("Publishing blog with payload:", { ...payload, image: payload.image ? `${payload.image.substring(0, 50)}... (length: ${payload.image.length})` : "none" });
-
-      // Check if image is too large (e.g., > 2MB after base64 encoding is ~2.7MB)
-      if (formData.image && formData.image.length > 2 * 1024 * 1024) {
-        throw new Error("The image is too large. Please upload an image smaller than 1.5MB.");
-      }
-
-      // Changed from /api/v1/createPost to /api/v1/posts to match listing/admin endpoints
-      const response = await apiClient.post('/api/v1/createPost', payload);
+      const response = await apiClient.post("/api/v1/posts", payload);
+      alert(`response: ${JSON.stringify(response)}`)
       console.log("Server response:", response.data);
 
       toast.success("Blog published successfully!");
-      setTimeout(() => {
-        router.push("/blog");
-      }, 800);
+      // setTimeout(() => router.push("/blog"), 800);
+      router.push('/blog')
     } catch (error: any) {
       console.error("Error creating blog:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Failed to publish blog. Please try again.";
-      setErrorMessage(errorMessage);
-      toast.error(errorMessage);
+      const msg =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to publish blog. Please try again.";
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -162,10 +163,7 @@ const CreateBlogPage = () => {
   }
 
   return (
-
-
     <div>
-      {/* <ScrollProgressBar /> */}
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-8">
           <section className="rounded-3xl border border-slate-200/80 bg-white/95 p-8 shadow-lg backdrop-blur">
@@ -204,6 +202,7 @@ const CreateBlogPage = () => {
               </div>
             </div>
           </section>
+
           <form
             onSubmit={handleSubmit}
             className="space-y-8 rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-lg md:p-8"
@@ -228,195 +227,182 @@ const CreateBlogPage = () => {
                     onChange={handleChange}
                     required
                     placeholder="Enter an attention-grabbing title"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full px-4 py-3 rounded-xl bg-white text-black border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   />
                 </div>
 
-                {/* Text Editor (replaced ReactQuill with enhanced textarea) */}
+                {/* Content Editor */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Blog Content
                   </label>
                   <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
                     {/* Toolbar */}
-                    <div className="bg-white border border-slate-200 p-2 flex flex-wrap gap-2">
+                    <div className="bg-white border-b border-slate-200 p-2 flex flex-wrap gap-2">
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const end = textarea.selectionEnd;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const selection = text.substring(start, end);
-                            const after = text.substring(end);
-                            const newText =
-                              before + "**" + selection + "**" + after;
-                            setFormData({ ...formData, description: newText });
-                            // Reset selection after state update
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(start + 2, end + 2);
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Bold"
+                        onClick={() =>
+                          insertMarkdown((sel) => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              e = val.selectionEnd,
+                              t = val.value;
+                            return {
+                              text:
+                                t.substring(0, s) +
+                                "**" +
+                                sel +
+                                "**" +
+                                t.substring(e),
+                              cursorStart: s + 2,
+                              cursorEnd: e + 2,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm bg-white text-gray-700 border border-slate-200 rounded hover:bg-gray-100"
                       >
                         <strong>B</strong>
                       </button>
+
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const end = textarea.selectionEnd;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const selection = text.substring(start, end);
-                            const after = text.substring(end);
-                            const newText = before + "*" + selection + "*" + after;
-                            setFormData({ ...formData, description: newText });
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(start + 1, end + 1);
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Italic"
+                        onClick={() =>
+                          insertMarkdown((sel) => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              e = val.selectionEnd,
+                              t = val.value;
+                            return {
+                              text:
+                                t.substring(0, s) +
+                                "*" +
+                                sel +
+                                "*" +
+                                t.substring(e),
+                              cursorStart: s + 1,
+                              cursorEnd: e + 1,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
                       >
                         <em>I</em>
                       </button>
+
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const end = textarea.selectionEnd;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const selection = text.substring(start, end);
-                            const after = text.substring(end);
-                            const newText = before + "# " + selection + after;
-                            setFormData({ ...formData, description: newText });
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(start + 2, end + 2);
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Heading"
+                        onClick={() =>
+                          insertMarkdown((sel) => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              e = val.selectionEnd,
+                              t = val.value;
+                            return {
+                              text:
+                                t.substring(0, s) + "# " + sel + t.substring(e),
+                              cursorStart: s + 2,
+                              cursorEnd: e + 2,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
                       >
                         H
                       </button>
+
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const after = text.substring(start);
-                            const newText = before + "\n- " + after;
-                            setFormData({ ...formData, description: newText });
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(start + 3, start + 3);
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Bullet List"
+                        onClick={() =>
+                          insertMarkdown(() => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              t = val.value;
+                            return {
+                              text: t.substring(0, s) + "\n- " + t.substring(s),
+                              cursorStart: s + 3,
+                              cursorEnd: s + 3,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
                       >
                         • List
                       </button>
+
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const end = textarea.selectionEnd;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const selection = text.substring(start, end);
-                            const after = text.substring(end);
-                            const newText =
-                              before +
-                              "[" +
-                              (selection || "link text") +
-                              "](url)" +
-                              after;
-                            setFormData({ ...formData, description: newText });
-                            const newCursorPos = selection
-                              ? start + selection.length + 3
-                              : start + 11;
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(
-                                newCursorPos,
-                                newCursorPos + 3
-                              );
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Link"
+                        onClick={() =>
+                          insertMarkdown((sel) => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              e = val.selectionEnd,
+                              t = val.value;
+                            const linkText = sel || "link text";
+                            const inserted = `[${linkText}](url)`;
+                            const cursorPos = s + linkText.length + 3;
+                            return {
+                              text:
+                                t.substring(0, s) + inserted + t.substring(e),
+                              cursorStart: cursorPos,
+                              cursorEnd: cursorPos + 3,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
                       >
                         <Link className="h-4 w-4" />
                       </button>
+
                       <button
                         type="button"
-                        onClick={() => {
-                          const textarea = document.getElementById(
-                            "blog-content"
-                          ) as HTMLTextAreaElement;
-                          if (textarea) {
-                            const start = textarea.selectionStart;
-                            const text = textarea.value;
-                            const before = text.substring(0, start);
-                            const after = text.substring(start);
-                            const newText =
-                              before + "\n```\ncode here\n```\n" + after;
-                            setFormData({ ...formData, description: newText });
-                            setTimeout(() => {
-                              textarea.focus();
-                              textarea.setSelectionRange(start + 5, start + 14);
-                            }, 0);
-                          }
-                        }}
-                        className="px-2 py-1 text-sm bg-white border border-slate-200 rounded hover:bg-gray-100"
                         title="Code Block"
+                        onClick={() =>
+                          insertMarkdown(() => {
+                            const val = document.getElementById(
+                              "blog-content",
+                            ) as HTMLTextAreaElement;
+                            const s = val.selectionStart,
+                              t = val.value;
+                            return {
+                              text:
+                                t.substring(0, s) +
+                                "\n```\ncode here\n```\n" +
+                                t.substring(s),
+                              cursorStart: s + 5,
+                              cursorEnd: s + 14,
+                            };
+                          })
+                        }
+                        className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
                       >
                         {"</>"}
                       </button>
                     </div>
 
-                    {/* Content Area */}
+                    {/* FIX 2: name="content" to match state key */}
                     <textarea
                       id="blog-content"
-                      name="description"
-                      value={formData.description}
+                      name="content"
+                      value={formData.content}
                       onChange={handleChange}
                       required
                       placeholder="Write your blog content here..."
-                      className="w-full bg-white p-4 min-h-64 focus:outline-none focus:ring-0"
+                      className="w-full bg-white text-black p-4 min-h-64 focus:outline-none focus:ring-0"
                       rows={10}
                     />
                   </div>
@@ -424,21 +410,21 @@ const CreateBlogPage = () => {
                     <span>
                       Markdown supported (bold, italic, links, lists, headings)
                     </span>
-                    <span>{formData.description.length} characters</span>
+                    <span>{formData.content.length} characters</span>
                   </div>
                 </div>
 
-                {/* Preview Section */}
-                {formData.description && (
+                {/* Preview */}
+                {formData.content && (
                   <div className="bg-white border border-slate-200 rounded-xl p-4 mt-2 max-h-[400px] overflow-auto">
                     <h3 className="text-sm font-medium text-gray-700 mb-2">
                       Preview
                     </h3>
                     <div
-                      className="prose max-w-none break-words"
+                      className="prose max-w-none break-words text-black"
                       style={{ whiteSpace: "pre-wrap" }}
                       dangerouslySetInnerHTML={{
-                        __html: formData.description
+                        __html: formData.content
                           .replace(/&/g, "&amp;")
                           .replace(/</g, "&lt;")
                           .replace(/>/g, "&gt;")
@@ -450,11 +436,11 @@ const CreateBlogPage = () => {
                           .replace(/^- (.*$)/gm, "<ul><li>$1</li></ul>")
                           .replace(
                             /\[([^\]]+)\]\(([^)]+)\)/g,
-                            '<a href="$2">$1</a>'
+                            '<a href="$2" class="text-blue-600 underline">$1</a>',
                           )
                           .replace(
                             /```([\s\S]*?)```/g,
-                            "<pre><code>$1</code></pre>"
+                            "<pre><code>$1</code></pre>",
                           ),
                       }}
                     />
@@ -473,17 +459,22 @@ const CreateBlogPage = () => {
                       value={currentTag}
                       onChange={(e) => setCurrentTag(e.target.value)}
                       placeholder="Add a tag"
-                      className="flex-grow px-4 py-2 rounded-l-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleTagAdd(); // FIX 3: no event argument
+                        }
+                      }}
+                      className="flex-grow px-4 py-2 rounded-l-xl bg-white text-black border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                     />
                     <button
                       type="button"
-                      onClick={handleTagAdd}
+                      onClick={handleTagAdd} // FIX 3: no event argument
                       className="px-4 py-2 bg-blue-600 text-white rounded-r-xl hover:bg-blue-700 transition"
                     >
                       Add
                     </button>
                   </div>
-
                   {formData.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {formData.tags.map((tag, index) => (
@@ -525,7 +516,7 @@ const CreateBlogPage = () => {
                           type="button"
                           onClick={() => {
                             setImagePreview("");
-                            setFormData({ ...formData, image: "" });
+                            setFormData((prev) => ({ ...prev, image: "" }));
                           }}
                           className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
                         >
@@ -564,7 +555,7 @@ const CreateBlogPage = () => {
                     value={formData.category}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full px-4 py-3 rounded-xl bg-white text-black border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                   >
                     <option value="">Select Category</option>
                     <option value="AI">Artificial Intelligence</option>
@@ -573,73 +564,24 @@ const CreateBlogPage = () => {
                     <option value="Blockchain">Blockchain</option>
                     <option value="Cloud Computing">Cloud Computing</option>
                     <option value="Cybersecurity">Cybersecurity</option>
-                    <option value="Mobile Development">Mobile Development</option>
+                    <option value="Mobile Development">
+                      Mobile Development
+                    </option>
                   </select>
-                </div>
-
-                {/* Date */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Calendar className="inline mr-2 h-4 w-4" />
-                    Publish Date
-                  </label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Estimated Read Time (in minutes):
-                    <input
-                      type="number"
-                      min={1}
-                      value={formData.minutes}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          minutes: Number(e.target.value),
-                        })
-                      }
-                      required
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </label>
-                </div>
-
-                {/* Author */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <User className="inline mr-2 h-4 w-4" />
-                    Author
-                  </label>
-                  <input
-                    type="text"
-                    name="author"
-                    value={formData.author}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                    className="w-full px-4 py-3 rounded-xl bg-white border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  />
                 </div>
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <div className="mt-8 text-center">
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`px-8 py-3 rounded-2xl text-white font-medium text-lg transition
-                  ${isLoading
+                className={`px-8 py-3 rounded-2xl text-white font-medium text-lg transition ${
+                  isLoading
                     ? "bg-blue-400 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl"
-                  }`}
+                }`}
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
@@ -656,12 +598,12 @@ const CreateBlogPage = () => {
                         r="10"
                         stroke="currentColor"
                         strokeWidth="4"
-                      ></circle>
+                      />
                       <path
                         className="opacity-75"
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
+                      />
                     </svg>
                     Publishing...
                   </span>
@@ -669,7 +611,6 @@ const CreateBlogPage = () => {
                   "Publish Blog"
                 )}
               </button>
-
               <button
                 type="button"
                 onClick={() => router.push("/blog")}
