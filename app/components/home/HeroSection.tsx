@@ -1,15 +1,33 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { BookOpen, CheckCircle, ArrowRight, Sparkles, TrendingUp, Users, Award, Star } from 'lucide-react';
-import Link from 'next/link';
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  BookOpen,
+  CheckCircle,
+  ArrowRight,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Award,
+  Star,
+} from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface HeroSectionProps {
   blogCount: number;
 }
 
 export default function HeroSection({ blogCount }: HeroSectionProps) {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      <h1>Loading....</h1>;
+    }
+  }, [isAuthenticated, authLoading]);
+
   return (
     <section className="relative flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
@@ -23,7 +41,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute top-1/4 left-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-blue-400/20 rounded-full blur-3xl"
         />
@@ -36,7 +54,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 bg-cyan-400/20 rounded-full blur-3xl"
         />
@@ -48,7 +66,7 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
           transition={{
             duration: 30,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
           className="absolute top-1/2 left-1/2 w-40 h-40 sm:w-56 sm:h-56 md:w-80 md:h-80 bg-sky-400/15 rounded-full blur-3xl"
         />
@@ -71,7 +89,9 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-[#2563eb] ring-1 ring-blue-200/50 dark:ring-blue-700/50 shadow-lg"
             >
               <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
-              <span className="hidden sm:inline">Minimalistic Learning Platform</span>
+              <span className="hidden sm:inline">
+                Minimalistic Learning Platform
+              </span>
               <span className="sm:hidden">Learning Platform</span>
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
             </motion.div>
@@ -98,7 +118,8 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="max-w-lg text-base sm:text-lg md:text-xl leading-relaxed text-slate-600 dark:text-slate-400"
             >
-              Join thousands of learners. Access high-quality content, blogs, and resources curated by industry experts.
+              Join thousands of learners. Access high-quality content, blogs,
+              and resources curated by industry experts.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -115,13 +136,15 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                 Explore Blog
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link
-                href="/blog/createblogs"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300 transition-all hover:bg-white dark:hover:bg-slate-800 hover:scale-105 hover:border-[#2563eb]/50"
-              >
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-                Create Blog
-              </Link>
+              {isAuthenticated && !authLoading && (
+                <Link
+                  href="/blog/createblogs"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300 transition-all hover:bg-white dark:hover:bg-slate-800 hover:scale-105 hover:border-[#2563eb]/50"
+                >
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Create Blog
+                </Link>
+              )}
             </motion.div>
 
             {/* Trust Badges */}
@@ -131,12 +154,26 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="pt-4 sm:pt-6 space-y-2 sm:space-y-3"
             >
-              <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">Trusted by learners worldwide</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                Trusted by learners worldwide
+              </p>
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 {[
-                  { icon: Users, label: "Industry Experts", color: "from-blue-500 to-cyan-500" },
-                  { icon: Award, label: "Verified Content", color: "from-blue-500 to-sky-500" },
-                  { icon: TrendingUp, label: "Regular Updates", color: "from-sky-500 to-cyan-500" },
+                  {
+                    icon: Users,
+                    label: "Industry Experts",
+                    color: "from-blue-500 to-cyan-500",
+                  },
+                  {
+                    icon: Award,
+                    label: "Verified Content",
+                    color: "from-blue-500 to-sky-500",
+                  },
+                  {
+                    icon: TrendingUp,
+                    label: "Regular Updates",
+                    color: "from-sky-500 to-cyan-500",
+                  },
                 ].map((badge, index) => {
                   const Icon = badge.icon;
                   return (
@@ -148,7 +185,9 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                       className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r ${badge.color} bg-opacity-10 backdrop-blur-sm border border-white/20 dark:border-slate-700/50`}
                     >
                       <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-[#2563eb]" />
-                      <span className="text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300">{badge.label}</span>
+                      <span className="text-[10px] sm:text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        {badge.label}
+                      </span>
                     </motion.div>
                   );
                 })}
@@ -176,18 +215,26 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                   animate={{
                     x: [0, 20, 0],
                     y: [0, 20, 0],
-                    rotate: [0, 10, 0]
+                    rotate: [0, 10, 0],
                   }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                   className="absolute top-10 right-10 w-24 h-24 rounded-full bg-gradient-to-br from-blue-400/30 to-cyan-400/30 blur-2xl"
                 />
                 <motion.div
                   animate={{
                     x: [0, -20, 0],
                     y: [0, -20, 0],
-                    rotate: [0, -10, 0]
+                    rotate: [0, -10, 0],
                   }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                   className="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-gradient-to-br from-sky-400/30 to-blue-400/30 blur-2xl"
                 />
 
@@ -196,9 +243,13 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                   <motion.div
                     animate={{
                       scale: [1, 1.1, 1],
-                      rotate: [0, 5, -5, 0]
+                      rotate: [0, 5, -5, 0],
                     }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                     className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 mb-4 md:mb-6 shadow-xl"
                   >
                     <BookOpen className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white" />
@@ -217,7 +268,11 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                 animate={{
                   y: [0, -10, 0],
                 }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8 rounded-xl md:rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl p-3 md:p-4 lg:p-5 shadow-xl ring-1 ring-black/5"
               >
                 <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
@@ -225,7 +280,9 @@ export default function HeroSection({ blogCount }: HeroSectionProps) {
                     <CheckCircle size={20} className="md:w-6 md:h-6" />
                   </div>
                   <div>
-                    <p className="text-base md:text-lg font-bold text-slate-900 dark:text-slate-100">{blogCount}+ Blogs</p>
+                    <p className="text-base md:text-lg font-bold text-slate-900 dark:text-slate-100">
+                      {blogCount}+ Blogs
+                    </p>
                     <p className="text-[10px] md:text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                       <Star className="w-2.5 h-2.5 md:w-3 md:h-3 fill-blue-400 text-blue-400" />
                       Published & verified

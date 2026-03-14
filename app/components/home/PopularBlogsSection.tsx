@@ -1,9 +1,10 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ArrowRight, BookOpen, Star, Clock, TrendingUp } from 'lucide-react';
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight, BookOpen, Star, Clock, TrendingUp } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface Blog {
   _id: string;
@@ -101,7 +102,17 @@ function BlogCard({ blog, index }: { blog: Blog; index: number }) {
   );
 }
 
-export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps) {
+export default function PopularBlogsSection({
+  blogs,
+}: PopularBlogsSectionProps) {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      <h1>Loading....</h1>;
+    }
+  }, [isAuthenticated, authLoading]);
+
   return (
     <section className="relative bg-gradient-to-b from-slate-50/50 to-white dark:from-slate-900/50 dark:to-slate-950 py-24 md:py-32 overflow-hidden">
       {/* Background Decorations */}
@@ -143,11 +154,7 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
         {/* Blogs Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog, index) => (
-            <BlogCard
-              key={blog._id}
-              blog={blog}
-              index={index}
-            />
+            <BlogCard key={blog._id} blog={blog} index={index} />
           ))}
           {blogs.length === 0 && (
             <motion.div
@@ -165,12 +172,21 @@ export default function PopularBlogsSection({ blogs }: PopularBlogsSectionProps)
                 <p className="text-slate-500 dark:text-slate-400">
                   Be the first to create one!
                 </p>
-                <Link
-                  href="/blog/createblogs"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 mt-4"
-                >
-                  Create Blog
-                </Link>
+                {isAuthenticated && !authLoading ? (
+                  <Link
+                    href="/blog/createblogs"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 mt-4"
+                  >
+                    Write a Blog
+                  </Link>
+                ) : (
+                  <Link
+                    href="/auth/login"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/30 mt-4"
+                  >
+                    Login to Write a Blog
+                  </Link>
+                )}
               </div>
             </motion.div>
           )}
