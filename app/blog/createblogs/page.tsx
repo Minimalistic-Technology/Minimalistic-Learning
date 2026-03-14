@@ -13,7 +13,6 @@ interface BlogFormData {
   title: string;
   content: string;
   category: string;
-  image: string;
   tags: string[];
   authorId: string;
 }
@@ -26,13 +25,14 @@ const CreateBlogPage = () => {
     title: "",
     content: "",
     category: "",
-    image: "",
     tags: [],
     authorId: "",
   });
 
-  const [currentTag, setCurrentTag] = useState<string>("");
+  // FIX 1: Store the raw File separately for FormData upload
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [currentTag, setCurrentTag] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -73,15 +73,15 @@ const CreateBlogPage = () => {
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const file = files[0];
-      setImagePreview(URL.createObjectURL(file));
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, image: reader.result as string }));
-      };
+    const file = e.target.files?.[0];
+    if (file) {
+      // FIX 3: validate size using file.size (bytes), not base64 length
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image must be smaller than 5MB.");
+        return;
+      }
+      setImageFile(file);                          // FIX 1: store raw File
+      setImagePreview(URL.createObjectURL(file));  // only for preview
     }
   };
 
@@ -111,36 +111,30 @@ const CreateBlogPage = () => {
     setIsLoading(true);
     setErrorMessage("");
 
-    if (formData.image && formData.image.length > 2 * 1024 * 1024) {
-      const msg =
-        "The image is too large. Please upload an image smaller than 1.5MB.";
-      setErrorMessage(msg);
-      toast.error(msg);
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const payload = {
-        title: formData.title,
-        content: formData.content,
-        category: formData.category,
-        coverImage: {
-          url: formData.image,
-          alt: formData.title,
-        },
-        tags: formData.tags,
-        authorId: formData.authorId,
-        published: true,
-      };
+      // FIX 2: build FormData correctly and send formDataToSend (not formData state)
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("content", formData.content);
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("published", "true");
+      formDataToSend.append("authorId", formData.authorId);
+      formData.tags.forEach((tag) => formDataToSend.append("tags[]", tag));
 
-      const response = await apiClient.post("/api/v1/posts", payload);
-      alert(`response: ${JSON.stringify(response)}`)
+      // FIX 1: append the raw File object — multer needs a real File, not base64
+      if (imageFile) {
+        formDataToSend.append("coverImage", imageFile);
+      }
+
+      const response = await apiClient.post("/api/v1/posts", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // FIX 4: removed alert() debug leftover
       console.log("Server response:", response.data);
 
       toast.success("Blog published successfully!");
-      // setTimeout(() => router.push("/blog"), 800);
-      router.push('/blog')
+      router.push("/blog");
     } catch (error: any) {
       console.error("Error creating blog:", error);
       const msg =
@@ -237,29 +231,15 @@ const CreateBlogPage = () => {
                     Blog Content
                   </label>
                   <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-                    {/* Toolbar */}
                     <div className="bg-white border-b border-slate-200 p-2 flex flex-wrap gap-2">
                       <button
                         type="button"
                         title="Bold"
                         onClick={() =>
                           insertMarkdown((sel) => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              e = val.selectionEnd,
-                              t = val.value;
-                            return {
-                              text:
-                                t.substring(0, s) +
-                                "**" +
-                                sel +
-                                "**" +
-                                t.substring(e),
-                              cursorStart: s + 2,
-                              cursorEnd: e + 2,
-                            };
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, e = val.selectionEnd, t = val.value;
+                            return { text: t.substring(0, s) + "**" + sel + "**" + t.substring(e), cursorStart: s + 2, cursorEnd: e + 2 };
                           })
                         }
                         className="px-2 py-1 text-sm bg-white text-gray-700 border border-slate-200 rounded hover:bg-gray-100"
@@ -272,22 +252,9 @@ const CreateBlogPage = () => {
                         title="Italic"
                         onClick={() =>
                           insertMarkdown((sel) => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              e = val.selectionEnd,
-                              t = val.value;
-                            return {
-                              text:
-                                t.substring(0, s) +
-                                "*" +
-                                sel +
-                                "*" +
-                                t.substring(e),
-                              cursorStart: s + 1,
-                              cursorEnd: e + 1,
-                            };
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, e = val.selectionEnd, t = val.value;
+                            return { text: t.substring(0, s) + "*" + sel + "*" + t.substring(e), cursorStart: s + 1, cursorEnd: e + 1 };
                           })
                         }
                         className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
@@ -300,18 +267,9 @@ const CreateBlogPage = () => {
                         title="Heading"
                         onClick={() =>
                           insertMarkdown((sel) => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              e = val.selectionEnd,
-                              t = val.value;
-                            return {
-                              text:
-                                t.substring(0, s) + "# " + sel + t.substring(e),
-                              cursorStart: s + 2,
-                              cursorEnd: e + 2,
-                            };
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, e = val.selectionEnd, t = val.value;
+                            return { text: t.substring(0, s) + "# " + sel + t.substring(e), cursorStart: s + 2, cursorEnd: e + 2 };
                           })
                         }
                         className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
@@ -324,16 +282,9 @@ const CreateBlogPage = () => {
                         title="Bullet List"
                         onClick={() =>
                           insertMarkdown(() => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              t = val.value;
-                            return {
-                              text: t.substring(0, s) + "\n- " + t.substring(s),
-                              cursorStart: s + 3,
-                              cursorEnd: s + 3,
-                            };
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, t = val.value;
+                            return { text: t.substring(0, s) + "\n- " + t.substring(s), cursorStart: s + 3, cursorEnd: s + 3 };
                           })
                         }
                         className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
@@ -346,21 +297,12 @@ const CreateBlogPage = () => {
                         title="Link"
                         onClick={() =>
                           insertMarkdown((sel) => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              e = val.selectionEnd,
-                              t = val.value;
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, e = val.selectionEnd, t = val.value;
                             const linkText = sel || "link text";
                             const inserted = `[${linkText}](url)`;
                             const cursorPos = s + linkText.length + 3;
-                            return {
-                              text:
-                                t.substring(0, s) + inserted + t.substring(e),
-                              cursorStart: cursorPos,
-                              cursorEnd: cursorPos + 3,
-                            };
+                            return { text: t.substring(0, s) + inserted + t.substring(e), cursorStart: cursorPos, cursorEnd: cursorPos + 3 };
                           })
                         }
                         className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
@@ -373,19 +315,9 @@ const CreateBlogPage = () => {
                         title="Code Block"
                         onClick={() =>
                           insertMarkdown(() => {
-                            const val = document.getElementById(
-                              "blog-content",
-                            ) as HTMLTextAreaElement;
-                            const s = val.selectionStart,
-                              t = val.value;
-                            return {
-                              text:
-                                t.substring(0, s) +
-                                "\n```\ncode here\n```\n" +
-                                t.substring(s),
-                              cursorStart: s + 5,
-                              cursorEnd: s + 14,
-                            };
+                            const val = document.getElementById("blog-content") as HTMLTextAreaElement;
+                            const s = val.selectionStart, t = val.value;
+                            return { text: t.substring(0, s) + "\n```\ncode here\n```\n" + t.substring(s), cursorStart: s + 5, cursorEnd: s + 14 };
                           })
                         }
                         className="px-2 py-1 text-sm text-gray-700 bg-white border border-slate-200 rounded hover:bg-gray-100"
@@ -394,7 +326,6 @@ const CreateBlogPage = () => {
                       </button>
                     </div>
 
-                    {/* FIX 2: name="content" to match state key */}
                     <textarea
                       id="blog-content"
                       name="content"
@@ -407,9 +338,7 @@ const CreateBlogPage = () => {
                     />
                   </div>
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>
-                      Markdown supported (bold, italic, links, lists, headings)
-                    </span>
+                    <span>Markdown supported (bold, italic, links, lists, headings)</span>
                     <span>{formData.content.length} characters</span>
                   </div>
                 </div>
@@ -417,9 +346,7 @@ const CreateBlogPage = () => {
                 {/* Preview */}
                 {formData.content && (
                   <div className="bg-white border border-slate-200 rounded-xl p-4 mt-2 max-h-[400px] overflow-auto">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
-                      Preview
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">Preview</h3>
                     <div
                       className="prose max-w-none break-words text-black"
                       style={{ whiteSpace: "pre-wrap" }}
@@ -434,14 +361,8 @@ const CreateBlogPage = () => {
                           .replace(/^## (.*$)/gm, "<h2>$1</h2>")
                           .replace(/^# (.*$)/gm, "<h1>$1</h1>")
                           .replace(/^- (.*$)/gm, "<ul><li>$1</li></ul>")
-                          .replace(
-                            /\[([^\]]+)\]\(([^)]+)\)/g,
-                            '<a href="$2" class="text-blue-600 underline">$1</a>',
-                          )
-                          .replace(
-                            /```([\s\S]*?)```/g,
-                            "<pre><code>$1</code></pre>",
-                          ),
+                          .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 underline">$1</a>')
+                          .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>"),
                       }}
                     />
                   </div>
@@ -462,14 +383,14 @@ const CreateBlogPage = () => {
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
                           e.preventDefault();
-                          handleTagAdd(); // FIX 3: no event argument
+                          handleTagAdd();
                         }
                       }}
                       className="flex-grow px-4 py-2 rounded-l-xl bg-white text-black border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                     />
                     <button
                       type="button"
-                      onClick={handleTagAdd} // FIX 3: no event argument
+                      onClick={handleTagAdd}
                       className="px-4 py-2 bg-blue-600 text-white rounded-r-xl hover:bg-blue-700 transition"
                     >
                       Add
@@ -516,7 +437,7 @@ const CreateBlogPage = () => {
                           type="button"
                           onClick={() => {
                             setImagePreview("");
-                            setFormData((prev) => ({ ...prev, image: "" }));
+                            setImageFile(null); // FIX 1: clear File state too
                           }}
                           className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
                         >
@@ -564,9 +485,7 @@ const CreateBlogPage = () => {
                     <option value="Blockchain">Blockchain</option>
                     <option value="Cloud Computing">Cloud Computing</option>
                     <option value="Cybersecurity">Cybersecurity</option>
-                    <option value="Mobile Development">
-                      Mobile Development
-                    </option>
+                    <option value="Mobile Development">Mobile Development</option>
                   </select>
                 </div>
               </div>
@@ -591,19 +510,8 @@ const CreateBlogPage = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                     >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
                     Publishing...
                   </span>
