@@ -37,7 +37,7 @@ const CreateBlogPage = () => {
 
   return (
     <div>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
+      <div className="min-h-screen pt-[100px] bg-gradient-to-br from-purple-50 via-indigo-50/50 to-pink-50/50 dark:from-slate-950 dark:via-purple-950/20 dark:to-indigo-950/20 px-4 py-10">
         <div className="mx-auto max-w-6xl space-y-8">
 
           {/* Hero */}

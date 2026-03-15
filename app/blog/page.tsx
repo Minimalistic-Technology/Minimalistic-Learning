@@ -9,9 +9,8 @@ import { BlogHero } from "@/features/blog/components/blog-hero";
 import { BlogStats } from "@/features/blog/components/blog-status";
 import { BlogFilters } from "@/features/blog/components/blog-filters";
 import { BlogCard } from "@/features/blog/components/blog-card";
-import {
-  useBlogPage,
-} from "@/features/blog/hooks/use-blogs";
+import { useBlogDelete, useBlogPage } from "@/features/blog/hooks/use-blogs";
+import { cn } from "../lib/utils";
 
 const BlogPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -36,7 +35,13 @@ const BlogPage = () => {
   } = useBlogPage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20 text-slate-800 dark:text-slate-100">
+    <div
+      className={cn(
+        "min-h-screen pt-20 flex flex-col gap-16",
+        // "bg-gradient-to-br from-blue-50 via-sky-50/50 to-cyan-50/50 dark:from-slate-950 dark:via-blue-950/20 dark:to-cyan-950/20",
+        "text-slate-800 dark:text-slate-100",
+      )}
+    >
       <BlogHero
         sortFilter={sortFilter}
         setSortFilter={setSortFilter}
@@ -63,7 +68,7 @@ const BlogPage = () => {
         error={error?.message as string}
       />
 
-      <section className="max-w-7xl mx-auto px-6 pb-24">
+      <section className="max-w-7xl mx-auto px-6 pb-24 w-full">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600" />
@@ -114,7 +119,7 @@ const BlogPage = () => {
                   index={index}
                   currentUser={user}
                   isAuthenticated={isAuthenticated}
-                  onDelete={() => {}}
+                  onDelete={() => useBlogDelete(blog._id)}
                 />
               ))}
             </AnimatePresence>

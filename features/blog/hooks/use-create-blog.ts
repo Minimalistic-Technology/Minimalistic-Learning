@@ -105,6 +105,7 @@ export const useCreateBlog = () => {
         error.response?.data?.message ||
         error.message ||
         "Failed to publish blog. Please try again.";
+        console.log("error message: ", error)
       setErrorMessage(msg);
       toast.error(msg);
     } finally {

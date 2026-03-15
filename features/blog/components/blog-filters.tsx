@@ -26,7 +26,7 @@ export const BlogFilters = ({
   viewMode, setViewMode,
   isAuthenticated, error,
 }: Props) => (
-  <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
+  <section className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
     <div className="rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 p-4 sm:p-6 shadow-lg">
       {error && (
         <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
