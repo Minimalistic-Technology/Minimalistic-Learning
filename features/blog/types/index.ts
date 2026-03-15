@@ -3,7 +3,7 @@ export interface Blog {
     title: string;
     slug: string;
     content: string;
-    description?: string;
+    description: string;
     coverImage?: {
         url: string;
         alt: string;

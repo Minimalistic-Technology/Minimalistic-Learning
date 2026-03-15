@@ -1,105 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Star, Clock, TrendingUp } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
-
-interface Blog {
-  _id: string;
-  slug?: string;
-  title: string;
-  description: string;
-  image?: string;
-  category?: string;
-  author?: string;
-  date?: string;
-  verified?: boolean;
-  rating?: number;
-}
+import { Blog } from "@/features/blog/types";
+import { BlogCard } from "@/features/blog/components/blog-card";
+import { useBlogDelete } from "@/features/blog/hooks/use-blogs";
+import { AnimatedBackground } from "../animated-background";
+import { Badge } from "../badge";
 
 interface PopularBlogsSectionProps {
   blogs: Blog[];
-}
-
-function BlogCard({ blog, index }: { blog: Blog; index: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -8 }}
-    >
-      <Link
-        href={`/blog/${blog.slug ?? blog._id}`}
-        className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/50 dark:border-slate-700/50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5 transition-all duration-300 hover:shadow-2xl"
-      >
-        {/* Blog Image */}
-        <div className="relative h-56 w-full overflow-hidden">
-          <img
-            src={
-              blog.image ||
-              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
-            }
-            alt={blog.title}
-            className="h-full w-full object-cover transition duration-500 ease-in-out group-hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-          {/* Category Badge */}
-          <div className="absolute top-4 left-4">
-            <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-bold uppercase tracking-wide text-[#2563eb] shadow-lg">
-              {blog.category || "General"}
-            </span>
-          </div>
-
-          {/* Rating */}
-          <div className="absolute top-4 right-4">
-            <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-lg">
-              <Star className="w-4 h-4 fill-blue-400 text-blue-400" />
-              <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
-                {blog.rating?.toFixed(1) || "5.0"}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex flex-1 flex-col gap-4 p-6">
-          <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-[#2563eb] transition-colors line-clamp-2">
-              {blog.title}
-            </h3>
-            <p className="flex-1 text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
-              {blog.description?.length && blog.description.length > 120
-                ? `${blog.description.slice(0, 120)}…`
-                : blog.description}
-            </p>
-          </div>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                {blog.date
-                  ? new Date(blog.date).toLocaleDateString()
-                  : "Recently"}
-              </span>
-              <span>•</span>
-              <span>{blog.author || "Minimalistic Learning"}</span>
-            </div>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-[#2563eb] group-hover:gap-3 transition-all">
-              Read
-              <ArrowRight className="w-4 h-4" />
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
 }
 
 export default function PopularBlogsSection({
@@ -107,19 +19,21 @@ export default function PopularBlogsSection({
 }: PopularBlogsSectionProps) {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
 
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      <h1>Loading....</h1>;
-    }
-  }, [isAuthenticated, authLoading]);
-
   return (
     <section className="relative bg-gradient-to-b from-slate-50/50 to-white dark:from-slate-900/50 dark:to-slate-950 py-24 md:py-32 overflow-hidden">
       {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
-      </div>
+      <AnimatedBackground
+        blobs={[
+          {
+            className:
+              "absolute top-0 left-0 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl",
+          },
+          {
+            className:
+              "absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl",
+          },
+        ]}
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         {/* Header */}
@@ -127,14 +41,15 @@ export default function PopularBlogsSection({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.3 }}
           className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#2563eb] mb-4 shadow-lg">
-              <TrendingUp className="w-3 h-3" />
-              Trending Now
-            </div>
+            <Badge
+            title="Trending Now"
+            icon={<TrendingUp className="size-3"/>}
+            className="mb-6"
+            />
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
               Popular Blogs
             </h2>
@@ -154,7 +69,15 @@ export default function PopularBlogsSection({
         {/* Blogs Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {blogs.map((blog, index) => (
-            <BlogCard key={blog._id} blog={blog} index={index} />
+            <BlogCard
+              key={blog._id}
+              blog={blog}
+              viewMode={"grid"}
+              currentUser={user}
+              isAuthenticated={isAuthenticated}
+              index={index}
+              onDelete={() => useBlogDelete(blog._id)}
+            />
           ))}
           {blogs.length === 0 && (
             <motion.div

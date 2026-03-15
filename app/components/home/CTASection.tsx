@@ -17,7 +17,7 @@ export default function CTASection() {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.3 }}
         className="relative overflow-hidden rounded-3xl border border-blue-200/50 dark:border-blue-700/50 bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 px-8 py-20 md:py-24 text-center text-white shadow-2xl ring-2 ring-blue-500/30 dark:ring-blue-700/30 sm:px-12"
       >
         {/* Animated Background Overlay */}
@@ -51,7 +51,7 @@ export default function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
             className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6"
           >
             Ready to start your
@@ -63,7 +63,7 @@ export default function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
             className="mx-auto mt-4 mb-10 max-w-2xl text-lg md:text-xl text-blue-100 leading-relaxed"
           >
             Join thousands of learners today. Explore our blog library and start creating your own content to share knowledge with the community.
@@ -73,7 +73,7 @@ export default function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
             className="flex flex-col justify-center gap-4 sm:flex-row"
           >
             <Link
@@ -97,7 +97,7 @@ export default function CTASection() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
             className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-blue-100"
           >
             <div className="flex items-center gap-2">

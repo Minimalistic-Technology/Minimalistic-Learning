@@ -98,7 +98,7 @@ const Navbar = () => {
             href="/" 
             className="flex items-center gap-2 sm:gap-3 group relative"
           >
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 p-2 sm:p-2.5 shadow-lg shadow-blue-500/30 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 p-2 sm:p-2.5 shadow-lg shadow-blue-500/30">
               <BookOpen className="w-full h-full text-white" />
             </div>
             <div className="flex flex-col">

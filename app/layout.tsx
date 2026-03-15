@@ -97,7 +97,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar />
             <OfflineNotification />
-            <main>{children}</main>
+            <main className="pt-8">{children}</main>
             <Footer />
           </AuthProvider>
         </Providers>
