@@ -3,10 +3,10 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Providers } from "./Providers";
 import { cn } from "./lib/utils";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 import OfflineNotification from "./components/OfflineNavigator";
 import { AuthProvider } from "./context/AuthContext";
-
+import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
   title: "Minimalistic Learning",
@@ -74,7 +74,6 @@ export const viewport: Viewport = {
   themeColor: "#daf0ff",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -87,10 +86,10 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          'min-h-screen bg-white dark:bg-slate-950',
-          'antialiased',
+          "min-h-screen bg-white dark:bg-slate-950",
+          "antialiased",
           // Prevent content shift
-          '[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in'
+          "[&_.theme-toggle-wrapper]:opacity-0 [&_.theme-toggle-wrapper]:animate-fade-in",
         )}
       >
         {/* <NextTopLoader showSpinner={false} /> */}
@@ -99,6 +98,7 @@ export default function RootLayout({
             <Navbar />
             <OfflineNotification />
             <main>{children}</main>
+            <Footer />
           </AuthProvider>
         </Providers>
       </body>

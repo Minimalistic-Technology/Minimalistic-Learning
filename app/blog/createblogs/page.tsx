@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { PenSquare, Sparkles } from "lucide-react";
-import Footer from "@/app/components/Footer";
 import { MarkdownToolbar } from "@/features/blog/components/markdown-toolbar";
 import { ImageUpload } from "@/features/blog/components/image-upload";
 import { TagInput } from "@/features/blog/components/tag-input";
@@ -215,7 +214,6 @@ const CreateBlogPage = () => {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

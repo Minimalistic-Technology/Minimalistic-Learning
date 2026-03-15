@@ -2,7 +2,6 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import ScrollProgressBar from './components/ScrollerProgress';
-import Footer from './components/Footer';
 import HeroSection from './components/home/HeroSection';
 import StatsSection from './components/home/StatsSection';
 import FeaturesSection from './components/home/FeaturesSection';
@@ -110,8 +109,6 @@ export default function LandingPage() {
 
         <CTASection />
       </div>
-
-      <Footer />
     </div>
   );
 }

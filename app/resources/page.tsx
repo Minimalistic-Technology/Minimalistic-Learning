@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import Link from "next/link";
 import { FileText, Video, Book, Download, ExternalLink, Search, Sparkles, Filter, Grid3x3, List, ArrowRight, TrendingUp } from "lucide-react";
 import { useState, useRef } from "react";
-import Footer from "@/app/components/Footer";
 
 const resources = [
   {
@@ -434,7 +433,6 @@ export default function ResourcesPage() {
           )}
         </AnimatePresence>
       </div>
-      <Footer />
     </div>
   );
 }

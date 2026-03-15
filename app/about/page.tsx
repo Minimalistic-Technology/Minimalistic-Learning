@@ -2,7 +2,6 @@
 
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Target, Users, Lightbulb, Heart, Sparkles, ArrowRight, BookOpen, TrendingUp, Award } from "lucide-react";
-import Footer from "../components/Footer";
 import Team from "../components/Team";
 import Link from "next/link";
 import { useRef } from "react";
@@ -421,8 +420,6 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

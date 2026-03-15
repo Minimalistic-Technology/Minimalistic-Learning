@@ -3,7 +3,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Footer from "@/app/components/Footer";
 import ScrollProgressBar from "@/app/components/ScrollerProgress";
 import {
   ArrowLeft,
@@ -345,7 +344,6 @@ export default function ParaphrasedBlogPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

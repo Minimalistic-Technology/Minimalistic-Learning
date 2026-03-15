@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { PenSquare, Search } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import Footer from "../components/Footer";
 import { BlogHero } from "@/features/blog/components/blog-hero";
 import { BlogStats } from "@/features/blog/components/blog-status";
 import { BlogFilters } from "@/features/blog/components/blog-filters";
@@ -126,8 +125,6 @@ const BlogPage = () => {
           </div>
         )}
       </section>
-
-      <Footer />
     </div>
   );
 };
