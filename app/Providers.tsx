@@ -1,12 +1,14 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { ThemeProvider } from "./theme-provider";
-// import { SessionProvider } from 'next-auth/react';
 import { RecoilRoot } from "recoil";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const Providers = ({ children }: { children: ReactNode }) => {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <>
       <SessionProvider>
@@ -17,30 +19,32 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           disableTransitionOnChange
         >
           <RecoilRoot>
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#fff',
-                  color: '#333',
-                  border: '1px solid #e5e7eb',
-                },
-                success: {
-                  iconTheme: {
-                    primary: '#3b82f6',
-                    secondary: '#fff',
+            <QueryClientProvider client={queryClient}>
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#fff',
+                    color: '#333',
+                    border: '1px solid #e5e7eb',
                   },
-                },
-                error: {
-                  iconTheme: {
-                    primary: '#ef4444',
-                    secondary: '#fff',
+                  success: {
+                    iconTheme: {
+                      primary: '#3b82f6',
+                      secondary: '#fff',
+                    },
                   },
-                },
-              }}
-            />
-            {children}
+                  error: {
+                    iconTheme: {
+                      primary: '#ef4444',
+                      secondary: '#fff',
+                    },
+                  },
+                }}
+              />
+              {children}
+            </QueryClientProvider>
           </RecoilRoot>
         </ThemeProvider>
       </SessionProvider>
